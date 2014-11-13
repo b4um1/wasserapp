@@ -24,7 +24,6 @@ import at.fhhgb.mc.wasserapp.ActivitySwipeDetector;
 /**
  * The Class HomeActivity.
  * Mario Baumgartner
- * NEXT STEP
  */
 public class HomeActivity extends Activity implements OnClickListener {
 
