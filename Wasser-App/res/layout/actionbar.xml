@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:id="@+id/rootActionbar" >
+
+    <ViewFlipper
+        android:id="@+id/viewflipper"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <include
+            android:id="@+id/home"
+            layout="@layout/activity_home" />
+
+        <include
+            android:id="@+id/positions"
+            layout="@layout/activity_choose_marker" />
+
+        <include
+            android:id="@+id/maps"
+            layout="@layout/activity_maps" />
+
+        <include
+            android:id="@+id/waterlevels"
+            layout="@layout/activity_water_levels" />
+
+        <include
+            android:id="@+id/rivers"
+            layout="@layout/activity_rivers" />
+
+        <include
+            android:id="@+id/measuringpoint"
+            layout="@layout/activity_measuring_point" />
+
+        <include
+            android:id="@+id/showmeasuringpoint"
+            layout="@layout/activity_show_measuring_point" />
+
+        <include
+            android:id="@+id/rssfeed"
+            layout="@layout/activity_web_view" />
+
+        <include
+            android:id="@+id/more"
+            layout="@layout/activity_more" />
+
+        <include
+            android:id="@+id/about"
+            layout="@layout/activity_about" />
+
+        <include
+            android:id="@+id/login"
+            layout="@layout/activity_login" />
+        
+        <include
+            android:id="@+id/details"
+            layout="@layout/activity_fountain_details" />
+    </ViewFlipper>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:layout_gravity="bottom"
+        android:background="@color/blue"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/b_home"
+            style="@style/light_small"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@layout/button_actionbar"
+            android:drawableTop="@drawable/ic_home"
+            android:paddingTop="18dp"
+            android:text="@string/actionbar_home"
+            android:textAllCaps="true"
+            android:textColor="@color/whitegray" />
+
+        <Button
+            android:id="@+id/b_position"
+            style="@style/light_small"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@layout/button_actionbar"
+            android:drawableTop="@drawable/ic_position"
+            android:paddingTop="8dp"
+            android:text="@string/actionbar_positioin"
+            android:textAllCaps="true"
+            android:textColor="@color/whitegray" />
+
+        <Button
+            android:id="@+id/b_news"
+            style="@style/light_small"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@layout/button_actionbar"
+            android:drawableTop="@drawable/ic_news"
+            android:paddingTop="8dp"
+            android:text="@string/actionbar_news"
+            android:textAllCaps="true"
+            android:textColor="@color/whitegray" />
+
+        <Button
+            android:id="@+id/b_more"
+            style="@style/light_small"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@layout/button_actionbar"
+            android:drawableTop="@drawable/ic_more"
+            android:paddingTop="18dp"
+            android:text="@string/actionbar_more"
+            android:textAllCaps="true"/>
+    </LinearLayout>
+
+</FrameLayout>

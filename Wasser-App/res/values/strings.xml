@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Water</string>
+    
+    <!-- action bar -->
+    <string name="actionbar_home">Home</string>
+    <string name="actionbar_positioin">Position</string>
+    <string name="actionbar_mark">Mark</string>
+    <string name="actionbar_news">News</string>
+    <string name="actionbar_more">More</string>
+
+    <!-- map -->
+    <string name="map_fountain">Fountain</string>
+    <string name="map_wc">WC</string>
+    <string name="map_all">All Objects</string>
+    <string name="map_mark">Mark Object</string>
+    <string name="map_mark_fountain">Mark Fountain</string>
+    <string name="map_mark_wc">Mark WC</string>
+   	<string name="s_marker_not_saved_info">Before you create a new marker, you have to save the actual marker</string>
+    <string name="save">save</string>
+    <string name="delete">delete</string>
+    <string name="takepicture">picture</string>
+    <string name="drinkable">Drinkable</string>
+    <string name="accessible">barrier-free WC</string>
+
+    <!-- waterlevel -->
+    <string name="waterlevel_waterlevel">Water Level</string>
+    <string name="waterlevel_location_river">Location, River</string>
+    <string name="waterlevel_river">River</string>
+    <string name="waterlevel_measuringpoint">Measuring point</string>
+    <string name="waterlevel_waterlevel_diagram">Water Level - Chart</string>
+    <string name="waterlevel_meter">meter</string>
+    <string name="waterlevel_daysago">days ago</string>
+    <string name="waterlevel_actual_waterlevel">Actual Water Level</string>
+    <string name="waterlevel_notification">Remind me at a water level of</string>
+    <string name="waterlevel_turn_on_internet">Please turn on your internet connection!</string>
+
+    <!-- precipitation -->
+    <string name="precipitation_precipitation">Precipitation</string>
+    
+    <!-- healing -->
+    <string name="healing_healingspring">Healing spring</string>
+    
+    <!-- lakes -->
+    <string name="lakes_lakes">Lakes</string>
+    
+    <!-- more -->
+    <string name="more_login">Login</string>
+    <string name="more_about">About</string>
+    <string name="more_email">e-mail</string>
+    <string name="more_password">password</string>
+    
+    <!-- details -->
+    <string name="details_fountain">Fountain Details</string>
+    <string name="details_wc">WC Details</string>
+    <string name="details_lastverification">Last verification</string>
+    <string name="details_rating">Rating</string>
+    <string name="details_yourcomment">Your comment...</string>
+    <string name="details_yourrating">Your rating:</string>
+    <string name="details_send">send</string>
+
+    <!-- notification -->
+    <string name="notification_msg_1">The River </string>
+    <string name="notification_msg_2"> at the Measuringpoint </string>
+    <string name="notification_msg_3"> has reached a Waterlevel of </string>
+    <string name="notification_msg_4"> meters!</string>
+
+</resources>

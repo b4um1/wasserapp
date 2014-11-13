@@ -1,0 +1,30 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="${packageName}.${activityClass}" 
+    android:paddingBottom="50dp">
+
+    <TextView
+        android:id="@+id/tf_list_comment"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="0.9"
+        android:text="Text from feed"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <EditText
+        android:id="@+id/editText_rssfeed"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_gravity="top|left"
+        android:layout_weight="0.1"
+        android:ems="10"
+        android:textAlignment="gravity" >
+
+        <requestFocus />
+    </EditText>
+
+</LinearLayout>

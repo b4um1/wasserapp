@@ -1,0 +1,49 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginBottom="50dp"
+    android:orientation="vertical" >
+
+    <FrameLayout
+        android:id="@+id/l_navigationbar"
+        android:layout_width="fill_parent"
+        android:layout_height="40dp"
+        android:background="@color/blue" >
+
+        <Button
+            android:id="@+id/b_back"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="left"
+            android:background="@layout/button_actionbar"
+            android:drawableLeft="@drawable/ic_back"
+            android:paddingLeft="15dp"
+            android:paddingRight="30dp" />
+
+        <TextView
+            android:id="@+id/tv_maps_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/map_mark_fountain"
+            android:textAllCaps="true"
+            android:textColor="@color/whitegray" />
+
+        <SearchView
+            android:id="@+id/sv_maps_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:background="@color/blue"
+            android:queryHint="Adresse suchen..." >
+        </SearchView>
+    </FrameLayout>
+
+    <fragment
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.MapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</LinearLayout>

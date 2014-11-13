@@ -1,0 +1,88 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginBottom="50dp"
+    android:background="@drawable/bg_water"
+    android:orientation="vertical" >
+
+    <FrameLayout
+        android:id="@+id/l_navigationbar"
+        android:layout_width="fill_parent"
+        android:layout_height="40dp"
+        android:background="@color/blue" >
+
+        <Button
+            android:id="@+id/b_back"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="left"
+            android:background="@layout/button_actionbar"
+            android:drawableLeft="@drawable/ic_back"
+            android:paddingLeft="15dp"
+            android:paddingRight="30dp" />
+
+        <TextView
+            android:id="@+id/tv_maps_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/waterlevel_waterlevel"
+            android:textAllCaps="true"
+            android:textColor="@color/whitegray" />
+
+        <Button
+            android:id="@+id/b_addFavorite"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="right"
+            android:background="@layout/button_actionbar"
+            android:drawableRight="@drawable/ic_favorites"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <LinearLayout
+            android:id="@+id/LinearLayout1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="vertical" >
+
+            <FrameLayout
+                android:layout_width="fill_parent"
+                android:layout_height="40dp"
+                android:alpha="0.8"
+                android:background="@color/blue" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="5dp"
+                    android:text="@string/waterlevel_location_river"
+                    android:textColor="@color/whitegray" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|right"
+                    android:layout_marginRight="60dp"
+                    android:text="@string/waterlevel_waterlevel"
+                    android:textColor="@color/whitegray" />
+            </FrameLayout>
+
+            <ListView
+                android:id="@+id/container_waterlevels"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+            </ListView>
+        </LinearLayout>
+
+    </FrameLayout>
+
+</LinearLayout>

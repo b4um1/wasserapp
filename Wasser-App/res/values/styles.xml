@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--
+        Base application theme, dependent on API level. This theme is replaced
+        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
+    -->
+    <!-- <style name="AppBaseTheme" parent="Theme.AppCompat.Light"></style> -->
+    <!--
+            Theme customizations available in newer API levels can go in
+            res/values-vXX/styles.xml, while customizations related to
+            backward-compatibility can go here.
+    -->
+
+
+    <!-- Application theme. -->
+    <style name="AppTheme" parent="AppBaseTheme"></style>
+
+    <!-- Buttons -->
+
+    <style name="Button_list" parent="android:Widget">
+        <item name="android:textColor">@color/whitegray</item>
+        <item name="android:textSize">17sp</item>
+        <item name="android:alpha">0.8</item>
+        <item name="android:gravity">left|center_vertical</item>
+        <item name="android:paddingLeft">15dip</item>
+    </style>
+
+    <!-- Fonts -->
+
+    <style name="light" parent="@android:style/TextAppearance">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">#ffffff</item>
+    </style>
+
+    <style name="light_small" parent="@android:style/TextAppearance">
+        <item name="android:textSize">11sp</item>
+        <item name="android:textColor">#ffffff</item>
+    </style>
+
+    <style name="bold" parent="@android:style/TextAppearance">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">#ffffff</item>
+    </style>
+
+    <style name="bold_small" parent="@android:style/TextAppearance">
+        <item name="android:textSize">11sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">#ffffff</item>
+    </style>
+
+    <style name="large" parent="@android:style/TextAppearance">
+        <item name="android:textSize">36sp</item>
+        <item name="android:typeface">sans</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">#ffffff</item>
+    </style>
+    
+    <style name="waterRatingBar" parent="@android:style/Widget.RatingBar">
+        <item name="android:progressDrawable">@drawable/ic_position</item>
+        <item name="android:minHeight">18dip</item>
+        <item name="android:padding">5dp</item>
+        <item name="android:maxHeight">25dip</item>
+    </style>
+</resources>

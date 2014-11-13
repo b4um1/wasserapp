@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+     <string name="app_name">Wasser</string>
+     
+    <!-- action bar -->
+    <string name="actionbar_mark">Markieren</string>
+    <string name="actionbar_news">Neues</string>
+    <string name="actionbar_more">Mehr</string>
+
+   <!-- map -->
+    <string name="map_fountain">Brunnen</string>
+    <string name="map_mark">Markieren</string>
+    <string name="map_all">Alle Objekte</string>
+    <string name="map_mark_fountain">Brunnen markieren</string>
+    <string name="map_mark_wc">WC markieren</string>
+    <string name="s_marker_not_saved_info">Bevor Sie einen neuen Marker erstellen können, muss der letzte Marker gespeichert werden</string>
+    <string name="save">speichern</string>
+    <string name="delete">löschen</string>
+    <string name="takepicture">Foto</string>
+    <string name="drinkable">Trinkwasser</string>
+    <string name="accessible">Barrierefreies WC</string>
+    
+    <!-- waterlevel -->
+    <string name="waterlevel_waterlevel">Pegelstand</string>
+    <string name="waterlevel_location_river">Ort, Fluss</string>
+    <string name="waterlevel_waterlevel_diagram">Pegelstand - Diagramm</string>
+    <string name="waterlevel_meter">Meter</string>
+    <string name="waterlevel_daysago">vor x Tagen</string>
+    <string name="waterlevel_actual_waterlevel">Pegelstand aktuell</string>
+    <string name="waterlevel_notification">Benachrichtigung bei einem Pegelstand von</string>
+    <string name="waterlevel_turn_on_internet">Bitte stellen Sie eine Internetverbindung her!</string>
+
+     <!-- precipitation -->
+    <string name="precipitation_precipitation">Niederschlag</string>
+    
+    <!-- healing -->
+    <string name="healing_healingspring">Heilbrunnen</string>
+    
+    <!-- lakes -->
+    <string name="lakes_lakes">Seen</string>
+    
+    <!-- more -->
+    <string name="more_email">E-Mail</string>
+    <string name="more_password">Passwort</string>
+    
+    <!-- details -->
+    <string name="details_fountain">Brunnen Details</string>
+    <string name="details_lastverification">letzte Überprüfung</string>
+    <string name="details_rating">Bewertung</string>
+    <string name="details_yourcomment">Dein Kommentar...</string>
+    <string name="details_yourrating">Deine Bewertung:</string>
+    <string name="details_send">senden</string>
+    
+    <!-- notification -->
+    <string name="notification_msg_1">Der Fluss </string>
+    <string name="notification_msg_2"> an der Messstelle </string>
+    <string name="notification_msg_3"> hat einen Pegelstand von </string>
+    <string name="notification_msg_4"> Metern erreicht!</string>
+
+</resources>

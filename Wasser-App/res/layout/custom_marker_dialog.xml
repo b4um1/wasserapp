@@ -1,0 +1,133 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/LinearLayout1"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_vertical|center_horizontal"
+    android:background="@layout/custom_marker_dialog_shape"
+    android:alpha="0.8"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="273dp"
+        android:layout_height="200dp"
+        android:layout_gravity="center_horizontal"
+        android:orientation="vertical"
+        android:paddingTop="15dp" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:orientation="horizontal" >
+
+            <ImageView
+                android:id="@+id/ic_pos"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:src="@drawable/ic_position" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/tv_address"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:layout_marginLeft="9dp"
+                    android:layout_marginRight="10dp"
+                    android:text="street"
+                    android:textColor="@color/whitegray"
+                    android:textSize="17sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginTop="10dp"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp" >
+
+                <CheckBox
+                    android:id="@+id/cb_drink_or_bar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="20dp"
+                    android:button="@layout/custom_marker_dialog_checkbox"
+                    android:paddingLeft="10dp"
+                    android:text="@string/drinkable"
+                    android:textColor="@color/whitegray"
+                    android:textSize="16sp" />
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp" >
+
+                    <Button
+                        android:id="@+id/btn_takepicture"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_weight="0.26"
+                        android:background="@layout/custom_marker_dialog_button"
+                        android:drawableLeft="@drawable/ic_camera"
+                        android:paddingLeft="10dp"
+                        android:text="@string/takepicture"
+                        android:textColor="@color/blue"
+                        android:textSize="13sp" />
+
+                </FrameLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp" >
+
+                <Button
+                    android:id="@+id/btn_saveMarker"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_margin="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_weight="1"
+                    android:background="@layout/custom_marker_dialog_button"
+                    android:drawableLeft="@drawable/ic_save"
+                    android:paddingLeft="10dp"
+                    android:text="@string/save"
+                    android:textColor="@color/blue"
+                    android:textSize="14sp" />
+
+                <Button
+                    android:id="@+id/btn_delete"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_margin="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_weight="1"
+                    android:background="@layout/custom_marker_dialog_button"
+                    android:drawableLeft="@drawable/ic_delete_blue"
+                    android:paddingLeft="10dp"
+                    android:text="@string/delete"
+                    android:textColor="@color/blue"
+                    android:textSize="14sp" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

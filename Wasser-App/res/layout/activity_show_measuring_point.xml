@@ -1,0 +1,209 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginBottom="50dp"
+    android:background="@drawable/bg_water"
+    android:orientation="vertical"
+    tools:context="at.fhhgb.mc.wasserapp.waterlevel.ShowMeasuringPointActivity"
+    tools:ignore="MergeRootFrame" >
+
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="40dp"
+        android:background="@color/blue" >
+
+        <Button
+            android:id="@+id/b_back"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="left"
+            android:background="@layout/button_actionbar"
+            android:drawableLeft="@drawable/ic_back"
+            android:paddingLeft="15dp"
+            android:paddingRight="30dp" />
+
+        <TextView
+            android:id="@+id/tv_waterlevels_show_measuring_point_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/waterlevel_river"
+            android:textAllCaps="true"
+            android:textColor="@color/whitegray" />
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical" >
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:alpha="0.8"
+                android:background="@color/blue"
+                android:padding="5dp" >
+
+                <TextView
+                    android:id="@+id/tv_waterlevels_show_measuring_point_diagram"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="@string/waterlevel_waterlevel_diagram"
+                    android:textColor="@color/whitegray"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+            </FrameLayout>
+
+            <LinearLayout
+                android:id="@+id/Chart_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="1dp"
+                android:alpha="0.8"
+                android:background="@color/blue"
+                android:orientation="vertical"
+                android:padding="5dp" >
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_weight="0"
+            android:orientation="vertical" >
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:alpha="0.8"
+                android:background="@color/blue"
+                android:padding="5dp" >
+
+                <TextView
+                    android:id="@+id/tv_waterlevels_show_measuring_point_water_level"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="@string/waterlevel_actual_waterlevel"
+                    android:textColor="@color/whitegray"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/FrameLayout1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="1dp"
+                android:alpha="0.8"
+                android:background="@color/blue"
+                android:padding="5dp" >
+
+                <TextView
+                    android:id="@+id/tv_waterlevels_show_measuring_point_river_measuring_point"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="TextView"
+                    android:textColor="@color/whitegray"
+                    android:textSize="25sp" />
+
+                <TextView
+                    android:id="@+id/tv_waterlevels_show_measuring_point_water_level_content"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:text="n/a"
+                    android:textColor="@color/whitegray"
+                    android:textSize="25sp"
+                    android:textStyle="bold" />
+            </FrameLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_weight="0"
+            android:orientation="vertical" >
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:alpha="0.8"
+                android:background="@color/blue"
+                android:padding="5dp" >
+
+                <TextView
+                    android:id="@+id/tv_waterlevels_show_measuring_point_notification_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="@string/waterlevel_notification"
+                    android:textColor="@color/whitegray"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/FrameLayout1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="1dp"
+                android:alpha="0.8"
+                android:background="@color/blue"
+                android:padding="5dp" >
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:orientation="horizontal" >
+
+                    <EditText
+                        android:id="@+id/et_waterlevels_show_measuring_point_notification_input"
+                        android:layout_width="50dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:background="@layout/custom_textfield_shape"
+                        android:ems="10"
+                        android:inputType="numberDecimal"
+                        android:singleLine="true"
+                        android:textAlignment="center"
+                        android:textColor="@color/whitegray" />
+
+                    <TextView
+                        android:id="@+id/tv_waterlevels_show_measuring_point_notification_meter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="5dp"
+                        android:text="m"
+                        android:textColor="@color/whitegray"
+                        android:textSize="25sp" />
+                </LinearLayout>
+
+                <ToggleButton
+                    android:id="@+id/toggleButton1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|right"
+                    android:background="@layout/custom_marker_dialog_button"
+                    android:padding="5dp"
+                    android:text="ToggleButton" />
+                
+            </FrameLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>
