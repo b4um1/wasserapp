@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.ViewFlipper;
 import at.fhhgb.mc.wasserapp.ChooseMarkerActivity;
 import at.fhhgb.mc.wasserapp.HomeActivity;
+import at.fhhgb.mc.wasserapp.R;
 import at.fhhgb.mc.wasserapp.R.id;
 import at.fhhgb.mc.wasserapp.R.layout;
 import at.fhhgb.mc.wasserapp.mapactivity.MapActivity;
