@@ -2,6 +2,10 @@ package at.fhhgb.mc.wasserapp.model;
 
 import java.util.Date;
 
+/**
+ * @author Thomas Kranzer
+ * Model of Laborbus with getter and setter
+ */
 public class Laborbus {
 	private long id;
 	private Date mDateTime;
