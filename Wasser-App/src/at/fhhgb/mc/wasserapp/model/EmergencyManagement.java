@@ -11,7 +11,6 @@ public class EmergencyManagement {
 	private Date mTimeStamp;
 	private String mComment;
 	private String mReference;
-	private EmergencyInfo mEmergencyInfo;
 	
 	public Date getmTimeStamp() {
 		return mTimeStamp;
@@ -30,12 +29,6 @@ public class EmergencyManagement {
 	}
 	public void setmReference(String mReference) {
 		this.mReference = mReference;
-	}
-	public EmergencyInfo getmEmergencyInfo() {
-		return mEmergencyInfo;
-	}
-	public void setmEmergencyInfo(EmergencyInfo mEmergencyInfo) {
-		this.mEmergencyInfo = mEmergencyInfo;
 	}
 	public long getId() {
 		return id;

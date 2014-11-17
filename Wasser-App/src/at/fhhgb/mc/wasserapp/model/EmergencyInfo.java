@@ -11,6 +11,14 @@ public class EmergencyInfo {
 	private String mTel;
 	private String mContactPerson;
 	private String mPhoto;
+	private EmergencyManagement mEmergencymanagement;
+	
+	public EmergencyManagement getmEmergencymanagement() {
+		return mEmergencymanagement;
+	}
+	public void setmEmergencymanagement(EmergencyManagement mEmergencymanagement) {
+		this.mEmergencymanagement = mEmergencymanagement;
+	}
 	public String getmEmail() {
 		return mEmail;
 	}
