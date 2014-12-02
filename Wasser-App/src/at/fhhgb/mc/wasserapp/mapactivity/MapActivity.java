@@ -83,56 +83,56 @@ import at.fhhgb.mc.wasserapp.rssfeed.WebViewActivity;
  * 
  */
 public class MapActivity extends Activity implements OnMapClickListener,
-OnMapLongClickListener, OnMarkerClickListener, InfoWindowAdapter,
-OnInfoWindowClickListener, OnQueryTextListener, OnClickListener,
-OnCheckedChangeListener, OnMarkerDragListener, OnShowListener,
-LocationListener {
+		OnMapLongClickListener, OnMarkerClickListener, InfoWindowAdapter,
+		OnInfoWindowClickListener, OnQueryTextListener, OnClickListener,
+		OnCheckedChangeListener, OnMarkerDragListener, OnShowListener,
+		LocationListener {
 
 	/** The m_btn_save. */
 	private Button m_btn_save;
-	
+
 	/** The m_btn_delete. */
 	private Button m_btn_delete;
-	
+
 	/** The m_btn_go_to_marker. */
 	private Button m_btn_go_to_marker;
-	
+
 	/** The m_markertype. */
 	private String m_markertype;
 
 	/** The m_dialog. */
 	private Dialog m_dialog;
-	
+
 	/** The m_dialog_save_marker_alert. */
 	private Dialog m_dialog_save_marker_alert;
 
 	/** The m_searchview. */
 	private SearchView m_searchview;
-	
+
 	/** The m_dialog_checkbox. */
 	private CheckBox m_dialog_checkbox;
-	
+
 	/** The m_tv_title. */
 	private TextView m_tv_title;
 
 	/** The map fragment. */
 	private com.google.android.gms.maps.MapFragment mapFragment;
-	
+
 	/** The m_googlemap. */
 	private GoogleMap m_googlemap;
-	
+
 	/** The m_context. */
 	private Context m_context = this;
-	
+
 	/** The m_current location. */
 	private Location m_currentLocation;
 
 	/** The m_marker_object. */
 	private MarkerObject m_marker_object;
-	
+
 	/** The m_clicked_marker. */
 	private Marker m_clicked_marker;
-	
+
 	/** The m_saved_marker_objects. */
 	private ArrayList<MarkerObject> m_saved_marker_objects;
 
@@ -144,11 +144,13 @@ LocationListener {
 
 	/** The m_checkbox. */
 	private boolean m_checkbox;
-	
+
 	/** The m_super user. */
 	private boolean m_superUser;
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
 	 */
 	@Override
@@ -166,7 +168,7 @@ LocationListener {
 					(ViewGroup) findViewById(R.id.rootActionbar), this);
 			HomeActivity.setPositionToMark(this);
 
-			Button actionBarButton = (Button)findViewById(R.id.b_position);
+			Button actionBarButton = (Button) findViewById(R.id.b_position);
 
 			if (m_superUser
 					&& actionBarButton.getText().equals(
@@ -208,8 +210,6 @@ LocationListener {
 			m_dialog.setCanceledOnTouchOutside(false);
 			m_dialog.getWindow().setBackgroundDrawable(
 					new ColorDrawable(android.graphics.Color.TRANSPARENT));
-
-			
 
 			m_btn_save = (Button) m_dialog.findViewById(R.id.btn_saveMarker);
 			m_btn_save.setOnClickListener(this);
@@ -268,7 +268,9 @@ LocationListener {
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see android.app.Activity#onResume()
 	 */
 	@Override
@@ -278,28 +280,25 @@ LocationListener {
 
 			overridePendingTransition(0, 0);
 			HomeActivity.setPositionToMark(this);
-		Button actionBarButton = (Button)findViewById(R.id.b_position);
-		if(m_superUser && actionBarButton.getText().equals(getString(R.string.actionbar_mark))){
-			actionBarButton.setPressed(true);
-		}else if(actionBarButton.getText().equals(getString(R.string.actionbar_positioin))){
-			actionBarButton.setPressed(true);
-		}
-
-			
+			Button actionBarButton = (Button) findViewById(R.id.b_position);
+			if (m_superUser
+					&& actionBarButton.getText().equals(
+							getString(R.string.actionbar_mark))) {
+				actionBarButton.setPressed(true);
+			} else if (actionBarButton.getText().equals(
+					getString(R.string.actionbar_positioin))) {
+				actionBarButton.setPressed(true);
+			}
 
 			actualizeMapActivity();
 			setUpMap();
 			m_googlemap.clear();
-			getDataFromServer();
+			//getDataFromServer();
 		} else {
 			Toast t = Toast.makeText(this,
 					"turn on your internet connection!!!!", Toast.LENGTH_LONG);
 			t.show();
 		}
-		// setUpMap();
-		// m_googlemap.clear();
-		// getDataFromServer();
-		//
 	}
 
 	/**
@@ -421,7 +420,8 @@ LocationListener {
 	/**
 	 * Get the address of the LatLng coordinates.
 	 *
-	 * @param _latLng the _lat lng
+	 * @param _latLng
+	 *            the _lat lng
 	 * @return Address list with the address of the LatLng point
 	 */
 	public List<Address> getAddress(LatLng _latLng) {
@@ -457,7 +457,9 @@ LocationListener {
 	 */
 	private class GeocoderTask extends AsyncTask<String, Void, List<Address>> {
 
-		/* (non-Javadoc)
+		/*
+		 * (non-Javadoc)
+		 * 
 		 * @see android.os.AsyncTask#doInBackground(java.lang.Object[])
 		 */
 		@Override
@@ -475,7 +477,9 @@ LocationListener {
 			return addresses;
 		}
 
-		/* (non-Javadoc)
+		/*
+		 * (non-Javadoc)
+		 * 
 		 * @see android.os.AsyncTask#onPostExecute(java.lang.Object)
 		 */
 		@Override
@@ -502,8 +506,12 @@ LocationListener {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see com.google.android.gms.maps.GoogleMap.OnMapClickListener#onMapClick(com.google.android.gms.maps.model.LatLng)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.google.android.gms.maps.GoogleMap.OnMapClickListener#onMapClick(com
+	 * .google.android.gms.maps.model.LatLng)
 	 */
 	@Override
 	public void onMapClick(LatLng _latLng) {
@@ -531,7 +539,8 @@ LocationListener {
 	/**
 	 * Creates the new marker object.
 	 *
-	 * @param _latLng the _lat lng
+	 * @param _latLng
+	 *            the _lat lng
 	 */
 	public void createNewMarkerObject(LatLng _latLng) {
 		m_btn_save.setText("speichern");
@@ -544,6 +553,7 @@ LocationListener {
 		if (m_markertype.equals("wc")) {
 			m_marker_object = new Wc();
 		}
+		
 		m_marker_object.setM_latLng(_latLng);
 		m_marker_object.setAdress(address);
 		m_marker_object.setM_icon(m_checkbox);
@@ -557,13 +567,17 @@ LocationListener {
 		m_clicked_marker = m_googlemap.addMarker(m_markeroption);
 		m_dialog_checkbox.setChecked(m_checkbox);
 
-		m_marker_object.setM_id(""+m_clicked_marker.getPosition());
+		m_marker_object.setM_id("" + m_clicked_marker.getPosition());
 		m_tv_title.setText(m_marker_object.getM_address());
 		m_dialog.show();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.google.android.gms.maps.GoogleMap.InfoWindowAdapter#getInfoWindow(com.google.android.gms.maps.model.Marker)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.google.android.gms.maps.GoogleMap.InfoWindowAdapter#getInfoWindow
+	 * (com.google.android.gms.maps.model.Marker)
 	 */
 	@Override
 	public View getInfoWindow(Marker _marker) {
@@ -577,18 +591,26 @@ LocationListener {
 		return myContentView;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.google.android.gms.maps.GoogleMap.OnMarkerClickListener#onMarkerClick(com.google.android.gms.maps.model.Marker)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.google.android.gms.maps.GoogleMap.OnMarkerClickListener#onMarkerClick
+	 * (com.google.android.gms.maps.model.Marker)
 	 */
 	@Override
 	public boolean onMarkerClick(Marker _marker) {
 		m_clicked_marker = _marker;
-		m_marker_object = getMarkerObject(""+_marker.getPosition());
+		m_marker_object = getMarkerObject("" + _marker.getPosition());
 		return false;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.google.android.gms.maps.GoogleMap.InfoWindowAdapter#getInfoContents(com.google.android.gms.maps.model.Marker)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.google.android.gms.maps.GoogleMap.InfoWindowAdapter#getInfoContents
+	 * (com.google.android.gms.maps.model.Marker)
 	 */
 	@Override
 	public View getInfoContents(Marker _marker) {
@@ -596,8 +618,11 @@ LocationListener {
 		return null;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener#onInfoWindowClick(com.google.android.gms.maps.model.Marker)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener#
+	 * onInfoWindowClick(com.google.android.gms.maps.model.Marker)
 	 */
 	@Override
 	public void onInfoWindowClick(Marker _marker) {
@@ -609,22 +634,24 @@ LocationListener {
 			Intent goToDetailsActivity = new Intent(this,
 					FountainDetailsActivity.class);
 			goToDetailsActivity
-			.putExtra("address", m_clicked_marker.getTitle());
+					.putExtra("address", m_clicked_marker.getTitle());
 			goToDetailsActivity.putExtra("lat",
 					"" + m_clicked_marker.getPosition().latitude);
 			goToDetailsActivity.putExtra("lng",
 					"" + m_clicked_marker.getPosition().longitude);
 			goToDetailsActivity.putExtra("bool", true);
-			m_marker_object = getMarkerObject(""+_marker.getPosition());
+			m_marker_object = getMarkerObject("" + _marker.getPosition());
 			this.startActivity(goToDetailsActivity);
 
 		} else {
-			m_marker_object = getMarkerObject(""+_marker.getPosition());
+			m_marker_object = getMarkerObject("" + _marker.getPosition());
 			m_dialog.show();
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see android.view.View.OnClickListener#onClick(android.view.View)
 	 */
 	@Override
@@ -658,7 +685,7 @@ LocationListener {
 			i = new Intent();
 			onBackPressed();
 			break;
-			// End Actionbar
+		// End Actionbar
 		default:
 			i = new Intent();
 		}
@@ -673,10 +700,10 @@ LocationListener {
 				sendMarkerToServer(m_marker_object);
 				m_dialog_checkbox.setChecked(m_marker_object.getM_checkbox());
 				Toast.makeText(this, "Marker gespeichert", Toast.LENGTH_LONG)
-				.show();
+						.show();
 			} else {
 				Toast.makeText(this, "Marker geupdatet", Toast.LENGTH_LONG)
-				.show();
+						.show();
 				m_clicked_marker.hideInfoWindow();
 				m_marker_object.setAdress(m_clicked_marker.getTitle());
 				Log.d("new marker address: ", m_marker_object.getM_address());
@@ -690,7 +717,7 @@ LocationListener {
 				m_saved_marker_objects.remove(m_marker_object);
 				deleteMarkerFromServer(m_marker_object);
 				Toast.makeText(this, "Marker geloescht", Toast.LENGTH_LONG)
-				.show();
+						.show();
 			}
 			m_clicked_marker.remove();
 			m_dialog.dismiss();
@@ -703,8 +730,12 @@ LocationListener {
 
 	}
 
-	/* (non-Javadoc)
-	 * @see android.widget.SearchView.OnQueryTextListener#onQueryTextChange(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * android.widget.SearchView.OnQueryTextListener#onQueryTextChange(java.
+	 * lang.String)
 	 */
 	@Override
 	public boolean onQueryTextChange(String newText) {
@@ -712,8 +743,12 @@ LocationListener {
 		return false;
 	}
 
-	/* (non-Javadoc)
-	 * @see android.widget.SearchView.OnQueryTextListener#onQueryTextSubmit(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * android.widget.SearchView.OnQueryTextListener#onQueryTextSubmit(java.
+	 * lang.String)
 	 */
 	@Override
 	public boolean onQueryTextSubmit(String query) {
@@ -724,8 +759,12 @@ LocationListener {
 		return false;
 	}
 
-	/* (non-Javadoc)
-	 * @see android.widget.CompoundButton.OnCheckedChangeListener#onCheckedChanged(android.widget.CompoundButton, boolean)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * android.widget.CompoundButton.OnCheckedChangeListener#onCheckedChanged
+	 * (android.widget.CompoundButton, boolean)
 	 */
 	@Override
 	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -745,15 +784,23 @@ LocationListener {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see com.google.android.gms.maps.GoogleMap.OnMarkerDragListener#onMarkerDrag(com.google.android.gms.maps.model.Marker)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.google.android.gms.maps.GoogleMap.OnMarkerDragListener#onMarkerDrag
+	 * (com.google.android.gms.maps.model.Marker)
 	 */
 	@Override
 	public void onMarkerDrag(Marker arg0) {
 	}
 
-	/* (non-Javadoc)
-	 * @see com.google.android.gms.maps.GoogleMap.OnMarkerDragListener#onMarkerDragEnd(com.google.android.gms.maps.model.Marker)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.google.android.gms.maps.GoogleMap.OnMarkerDragListener#onMarkerDragEnd
+	 * (com.google.android.gms.maps.model.Marker)
 	 */
 	@Override
 	public void onMarkerDragEnd(Marker _marker) {
@@ -765,14 +812,18 @@ LocationListener {
 		_marker.remove();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.google.android.gms.maps.GoogleMap.OnMarkerDragListener#onMarkerDragStart(com.google.android.gms.maps.model.Marker)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.google.android.gms.maps.GoogleMap.OnMarkerDragListener#onMarkerDragStart
+	 * (com.google.android.gms.maps.model.Marker)
 	 */
 	@Override
 	public void onMarkerDragStart(Marker _marker) {
 		m_clicked_marker = _marker;
 
-		m_marker_object = getMarkerObject(""+_marker.getPosition());
+		m_marker_object = getMarkerObject("" + _marker.getPosition());
 		m_checkbox = m_marker_object.getM_checkbox();
 
 		_marker.hideInfoWindow();
@@ -781,7 +832,8 @@ LocationListener {
 	/**
 	 * Gets the marker object.
 	 *
-	 * @param _id the _id
+	 * @param _id
+	 *            the _id
 	 * @return the marker object
 	 */
 	private MarkerObject getMarkerObject(String _id) {
@@ -817,15 +869,23 @@ LocationListener {
 		return false;
 	}
 
-	/* (non-Javadoc)
-	 * @see android.content.DialogInterface.OnShowListener#onShow(android.content.DialogInterface)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * android.content.DialogInterface.OnShowListener#onShow(android.content
+	 * .DialogInterface)
 	 */
 	@Override
 	public void onShow(DialogInterface _dialog) {
 	}
 
-	/* (non-Javadoc)
-	 * @see android.location.LocationListener#onLocationChanged(android.location.Location)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * android.location.LocationListener#onLocationChanged(android.location.
+	 * Location)
 	 */
 	@Override
 	public void onLocationChanged(Location arg0) {
@@ -833,8 +893,11 @@ LocationListener {
 
 	}
 
-	/* (non-Javadoc)
-	 * @see android.location.LocationListener#onProviderDisabled(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * android.location.LocationListener#onProviderDisabled(java.lang.String)
 	 */
 	@Override
 	public void onProviderDisabled(String arg0) {
@@ -842,8 +905,11 @@ LocationListener {
 
 	}
 
-	/* (non-Javadoc)
-	 * @see android.location.LocationListener#onProviderEnabled(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * android.location.LocationListener#onProviderEnabled(java.lang.String)
 	 */
 	@Override
 	public void onProviderEnabled(String arg0) {
@@ -851,8 +917,11 @@ LocationListener {
 
 	}
 
-	/* (non-Javadoc)
-	 * @see android.location.LocationListener#onStatusChanged(java.lang.String, int, android.os.Bundle)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.location.LocationListener#onStatusChanged(java.lang.String,
+	 * int, android.os.Bundle)
 	 */
 	@Override
 	public void onStatusChanged(String arg0, int arg1, Bundle arg2) {
@@ -863,7 +932,8 @@ LocationListener {
 	/**
 	 * Send marker to server.
 	 *
-	 * @param _markerObject the _marker object
+	 * @param _markerObject
+	 *            the _marker object
 	 */
 	private void sendMarkerToServer(MarkerObject _markerObject) {
 		new SaveTask().execute(_markerObject);
@@ -872,7 +942,8 @@ LocationListener {
 	/**
 	 * Delete marker from server.
 	 *
-	 * @param _m the _m
+	 * @param _m
+	 *            the _m
 	 */
 	private void deleteMarkerFromServer(MarkerObject _m) {
 
@@ -891,7 +962,8 @@ LocationListener {
 	/**
 	 * Update data on server.
 	 *
-	 * @param _marker_object the _marker_object
+	 * @param _marker_object
+	 *            the _marker_object
 	 */
 	private void updateDataOnServer(MarkerObject _marker_object) {
 
@@ -904,7 +976,9 @@ LocationListener {
 	 */
 	private class SaveTask extends AsyncTask<MarkerObject, Void, Void> {
 
-		/* (non-Javadoc)
+		/*
+		 * (non-Javadoc)
+		 * 
 		 * @see android.os.AsyncTask#doInBackground(java.lang.Object[])
 		 */
 		@Override
@@ -977,14 +1051,16 @@ LocationListener {
 	 */
 	private class RetrieveTask extends AsyncTask<Void, Void, String> {
 
-		/* (non-Javadoc)
+		/*
+		 * (non-Javadoc)
+		 * 
 		 * @see android.os.AsyncTask#doInBackground(java.lang.Object[])
 		 */
 		@Override
 		protected String doInBackground(Void... params) {
 			Log.d("retrieve", "entere do in background of retrieve task: ");
 
-			String strUrl = "http://www.reecon.eu/ooewasser/api/v1/?request=retrieve";
+			String strUrl = "http://www.reecon.eu/ooewasser/api/v1/?request=getAllFountains";
 			URL url = null;
 			StringBuffer sb = new StringBuffer();
 			try {
@@ -1011,7 +1087,9 @@ LocationListener {
 			return sb.toString();
 		}
 
-		/* (non-Javadoc)
+		/*
+		 * (non-Javadoc)
+		 * 
 		 * @see android.os.AsyncTask#onPostExecute(java.lang.Object)
 		 */
 		@Override
@@ -1027,9 +1105,11 @@ LocationListener {
 	 * The Class ParserTask.
 	 */
 	private class ParserTask extends
-	AsyncTask<String, Void, List<HashMap<String, String>>> {
-		
-		/* (non-Javadoc)
+			AsyncTask<String, Void, List<HashMap<String, String>>> {
+
+		/*
+		 * (non-Javadoc)
+		 * 
 		 * @see android.os.AsyncTask#doInBackground(java.lang.Object[])
 		 */
 		@Override
@@ -1046,7 +1126,9 @@ LocationListener {
 			return markersList;
 		}
 
-		/* (non-Javadoc)
+		/*
+		 * (non-Javadoc)
+		 * 
 		 * @see android.os.AsyncTask#onPostExecute(java.lang.Object)
 		 */
 		@Override
@@ -1095,7 +1177,8 @@ LocationListener {
 	/**
 	 * Adds the marker from my sql server to map.
 	 *
-	 * @param _m the _m
+	 * @param _m
+	 *            the _m
 	 */
 	public void addMarkerFromMySqlServerToMap(MarkerObject _m) {
 		MarkerOptions m = new MarkerOptions();
@@ -1113,7 +1196,9 @@ LocationListener {
 	 */
 	private class DeleteTask extends AsyncTask<LatLng, Void, Void> {
 
-		/* (non-Javadoc)
+		/*
+		 * (non-Javadoc)
+		 * 
 		 * @see android.os.AsyncTask#doInBackground(java.lang.Object[])
 		 */
 		@Override
@@ -1177,7 +1262,9 @@ LocationListener {
 	 */
 	private class UpdateTask extends AsyncTask<MarkerObject, Void, Void> {
 
-		/* (non-Javadoc)
+		/*
+		 * (non-Javadoc)
+		 * 
 		 * @see android.os.AsyncTask#doInBackground(java.lang.Object[])
 		 */
 		@Override
@@ -1237,7 +1324,9 @@ LocationListener {
 
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see android.app.Activity#onBackPressed()
 	 */
 	@Override
