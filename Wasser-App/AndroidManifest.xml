@@ -48,15 +48,16 @@
             android:value="@integer/google_play_services_version" />
 
         <service
-            android:name="at.fhhgb.mc.wasserapp.waterlevel.MyService"
+            android:name=".waterlevel.MyService"
             android:enabled="true" >
         </service>
         <service
-            android:name="at.fhhgb.mc.wasserapp.rssfeed.RssService"
+            android:name=".rssfeed.RssService"
             android:exported="false" />
 
         <activity
-            android:name="at.fhhgb.mc.wasserapp.HomeActivity"
+            android:name=".HomeActivity"
+            android:theme="@android:style/Theme.Holo"
             android:screenOrientation="nosensor" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -65,39 +66,43 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="at.fhhgb.mc.wasserapp.ChooseMarkerActivity"
+            android:name=".ChooseMarkerActivity"
             android:screenOrientation="nosensor" />
         <activity
-            android:name="at.fhhgb.mc.wasserapp.mapactivity.MapActivity"
+            android:name=".mapactivity.MapActivity"
             android:screenOrientation="nosensor" />
         <activity
-            android:name="at.fhhgb.mc.wasserapp.waterlevel.WaterLevelsActivity"
+            android:name=".waterlevel.WaterLevelsActivity"
             android:screenOrientation="nosensor" />
         <activity
-            android:name="at.fhhgb.mc.wasserapp.waterlevel.MeasuringPointActivity"
+            android:name=".waterlevel.MeasuringPointActivity"
             android:screenOrientation="nosensor" />
         <activity
-            android:name="at.fhhgb.mc.wasserapp.waterlevel.RiversActivity"
+            android:name=".waterlevel.RiversActivity"
             android:screenOrientation="nosensor" />
         <activity
-            android:name="at.fhhgb.mc.wasserapp.waterlevel.ShowMeasuringPointActivity"
+            android:name=".waterlevel.ShowMeasuringPointActivity"
             android:screenOrientation="nosensor" />
         <activity
-            android:name="at.fhhgb.mc.wasserapp.rssfeed.RssActivity"
+            android:name=".rssfeed.RssActivity"
             android:screenOrientation="nosensor" />
-        <activity android:name="at.fhhgb.mc.wasserapp.rssfeed.WebViewActivity" />
+        <activity android:name=".rssfeed.WebViewActivity" />
         <activity
-            android:name="at.fhhgb.mc.wasserapp.more.MoreActivity"
-            android:screenOrientation="nosensor" />
-        <activity
-            android:name="at.fhhgb.mc.wasserapp.more.AboutActivity"
+            android:name=".more.MoreActivity"
             android:screenOrientation="nosensor" />
         <activity
-            android:name="at.fhhgb.mc.wasserapp.more.LoginActivity"
+            android:name=".more.AboutActivity"
+            android:screenOrientation="nosensor" />
+        <activity
+            android:name=".more.LoginActivity"
             android:screenOrientation="nosensor"
             android:windowSoftInputMode="adjustResize|stateVisible" />
         <activity
-            android:name="at.fhhgb.mc.wasserapp.mapactivity.detail.FountainDetailsActivity"
+            android:name=".mapactivity.detail.FountainDetailsActivity"
+            android:screenOrientation="nosensor" >
+        </activity>
+        <activity
+            android:name=".MainActivity"
             android:screenOrientation="nosensor" >
         </activity>
     </application>

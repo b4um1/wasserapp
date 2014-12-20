@@ -3,8 +3,9 @@ package at.fhhgb.mc.wasserapp;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
+import android.text.Layout;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -18,20 +19,30 @@ import at.fhhgb.mc.wasserapp.more.MoreActivity;
 import at.fhhgb.mc.wasserapp.rssfeed.RssActivity;
 import at.fhhgb.mc.wasserapp.rssfeed.WebViewActivity;
 import at.fhhgb.mc.wasserapp.waterlevel.WaterLevelsActivity;
-import at.fhhgb.mc.wasserapp.ActivitySwipeDetector;
+import android.app.ActionBar;
+import android.app.ActionBar.Tab;
+import android.app.FragmentTransaction;
+import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.ViewPager;
 
 // TODO: Auto-generated Javadoc
 /**
  * The Class HomeActivity.
- * Mario Baumgartner
  */
-public class HomeActivity extends Activity implements OnClickListener {
+public class HomeActivity extends FragmentActivity implements OnClickListener, ActionBar.TabListener {
 
 	/** The m_markertype. */
 	public static String m_markertype;
 	
 	/** The m_superuser. */
 	public static boolean m_superuser;
+	
+    private ViewPager viewPager;
+    private TabsPagerAdapter mAdapter;
+    private ActionBar actionBar;
+    // Tab titles
+    private String[] tabs = { "PageOne", "PageTwo" };
 
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
@@ -50,19 +61,48 @@ public class HomeActivity extends Activity implements OnClickListener {
 		vf.setDisplayedChild(0);
 		overridePendingTransition(0, 0);
 
-		ViewFlipper viewFlipperHome = (ViewFlipper)findViewById(R.id.viewflipperHome);		
-		
-		ActivitySwipeDetector activitySwipeDetector = new ActivitySwipeDetector(viewFlipperHome, this);
-		findViewById(R.id.rootActionbar).setOnTouchListener(activitySwipeDetector);
-		
-
-
-		
 		Button actionBarButton = (Button)findViewById(R.id.b_home);
 		actionBarButton.setPressed(true);
-
+		
 		setAllButtonListener((ViewGroup) findViewById(R.id.rootActionbar), this);
 		setPositionToMark(this);
+		
+		// Initilization
+        viewPager = (ViewPager) findViewById(R.id.pager);
+    	actionBar = getActionBar();
+        mAdapter = new TabsPagerAdapter(getSupportFragmentManager());
+  
+        viewPager.setAdapter(mAdapter);
+        actionBar.setHomeButtonEnabled(false);
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);    
+        actionBar.setDisplayShowTitleEnabled(false);
+        actionBar.setDisplayShowHomeEnabled(false);
+        actionBar.hide();
+         
+        // Adding Tabs
+        for (String tab_name : tabs) {
+            actionBar.addTab(actionBar.newTab().setText(tab_name)
+                     .setTabListener(this));
+        }
+         
+        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+         	 
+            @Override
+            public void onPageSelected(int position) {
+                // on changing the page
+                // make respected tab selected
+                actionBar.setSelectedNavigationItem(position);
+            }
+  
+            @Override
+            public void onPageScrolled(int arg0, float arg1, int arg2) {
+            }
+ 
+            @Override
+            public void onPageScrollStateChanged(int arg0) {
+            }
+        });
+
 	}
 
 	/**
@@ -140,33 +180,6 @@ public class HomeActivity extends Activity implements OnClickListener {
 			i = new Intent(this, MoreActivity.class);
 			break;
 		// End Actionbar
-
-		case R.id.b_fountain:
-			i = new Intent();
-			Intent map_fontain;
-			map_fontain = new Intent();
-			map_fontain = new Intent(this, MapActivity.class);
-			map_fontain.putExtra("user", false);
-			map_fontain.putExtra("m_markertype", "fountain");
-			startActivity(map_fontain);
-
-			break;
-		case R.id.b_wc:
-			i = new Intent();
-			Intent map_wc;
-			map_wc = new Intent();
-			map_wc = new Intent(this, MapActivity.class);
-			map_wc.putExtra("user", false);
-			map_wc.putExtra("m_markertype", "wc");
-			startActivity(map_wc);
-			break;
-		case R.id.b_waterlevel:
-			i = new Intent(this, WaterLevelsActivity.class);
-			break;
-		case R.id.b_precipitation:
-			i = new Intent();
-			// i = new Intent(this, PrecipitationActivity.class);
-			break;
 		default:
 			i = new Intent();
 		}
@@ -182,6 +195,24 @@ public class HomeActivity extends Activity implements OnClickListener {
 	@Override
 	public void onBackPressed() {
 		finishAffinity();
+	}
+
+	@Override
+	public void onTabSelected(Tab tab, FragmentTransaction ft) {
+		viewPager.setCurrentItem(tab.getPosition());
+		
+	}
+
+	@Override
+	public void onTabUnselected(Tab tab, FragmentTransaction ft) {
+		
+		
+	}
+
+	@Override
+	public void onTabReselected(Tab tab, FragmentTransaction ft) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

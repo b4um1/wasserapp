@@ -10,8 +10,8 @@
         android:layout_height="match_parent" >
 
         <include
-            android:id="@+id/home"
-            layout="@layout/activity_home" />
+            android:id="@+id/main"
+            layout="@layout/activity_main" />
 
         <include
             android:id="@+id/positions"
