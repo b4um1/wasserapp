@@ -225,7 +225,7 @@ public class MarkerObject  implements Serializable{
 	 * @param _checkbox the new m_checkbox string bool
 	 */
 	public void setM_checkboxStringBool(String _checkbox) {
-		if(_checkbox.equals("true")){
+		if(_checkbox.equals("Ja")){
 			m_checkboxProof = true;
 		}else{
 			m_checkboxProof = false;

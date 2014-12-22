@@ -101,7 +101,7 @@ public class FountainDetailsActivity extends Activity implements OnClickListener
 	private ArrayList<Comment> list_of_comments = new ArrayList<Comment>();
 	
 	/** The m_bool. */
-	private boolean m_bool;
+	private boolean m_drinkable;
 
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
@@ -126,15 +126,15 @@ public class FountainDetailsActivity extends Activity implements OnClickListener
 		m_marker_address = i.getStringExtra("address");
 		m_marker_lat = i.getStringExtra("lat");
 		m_marker_lng = i.getStringExtra("lng");
-		m_bool = i.getBooleanExtra("bool", false);
-		if(m_bool){
+		m_drinkable = i.getBooleanExtra("drinkable", false);
+		if(m_drinkable){
 			TextView tv_drinkable = (TextView) findViewById(R.id.tv_drinkable);
 			tv_drinkable.setText("trinkbar");
 			Log.e("bool", "true");
 			
 		}else{
 			TextView tv_drinkable = (TextView) findViewById(R.id.tv_drinkable);
-			tv_drinkable.setText("nicht trinkbar");
+			tv_drinkable.setText("untrinkbar");
 			Log.e("bool", "false");
 		}
 		tv_address = (TextView) findViewById(R.id.tv_address);
@@ -142,7 +142,7 @@ public class FountainDetailsActivity extends Activity implements OnClickListener
 		tv_address.setText(m_marker_address);
 
 		//parse MySQL query
-		parseJson();
+		//parseJson();
 		
 		adapter = new ArrayAdapterDetail(this, R.layout.list_comments, list_of_comments);
 		ListView v = (ListView) findViewById(R.id.lv_comments);

@@ -3,137 +3,174 @@
  */
 package at.fhhgb.mc.wasserapp.mapactivity;
 
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
+import android.util.Log;
 
 // TODO: Auto-generated Javadoc
 /**
  * The Class MarkerJSONParser.
  */
 public class MarkerJSONParser {
-	
-	/**
-	 *  Receives a JSONObject and returns a list.
-	 *
-	 * @param jObject the j object
-	 * @return the list
-	 */
-	public List<HashMap<String,String>> parse(JSONObject jObject){		
-		
-		JSONArray jMarkers = null;
-		try {			
-			/** Retrieves all the elements in the 'markers' array */
-			jMarkers = jObject.getJSONArray("markers");
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		/** Invoking getMarkers with the array of json object
-		 * where each json object represent a marker
-		 */
-		return getMarkers(jMarkers);
-	}
-	
-	
-	/**
-	 * Gets the markers.
-	 *
-	 * @param jMarkers the j markers
-	 * @return the markers
-	 */
-	private List<HashMap<String, String>> getMarkers(JSONArray jMarkers){
-		int markersCount = jMarkers.length();
-		List<HashMap<String, String>> markersList = new ArrayList<HashMap<String,String>>();
-		HashMap<String, String> marker = null;	
 
-		/** Taking each marker, parses and adds to list object */
-		for(int i=0; i<markersCount;i++){
-			try {
-				/** Call getMarker with marker JSON object to parse the marker */
-				marker = getMarker((JSONObject)jMarkers.get(i));
-				markersList.add(marker);
-			}catch (JSONException e){
-				e.printStackTrace();
-			}
+	private final String FOUNTAIN_ID = "fountain_id";
+	private final String DRINKABLE = "drinkable";
+	private final String UPDATE_TIME = "update_time";
+	private final String CREATION_TIME = "creation_time";
+	private final String LATITUDE = "latitude";
+	private final String LONGITUDE = "longitude";
+	private final String STREET = "street";
+	private final String CITY = "city";
+	private final String ZIP = "zip";
+	private final String FIRSTNAME = "firstname";
+	private final String SURNAME = "surename";
+	private final String GRADE = "grade";
+	private final String COMMENT = "comment";
+
+	private final String LOGTAG = "MarkerJSONParserClass";
+
+	/**
+	 * Receives an String which is an json encoded array It returnes an array of
+	 * markers
+	 * 
+	 * @param _jsonResult
+	 * @return
+	 * @throws ParseException
+	 */
+	public List<HashMap<String, String>> parse(String _jsonResult)
+			throws ParseException {
+		Log.i(LOGTAG, "Parsing-process started");
+
+		JSONParser parser = new JSONParser();
+		Object obj = parser.parse(_jsonResult);
+		JSONArray array = (JSONArray) obj;
+
+		return getMarkers(array);
+	}
+
+	/**
+	 * Returns a List of Hashmaps which represents all the markers
+	 * 
+	 * @param _jArray
+	 * @return List<Hashmap<String,String>>
+	 */
+	private List<HashMap<String, String>> getMarkers(JSONArray _jArray) {
+		int markersCount = _jArray.size();
+		List<HashMap<String, String>> markersList = new ArrayList<HashMap<String, String>>();
+		HashMap<String, String> marker = null;
+
+		for (int i = 0; i < markersCount; i++) {
+			marker = getMarker((JSONObject) _jArray.get(i));
+			markersList.add(marker);
 		}
-		
 		return markersList;
 	}
-	
+
 	/**
-	 *  Parsing the Marker JSON object.
-	 *
-	 * @param jMarker the j marker
-	 * @return the marker
+	 * Parses the json-object into a Hashmap<Key,value>
+	 * 
+	 * @param _jMarker
+	 * @return
 	 */
-	private HashMap<String, String> getMarker(JSONObject jMarker){
+	private HashMap<String, String> getMarker(JSONObject _jMarker) {
 
 		HashMap<String, String> marker = new HashMap<String, String>();
 		String id = "-NA-";
 		String lat = "-NA-";
-		String lng ="-NA-";
-		String address="-NA-";
-		String type="-NA-";
-		String bool="-NA-";
-		String comment="-NA-";
-		String imglink="-NA-";
+		String lng = "-NA-";
+		String address = "-NA-";
+		String zip = "", city = "", street = "";
+		String type = "-NA-";
+		String drinkable = "-NA-";
+		String comment = "-NA-";
+		String surename = "", firstname = "", grade = "", update_time = "", creation_time = "";
 
+		// Extracting fountain_id, if available
+		if (_jMarker.containsKey(FOUNTAIN_ID)) {
+			id = "" + _jMarker.get(FOUNTAIN_ID);
+		}
+
+		// Extracting latitude, if available
+		if (_jMarker.containsKey(LATITUDE)) {
+			lat = "" + _jMarker.get(LATITUDE);
+		}
+
+		// Extracting longitude, if available
+		if (_jMarker.containsKey(LONGITUDE)) {
+			lng = "" + _jMarker.get(LONGITUDE);
+		}
+
+		// Extracting city, if available
+		if (_jMarker.containsKey(CITY)) {
+			city = (String) _jMarker.get(CITY);
+		}
+
+		// Extracting street, if available
+		if (_jMarker.containsKey(STREET)) {
+			street = (String) _jMarker.get(STREET);
+		}
+		// Extracting zip, if available
+		if (_jMarker.containsKey(ZIP)) {
+			zip = "" + _jMarker.get(ZIP);
+		}
+
+		address = street + " " + city + " " + zip;
+
+		// Extracting surname, if available
+		if (_jMarker.containsKey(SURNAME)) {
+			surename = "" + _jMarker.get(SURNAME);
+		}
+
+		// Extracting firstname, if available
+		if (_jMarker.containsKey(FIRSTNAME)) {
+			firstname = "" + _jMarker.get(FIRSTNAME);
+		}
+		// Extracting creation datetime, if available
+		if (_jMarker.containsKey(CREATION_TIME)) {
+			creation_time = "" + _jMarker.get(CREATION_TIME);
+		}
+		// Extracting update datetime, if available
+		if (_jMarker.containsKey(UPDATE_TIME)) {
+			update_time = "" + _jMarker.get(UPDATE_TIME);
+		}
+
+		type = "fountain";
+
+		// Extracting drinkable, if available
+		if (_jMarker.containsKey(DRINKABLE)) {
+			drinkable = "" + _jMarker.get(DRINKABLE);
+		}
+
+		// Extracting comment, if available
+		if (_jMarker.containsKey(COMMENT)) {
+			comment = "" + _jMarker.get(COMMENT);
+		}
+
+		// Extracting grade, if available
+		if (!_jMarker.containsKey(GRADE)) {
+			grade = "" + _jMarker.get(GRADE);
+		}
 		
-		try {
-			
-			
-			// Extracting latitude, if available
-			if(!jMarker.isNull("id")){
-				id = jMarker.getString("id");
-			}
-			
-			// Extracting latitude, if available
-			if(!jMarker.isNull("lat")){
-				lat = jMarker.getString("lat");
-			}
-			
-			// Extracting longitude, if available
-			if(!jMarker.isNull("lng")){
-				lng = jMarker.getString("lng");
-			}	
-			
-			if(!jMarker.isNull("address")){
-				address = jMarker.getString("address");
-			}
-			
-			if(!jMarker.isNull("type")){
-				type = jMarker.getString("type");
-			}
-			
-			if(!jMarker.isNull("bool")){
-				bool = jMarker.getString("bool");
-			}
-			if(!jMarker.isNull("comment")){
-				comment = jMarker.getString("comment");
-			}
-			
-			if(!jMarker.isNull("imglink")){
-				imglink = jMarker.getString("imglink");
-			}
-			
-			marker.put("id", id);
-			marker.put("lat", lat);
-			marker.put("lng", lng);		
-			marker.put("address", address);			
-			marker.put("type", type);			
-			marker.put("bool", bool);	
-			marker.put("comment", comment);			
-			marker.put("imglink", imglink);			
+		marker.put("id", id);
+		marker.put("lat", lat);
+		marker.put("lng", lng);
+		marker.put("address", address);
+		marker.put("type", type);
+		marker.put("drinkable", drinkable);
+		marker.put("comment", comment);
+		marker.put(FIRSTNAME, firstname);
+		marker.put(GRADE, grade);
+		marker.put(SURNAME, surename);
+		marker.put(UPDATE_TIME, update_time);
+		marker.put(CREATION_TIME, creation_time);
 
-			
-		} catch (JSONException e) {			
-			e.printStackTrace();
-		}		
 		return marker;
 	}
 }

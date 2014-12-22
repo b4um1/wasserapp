@@ -14,21 +14,17 @@ public class Fountain extends MarkerObject {
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
-	/**
-	 * Instantiates a new fountain.
-	 */
 	public Fountain() {
 		super();
-		setM_icon(true);
 		setM_type("fountain");
 	}
 
 	
-	/* (non-Javadoc)
-	 * @see at.fhhgb.mc.wasserapp.mapactivity.MarkerObject#setM_icon(boolean)
+	/**
+	 * Here you can set the icon of the marker. You can choose between drinkable/not drinkable
 	 */
-	public void setM_icon(boolean isAccessibleIsDrinkable) {
-		if (isAccessibleIsDrinkable) {
+	public void setM_icon(boolean _isDrinkable) {
+		if (_isDrinkable) {
 			this.setM_icon(BitmapDescriptorFactory
 					.fromResource(R.drawable.ic_position_drinkable));
 		} else {
@@ -36,21 +32,4 @@ public class Fountain extends MarkerObject {
 					.fromResource(R.drawable.ic_position_notdrinkable));
 		}
 	}
-
-	// parameter( _checkboxProof) is string because the value in the mysql table
-	// is also a string value
-	
-	/* (non-Javadoc)
-	 * @see at.fhhgb.mc.wasserapp.mapactivity.MarkerObject#setM_checkboxStringBool(java.lang.String)
-	 */
-	public void setM_checkboxStringBool(String _checkboxProof) {
-		if (_checkboxProof.equals("true")) {
-			this.setM_icon(BitmapDescriptorFactory
-					.fromResource(R.drawable.ic_position_drinkable));
-		} else {
-			this.setM_icon(BitmapDescriptorFactory
-					.fromResource(R.drawable.ic_position_notdrinkable));
-		}
-	}
-
 }
