@@ -9,7 +9,7 @@ public class RatingFountain {
 	private long id;
 	private String mComment;
 	private int mGrade;
-	private Fountain mFountain;
+	//private Fountain mFountain;
 	
 	public String getmComment() {
 		return mComment;

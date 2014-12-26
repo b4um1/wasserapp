@@ -27,7 +27,6 @@ public class MarkerObject  implements Serializable{
 	/** The m_lat lng. */
 	private LatLng m_latLng;
 	
-	/** The m_address. */
 	private String m_address;
 	
 	/** The m_comment. */
@@ -58,6 +57,7 @@ public class MarkerObject  implements Serializable{
 	 * @param _comment the _comment
 	 * @param _imgLink the _img link
 	 */
+	
 	public MarkerObject( LatLng _latLng, String _address, String _type, boolean _bool, String _comment, String _imgLink)
 	{
 		m_type = _type;
@@ -67,6 +67,14 @@ public class MarkerObject  implements Serializable{
 		m_imageLink = _imgLink;
 		m_comment = _comment;
 		m_checkboxProof = true;
+	}
+
+	public String getM_address() {
+		return m_address;
+	}
+
+	public void setM_address(String m_address) {
+		this.m_address = m_address;
 	}
 
 	/**
@@ -85,24 +93,7 @@ public class MarkerObject  implements Serializable{
 		m_latLng=_latLng;
 	}
 
-	/**
-	 * Gets the m_address.
-	 *
-	 * @return the m_address
-	 */
-	public String getM_address() {
-		return m_address;
-	}
 	
-	/**
-	 * Sets the adress.
-	 *
-	 * @param adress the new adress
-	 */
-	public void setAdress(String adress) {
-		this.m_address = adress;
-	}
-
 	/**
 	 * Gets the m_lat lng.
 	 *
@@ -213,9 +204,9 @@ public class MarkerObject  implements Serializable{
 	 */
 	public String getM_checkboxStringBool() {
 		if(m_checkboxProof){
-			return "true";
+			return "Ja";
 		}else{
-			return "false";
+			return "Nein";
 		}
 	}
 	//parameter( _checkbox) is string because the value in the mysql table is also a string value

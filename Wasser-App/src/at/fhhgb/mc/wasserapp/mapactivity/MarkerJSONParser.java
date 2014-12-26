@@ -165,6 +165,9 @@ public class MarkerJSONParser {
 		marker.put("type", type);
 		marker.put("drinkable", drinkable);
 		marker.put("comment", comment);
+		marker.put(STREET, street);
+		marker.put(CITY, city);
+		marker.put(ZIP, zip);
 		marker.put(FIRSTNAME, firstname);
 		marker.put(GRADE, grade);
 		marker.put(SURNAME, surename);

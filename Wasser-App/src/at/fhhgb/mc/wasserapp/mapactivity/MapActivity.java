@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -16,6 +17,7 @@ import java.util.Random;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
@@ -194,7 +196,6 @@ public class MapActivity extends Activity implements OnMapClickListener,
 			m_saved_marker_objects = new ArrayList<MarkerObject>();
 			m_marker_object = new MarkerObject();
 
-			actualizeMapActivity();
 			mapFragment = (com.google.android.gms.maps.MapFragment) getFragmentManager()
 					.findFragmentById(R.id.map);
 			mapFragment.setRetainInstance(true);
@@ -207,7 +208,8 @@ public class MapActivity extends Activity implements OnMapClickListener,
 			m_googlemap.setOnInfoWindowClickListener(this);
 
 			if (m_googlemap != null) {
-				setUpMap();
+				goToActualPositionOnMap();
+				initializeMapWithCertainData();
 			}
 
 			m_searchview = (SearchView) findViewById(R.id.sv_maps_search);
@@ -255,39 +257,49 @@ public class MapActivity extends Activity implements OnMapClickListener,
 	}
 
 	/**
-	 * Actualize map activity.
+	 * This function loads the right kind of data. If fountains are wished, only
+	 * fountains are showed. If WC's are wished, only toilets are shown. Or it
+	 * can show everything! Toilets and fountains!
 	 */
-	private void actualizeMapActivity() {
+	private void initializeMapWithCertainData() {
 		Intent i = getIntent();
 		Log.e("intent in mapactivity", i.getStringExtra("m_markertype"));
 		m_superUser = i.getBooleanExtra("user", false);
 		m_markertype = i.getStringExtra("m_markertype");
 
 		TextView tv = (TextView) findViewById(R.id.tv_maps_title);
-		if (m_superUser) {
-			if (m_markertype.equals("fountain")) {
+
+		if (m_markertype.equals("fountain")) {
+			// asynch task to retrieve all fountains from the server
+			getAllFountains();
+			Toast.makeText(getApplicationContext(),
+					"Brunnen wurden erfolgreich geladen", Toast.LENGTH_SHORT)
+					.show();
+			if (m_superUser) {
 				tv.setText(getString(R.string.map_mark_fountain));
 			} else {
+				tv.setText(getString(R.string.map_fountain));
+			}
+		} else if (m_markertype.equals("wc")) {
+			// asynch task to retrieve all fountains from the server
+			// getAllToilets
+			Toast.makeText(getApplicationContext(),
+					"WC's wurden erfolgreich geladen", Toast.LENGTH_SHORT)
+					.show();
+			if (m_superUser) {
 				tv.setText(getString(R.string.map_mark_wc));
+			} else {
+				tv.setText(getString(R.string.map_wc));
 			}
 		} else {
-			if (m_markertype.equals("fountain")) {
-				tv.setText(getString(R.string.map_fountain));
-			} else if (m_markertype.equals("wc")) {
-				tv.setText(getString(R.string.map_wc));
-			} else {
-				tv.setText(getString(R.string.map_all));
-			}
+			tv.setText(getString(R.string.map_all));
 		}
+
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see android.app.Activity#onResume()
-	 */
 	@Override
 	protected void onResume() {
+		Log.i("Mapactivity", "onResume");
 		super.onResume();
 		if (haveNetworkConnection() && isGooglePlayServicesAvailable()) {
 
@@ -303,13 +315,13 @@ public class MapActivity extends Activity implements OnMapClickListener,
 				actionBarButton.setPressed(true);
 			}
 
-			actualizeMapActivity();
-			setUpMap();
-			m_googlemap.clear();
-			getDataFromServer();
+			// in my opinion there is no sense in updating the map (get all the
+			// data from the server) on every onResume therefore i comment the
+			// initializeMap ...
+			// initializeMapWithCertainData();
+			// m_googlemap.clear();
 		} else {
-			Toast.makeText(this,
-					"Turn on your internet-connection to use the map!",
+			Toast.makeText(this, "Internet-connection is requiered",
 					Toast.LENGTH_SHORT).show();
 		}
 	}
@@ -334,24 +346,14 @@ public class MapActivity extends Activity implements OnMapClickListener,
 				if (ni.isConnected())
 					haveConnectedMobile = true;
 		}
-		if (haveConnectedWifi || haveConnectedMobile) {
-			Toast t = Toast.makeText(this, "You are online!!!!",
-					Toast.LENGTH_SHORT);
-			t.show();
-		} else {
-			Toast.makeText(this,
-					"Turn on your internet-connection to use the map!",
-					Toast.LENGTH_SHORT).show();
-		}
-
 		return haveConnectedWifi || haveConnectedMobile;
 	}
 
 	/**
-	 * This method is for the setup of the map. The camera moves to the current
-	 * position of the user.
+	 * This function is used to move to the actual position of the user The move
+	 * is animated
 	 */
-	private void setUpMap() {
+	private void goToActualPositionOnMap() {
 		m_googlemap.setMyLocationEnabled(true);
 		while (m_currentLocation == null) {
 			m_currentLocation = getLocation();
@@ -448,15 +450,15 @@ public class MapActivity extends Activity implements OnMapClickListener,
 				addresses = geocoder.getFromLocation(_latLng.latitude,
 						_latLng.longitude, 1);
 
-				String address = addresses.get(0).getAddressLine(0);
+				String street = addresses.get(0).getAddressLine(0);
 				String city = addresses.get(0).getAddressLine(1);
 				String country = addresses.get(0).getAddressLine(2);
-				Log.d("TAG", "address= " + address + ", city =" + city
+				Log.d("TAG", "address= " + street + ", city =" + city
 						+ ", country= " + country);
 				return addresses;
 			} else {
-				Toast.makeText(m_context, "latitude and longitude are null",
-						Toast.LENGTH_LONG).show();
+				Toast.makeText(m_context, "Not a valid position",
+						Toast.LENGTH_SHORT).show();
 				return null;
 			}
 		} catch (Exception e) {
@@ -541,8 +543,10 @@ public class MapActivity extends Activity implements OnMapClickListener,
 	 */
 	@Override
 	public void onMapLongClick(LatLng _latLng) {
-		//if (m_superUser) {
-		if (true){
+		// if (m_superUser) {
+		if (true) {
+			
+			Log.i("onmaplongclick", ""+_latLng.latitude + " " + _latLng.longitude);
 			createNewMarkerObject(_latLng);
 			m_checkbox = true;
 			m_temp_latLong = _latLng;
@@ -569,7 +573,7 @@ public class MapActivity extends Activity implements OnMapClickListener,
 		}
 
 		m_marker_object.setM_latLng(_latLng);
-		m_marker_object.setAdress(address);
+		m_marker_object.setM_address(address);
 		m_marker_object.setM_icon(m_checkbox);
 		m_marker_object.setM_checkbox(m_checkbox);
 		m_markeroption = new MarkerOptions();
@@ -638,9 +642,9 @@ public class MapActivity extends Activity implements OnMapClickListener,
 		TextView tvTitle = ((TextView) m_dialog.findViewById(R.id.tv_address));
 		tvTitle.setText(_marker.getTitle());
 		_marker.hideInfoWindow();
-		
+
 		MarkerObject mymarker = getMarkerObject(m_clicked_marker.getPosition());
-		
+
 		if (!m_superUser) {
 			Intent goToDetailsActivity = new Intent(this,
 					FountainDetailsActivity.class);
@@ -650,7 +654,7 @@ public class MapActivity extends Activity implements OnMapClickListener,
 					"" + m_clicked_marker.getPosition().latitude);
 			goToDetailsActivity.putExtra("lng",
 					"" + m_clicked_marker.getPosition().longitude);
-			goToDetailsActivity.putExtra("drinkable",mymarker.getM_checkbox());
+			goToDetailsActivity.putExtra("drinkable", mymarker.getM_checkbox());
 			m_marker_object = getMarkerObject("" + _marker.getPosition());
 			this.startActivity(goToDetailsActivity);
 
@@ -716,7 +720,7 @@ public class MapActivity extends Activity implements OnMapClickListener,
 				Toast.makeText(this, "Marker geupdatet", Toast.LENGTH_LONG)
 						.show();
 				m_clicked_marker.hideInfoWindow();
-				m_marker_object.setAdress(m_clicked_marker.getTitle());
+				m_marker_object.setM_address(m_clicked_marker.getTitle());
 				Log.d("new marker address: ", m_marker_object.getM_address());
 				m_dialog_checkbox.setChecked(m_marker_object.getM_checkbox());
 				updateDataOnServer(m_marker_object);
@@ -859,13 +863,15 @@ public class MapActivity extends Activity implements OnMapClickListener,
 		}
 		return null;
 	}
+
 	private MarkerObject getMarkerObject(LatLng _latlng) {
-		MarkerObject mymarker=null;
+		MarkerObject mymarker = null;
 		if (_latlng != null) {
 			for (int i = 0; i < m_saved_marker_objects.size(); i++) {
 				mymarker = null;
 				mymarker = m_saved_marker_objects.get(i);
-				if (mymarker.getM_latLng().latitude == _latlng.latitude && mymarker.getM_latLng().longitude == _latlng.longitude){
+				if (mymarker.getM_latLng().latitude == _latlng.latitude
+						&& mymarker.getM_latLng().longitude == _latlng.longitude) {
 					return mymarker;
 				}
 			}
@@ -892,7 +898,6 @@ public class MapActivity extends Activity implements OnMapClickListener,
 		return false;
 	}
 
-	
 	@Override
 	public void onShow(DialogInterface _dialog) {
 	}
@@ -918,6 +923,7 @@ public class MapActivity extends Activity implements OnMapClickListener,
 
 	/**
 	 * Send a marker to the server, to save it consitent in the database
+	 * 
 	 * @param _markerObject
 	 */
 	private void sendMarkerToServer(MarkerObject _markerObject) {
@@ -926,6 +932,7 @@ public class MapActivity extends Activity implements OnMapClickListener,
 
 	/**
 	 * Delete a marker from the server, e.g the database
+	 * 
 	 * @param _m
 	 */
 	private void deleteMarkerFromServer(MarkerObject _m) {
@@ -935,12 +942,13 @@ public class MapActivity extends Activity implements OnMapClickListener,
 	/**
 	 * Load the data from the server, e.g the database
 	 */
-	private void getDataFromServer() {
+	private void getAllFountains() {
 		new RetrieveTask().execute();
 	}
 
 	/**
 	 * Update the specific marker
+	 * 
 	 * @param _marker_object
 	 */
 	private void updateDataOnServer(MarkerObject _marker_object) {
@@ -952,18 +960,10 @@ public class MapActivity extends Activity implements OnMapClickListener,
 	 * Background save-task
 	 */
 	private class SaveTask extends AsyncTask<MarkerObject, Void, Void> {
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see android.os.AsyncTask#doInBackground(java.lang.Object[])
-		 */
 		@Override
 		protected Void doInBackground(MarkerObject... params) {
 
-			Log.d("send", "send object to database");
-
-			System.out.println(params[0]);
+			Log.d("SAVETASK", "starting to send objects to database: "+params[0]);
 
 			LatLng latLng = params[0].getM_latLng();
 
@@ -973,50 +973,52 @@ public class MapActivity extends Activity implements OnMapClickListener,
 
 			String address = params[0].getM_address();
 			String type = params[0].getM_type();
-			String bool = params[0].getM_checkboxStringBool();
+			String attribute = params[0].getM_checkboxStringBool();
 			String comment = params[0].getM_comment();
-			String imglink = params[0].getM_imageLink();
 
-			String strUrl = "http://www.reecon.eu/ooewasser/api/v1/?request=save";
-			URL url = null;
+			String url = "http://wasserapp.reecon.eu/marker_test.php";
+			HttpClient client = new DefaultHttpClient();
+			HttpPost post = new HttpPost(url);
+
+			// add header
+			post.setHeader("User-Agent", USER_AGENT);
+
 			try {
-				url = new URL(strUrl);
+				List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
+				urlParameters.add(new BasicNameValuePair("function",
+						"insertFountain"));
+				urlParameters.add(new BasicNameValuePair("marker_table",
+						type));
+				urlParameters.add(new BasicNameValuePair("attribut_column",
+						"drinkable"));
+				urlParameters.add(new BasicNameValuePair("attribut", attribute));
+				urlParameters.add(new BasicNameValuePair("comment",
+						comment));
+				urlParameters.add(new BasicNameValuePair("rating", "2"));
+				urlParameters
+						.add(new BasicNameValuePair("longitude", lng));
+				urlParameters
+						.add(new BasicNameValuePair("latitude", lat));
+				urlParameters.add(new BasicNameValuePair("street",
+						"teststreet"));
+				urlParameters.add(new BasicNameValuePair("city",
+						"testcity"));
+				urlParameters.add(new BasicNameValuePair("zip", "testzip"));
 
-				HttpURLConnection connection = (HttpURLConnection) url
-						.openConnection();
-				connection.setRequestMethod("POST");
-				connection.setDoOutput(true);
-				OutputStreamWriter outputStreamWriter = new OutputStreamWriter(
-						connection.getOutputStream());
-				outputStreamWriter.write("id=" + id + "&lat=" + lat + "&lng="
-						+ lng + "&address=" + address + "&type=" + type
-						+ "&bool=" + bool + "&comment=" + comment + "&imglink="
-						+ imglink);
-				outputStreamWriter.flush();
-				outputStreamWriter.close();
-
-				InputStream iStream = connection.getInputStream();
-				BufferedReader reader = new BufferedReader(
-						new InputStreamReader(iStream));
-
-				StringBuffer sb = new StringBuffer();
-
-				String line = "";
-
-				while ((line = reader.readLine()) != null) {
-					sb.append(line);
-				}
-				Log.d("save sb:", sb.toString());
-
-				reader.close();
-				iStream.close();
-
-			} catch (MalformedURLException e) {
+				post.setEntity(new UrlEncodedFormEntity(urlParameters));
+				HttpResponse response = client.execute(post);
+				
+				Log.i("SAVETASK", ""+response.getStatusLine().getStatusCode());
+				
+			} catch (UnsupportedEncodingException e1) {
+				e1.printStackTrace();
+			} catch (ClientProtocolException e) {
+				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IOException e) {
+				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-
 			return null;
 		}
 
@@ -1024,6 +1026,7 @@ public class MapActivity extends Activity implements OnMapClickListener,
 
 	/**
 	 * Background Retrieve-task
+	 * 
 	 * @author mariobaumgartner
 	 *
 	 */
@@ -1033,7 +1036,7 @@ public class MapActivity extends Activity implements OnMapClickListener,
 		protected String doInBackground(Void... params) {
 			Log.d("retrieve", "entere do in background of retrieve task: ");
 
-			String url = "http://wasserapp.reecon.eu/marker.php";
+			String url = "http://wasserapp.reecon.eu/marker_test.php";
 
 			HttpClient client = new DefaultHttpClient();
 			HttpPost post = new HttpPost(url);
@@ -1043,7 +1046,8 @@ public class MapActivity extends Activity implements OnMapClickListener,
 			StringBuffer result = new StringBuffer();
 			try {
 				List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
-				urlParameters.add(new BasicNameValuePair("function", "---"));
+				urlParameters.add(new BasicNameValuePair("function",
+						"getAllFountains"));
 				post.setEntity(new UrlEncodedFormEntity(urlParameters));
 
 				HttpResponse response = client.execute(post);
@@ -1073,7 +1077,6 @@ public class MapActivity extends Activity implements OnMapClickListener,
 		}
 	}
 
-	
 	/**
 	 * Background Parser-Task
 	 */
@@ -1083,7 +1086,7 @@ public class MapActivity extends Activity implements OnMapClickListener,
 		@Override
 		protected List<HashMap<String, String>> doInBackground(String... params) {
 			MarkerJSONParser markerParser = new MarkerJSONParser();
-			
+
 			List<HashMap<String, String>> markersList = new ArrayList<HashMap<String, String>>();
 			try {
 				markersList = markerParser.parse(params[0]);
@@ -1099,26 +1102,31 @@ public class MapActivity extends Activity implements OnMapClickListener,
 			for (int i = 0; i < result.size(); i++) {
 
 				HashMap<String, String> parsermap = result.get(i);
-				
+
 				double lat = Double.parseDouble(parsermap.get("lat"));
 				double lng = Double.parseDouble(parsermap.get("lng"));
 				LatLng latLng = new LatLng(lat, lng);
 				String id = parsermap.get("id");
 				String address = parsermap.get("address");
+				String street = parsermap.get("street");
+				String city = parsermap.get("city");
+				String zip = parsermap.get("zip");
+				
 				String drinkable = parsermap.get("drinkable");
 				String type = parsermap.get("type");
 				String comment = parsermap.get("comment");
-				// String imglink = parsermap.get("imglink");  // a pic to display in details. maybe
+				// String imglink = parsermap.get("imglink"); // a pic to
+				// display in details. maybe
 
 				MarkerObject m = new Fountain();
 
 				m.setM_id(id);
 				m.setM_latLng(latLng);
-				m.setAdress(address);
+				m.setM_address(address);
 				m.setM_checkboxStringBool(drinkable);
-				if (drinkable.equals("Ja")){
+				if (drinkable.equals("Ja")) {
 					m.setM_icon(true);
-				}else{
+				} else {
 					m.setM_icon(false);
 				}
 				m.setM_comment(comment);
@@ -1138,7 +1146,7 @@ public class MapActivity extends Activity implements OnMapClickListener,
 	 */
 	public void addMarkerFromMySqlServerToMap(MarkerObject _m) {
 		MarkerOptions m = new MarkerOptions();
-		m.title(_m.getM_address());
+		m.title(_m.getM_address().toString());
 		m.position(_m.getM_latLng());
 		m.icon(_m.getM_icon());
 		m.draggable(false);
