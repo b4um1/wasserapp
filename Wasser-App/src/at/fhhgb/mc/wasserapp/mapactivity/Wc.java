@@ -11,7 +11,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 /**
  * The Class Wc.
  */
-public class Wc extends MarkerObject {
+public class Wc extends MyMarkerObject {
 
 	
 	/** The Constant serialVersionUID. */

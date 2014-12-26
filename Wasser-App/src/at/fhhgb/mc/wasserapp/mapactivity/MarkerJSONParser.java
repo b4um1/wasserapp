@@ -20,8 +20,10 @@ import android.util.Log;
  */
 public class MarkerJSONParser {
 
-	private final String FOUNTAIN_ID = "fountain_id";
+	private String mType;
+	
 	private final String DRINKABLE = "drinkable";
+	private final String BARRIERFREE = "barrier_free";
 	private final String UPDATE_TIME = "update_time";
 	private final String CREATION_TIME = "creation_time";
 	private final String LATITUDE = "latitude";
@@ -35,6 +37,10 @@ public class MarkerJSONParser {
 	private final String COMMENT = "comment";
 
 	private final String LOGTAG = "MarkerJSONParserClass";
+
+	public MarkerJSONParser(String _type) {
+		mType = _type;
+	}
 
 	/**
 	 * Receives an String which is an json encoded array It returnes an array of
@@ -81,20 +87,21 @@ public class MarkerJSONParser {
 	 */
 	private HashMap<String, String> getMarker(JSONObject _jMarker) {
 
+		String searchid = mType + "_id";
+
 		HashMap<String, String> marker = new HashMap<String, String>();
 		String id = "-NA-";
 		String lat = "-NA-";
 		String lng = "-NA-";
 		String address = "-NA-";
 		String zip = "", city = "", street = "";
-		String type = "-NA-";
-		String drinkable = "-NA-";
+		String attribute = "-NA-";
 		String comment = "-NA-";
 		String surename = "", firstname = "", grade = "", update_time = "", creation_time = "";
 
-		// Extracting fountain_id, if available
-		if (_jMarker.containsKey(FOUNTAIN_ID)) {
-			id = "" + _jMarker.get(FOUNTAIN_ID);
+		// Extracting fountain_id,toilet_id,healingspring_id, if available
+		if (_jMarker.containsKey(searchid)) {
+			id = "" + _jMarker.get(searchid);
 		}
 
 		// Extracting latitude, if available
@@ -141,11 +148,18 @@ public class MarkerJSONParser {
 			update_time = "" + _jMarker.get(UPDATE_TIME);
 		}
 
-		type = "fountain";
-
-		// Extracting drinkable, if available
-		if (_jMarker.containsKey(DRINKABLE)) {
-			drinkable = "" + _jMarker.get(DRINKABLE);
+		if (mType.equals("fountain")) {
+			// Extracting drinkable, if available
+			if (_jMarker.containsKey(DRINKABLE)) {
+				attribute = "" + _jMarker.get(DRINKABLE);
+			}
+		}else{
+			if (mType.equals("wc")){
+				// Extracting drinkable, if available
+				if (_jMarker.containsKey(BARRIERFREE)) {
+					attribute = "" + _jMarker.get(BARRIERFREE);
+				}
+			}
 		}
 
 		// Extracting comment, if available
@@ -157,13 +171,13 @@ public class MarkerJSONParser {
 		if (!_jMarker.containsKey(GRADE)) {
 			grade = "" + _jMarker.get(GRADE);
 		}
-		
+
 		marker.put("id", id);
 		marker.put("lat", lat);
 		marker.put("lng", lng);
 		marker.put("address", address);
-		marker.put("type", type);
-		marker.put("drinkable", drinkable);
+		marker.put("type", mType);
+		marker.put("attribute", attribute);
 		marker.put("comment", comment);
 		marker.put(STREET, street);
 		marker.put(CITY, city);

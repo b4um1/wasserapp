@@ -13,10 +13,12 @@
     <!-- map -->
     <string name="map_fountain">Fountain</string>
     <string name="map_wc">WC</string>
+    <string name="map_hs">Healingspring</string>
     <string name="map_all">All Objects</string>
     <string name="map_mark">Mark Object</string>
     <string name="map_mark_fountain">Mark Fountain</string>
     <string name="map_mark_wc">Mark WC</string>
+     <string name="map_mark_hs">Mark Healingspring</string>
     <string name="s_marker_not_saved_info">Before you create a new marker, you have to save the actual marker</string>
     <string name="save">save</string>
     <string name="delete">delete</string>

@@ -101,6 +101,11 @@ public class MapActivity extends Activity implements OnMapClickListener,
 	/**
 	 * User Agent - Mozilla/5.0
 	 */
+	private String getMethod = "";
+	private final String GETFOUNTAINS = "getAllFountains";
+	private final String GETTOILETS = "getAllToilets";
+	private final String GETHEALINGSPRINGS = "getAllHealingsSprings";
+
 	private final String USER_AGENT = "Mozilla/5.0";
 	/** The m_btn_save. */
 	private Button m_btn_save;
@@ -142,13 +147,13 @@ public class MapActivity extends Activity implements OnMapClickListener,
 	private Location m_currentLocation;
 
 	/** The m_marker_object. */
-	private MarkerObject m_marker_object;
+	private MyMarkerObject m_marker_object;
 
 	/** The m_clicked_marker. */
 	private Marker m_clicked_marker;
 
 	/** The m_saved_marker_objects. */
-	private ArrayList<MarkerObject> m_saved_marker_objects;
+	private ArrayList<MyMarkerObject> m_saved_marker_objects;
 
 	/** The m_markeroption. */
 	private MarkerOptions m_markeroption;
@@ -193,8 +198,8 @@ public class MapActivity extends Activity implements OnMapClickListener,
 				actionBarButton.setPressed(true);
 			}
 
-			m_saved_marker_objects = new ArrayList<MarkerObject>();
-			m_marker_object = new MarkerObject();
+			m_saved_marker_objects = new ArrayList<MyMarkerObject>();
+			m_marker_object = new MyMarkerObject();
 
 			mapFragment = (com.google.android.gms.maps.MapFragment) getFragmentManager()
 					.findFragmentById(R.id.map);
@@ -234,7 +239,7 @@ public class MapActivity extends Activity implements OnMapClickListener,
 
 			m_dialog_checkbox = (CheckBox) m_dialog
 					.findViewById(R.id.cb_drink_or_bar);
-			if (m_markertype.equals("wc")) {
+			if (m_markertype.equals("toilet")) {
 				m_dialog_checkbox.setText(getString(R.string.accessible));
 			} else if (m_markertype.equals("fountain")) {
 				m_dialog_checkbox.setText(getString(R.string.drinkable));
@@ -267,6 +272,10 @@ public class MapActivity extends Activity implements OnMapClickListener,
 		m_superUser = i.getBooleanExtra("user", false);
 		m_markertype = i.getStringExtra("m_markertype");
 
+		if (m_markertype == null) {
+			m_markertype = "all";
+		}
+
 		TextView tv = (TextView) findViewById(R.id.tv_maps_title);
 
 		if (m_markertype.equals("fountain")) {
@@ -280,17 +289,28 @@ public class MapActivity extends Activity implements OnMapClickListener,
 			} else {
 				tv.setText(getString(R.string.map_fountain));
 			}
-		} else if (m_markertype.equals("wc")) {
+		} else if (m_markertype.equals("toilet")) {
 			// asynch task to retrieve all fountains from the server
-			// getAllToilets
+			getAllToilets();
 			Toast.makeText(getApplicationContext(),
-					"WC's wurden erfolgreich geladen", Toast.LENGTH_SHORT)
+					"Toiletten wurden erfolgreich geladen", Toast.LENGTH_SHORT)
 					.show();
 			if (m_superUser) {
 				tv.setText(getString(R.string.map_mark_wc));
 			} else {
 				tv.setText(getString(R.string.map_wc));
 			}
+		} else if (m_markertype.equals("healingspring")) {
+			getAllHealingSprings();
+			Toast.makeText(getApplicationContext(),
+					"Heilquellen wurden erfolgreich geladen",
+					Toast.LENGTH_SHORT).show();
+			if (m_superUser) {
+				tv.setText(getString(R.string.map_mark_hs));
+			} else {
+				tv.setText(getString(R.string.map_hs));
+			}
+
 		} else {
 			tv.setText(getString(R.string.map_all));
 		}
@@ -440,6 +460,8 @@ public class MapActivity extends Activity implements OnMapClickListener,
 	 * @return Address list with the address of the LatLng point
 	 */
 	public List<Address> getAddress(LatLng _latLng) {
+		Log.i("GEOCODERTASTSTARTED", "******Geocoder started******");
+
 		try {
 			Geocoder geocoder;
 			List<Address> addresses;
@@ -521,32 +543,19 @@ public class MapActivity extends Activity implements OnMapClickListener,
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.google.android.gms.maps.GoogleMap.OnMapClickListener#onMapClick(com
-	 * .google.android.gms.maps.model.LatLng)
-	 */
+	
 	@Override
 	public void onMapClick(LatLng _latLng) {
 		// get the address of the position where the user taps on the map.
 		// getAddress(_latLng);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.google.android.gms.maps.GoogleMap.OnMapLongClickListener#onMapLongClick
-	 * (com.google.android.gms.maps.model.LatLng)
-	 */
 	@Override
 	public void onMapLongClick(LatLng _latLng) {
 		// if (m_superUser) {
 		if (true) {
-			
-			Log.i("onmaplongclick", ""+_latLng.latitude + " " + _latLng.longitude);
+			Log.i("onmaplongclick", "" + _latLng.latitude + " "
+					+ _latLng.longitude);
 			createNewMarkerObject(_latLng);
 			m_checkbox = true;
 			m_temp_latLong = _latLng;
@@ -555,10 +564,10 @@ public class MapActivity extends Activity implements OnMapClickListener,
 	}
 
 	/**
-	 * Creates the new marker object.
-	 *
+	 * In this function, a new screen with data of the new marker is shown on
+	 * the display
+	 * 
 	 * @param _latLng
-	 *            the _lat lng
 	 */
 	public void createNewMarkerObject(LatLng _latLng) {
 		m_btn_save.setText("speichern");
@@ -567,15 +576,25 @@ public class MapActivity extends Activity implements OnMapClickListener,
 				+ addresslist.get(0).getAddressLine(1);
 		if (m_markertype.equals("fountain")) {
 			m_marker_object = new Fountain();
+			m_marker_object.setM_type("fountain");
 		}
-		if (m_markertype.equals("wc")) {
+		if (m_markertype.equals("toilet")) {
 			m_marker_object = new Wc();
+			m_marker_object.setM_type("toilet");
+		}
+		if (m_markertype.equals("healingspring")) {
+			m_marker_object = new Healingspring();
+			m_marker_object.setM_type("healingspring");
 		}
 
 		m_marker_object.setM_latLng(_latLng);
 		m_marker_object.setM_address(address);
 		m_marker_object.setM_icon(m_checkbox);
-		m_marker_object.setM_checkbox(m_checkbox);
+
+		if (m_markertype.equals("fountain") | m_markertype.equals("toilet")) {
+			m_marker_object.setM_checkbox(m_checkbox);
+		}
+
 		m_markeroption = new MarkerOptions();
 		m_markeroption.title(m_marker_object.getM_address());
 		m_markeroption.position(_latLng);
@@ -585,7 +604,7 @@ public class MapActivity extends Activity implements OnMapClickListener,
 		m_clicked_marker = m_googlemap.addMarker(m_markeroption);
 		m_dialog_checkbox.setChecked(m_checkbox);
 
-		m_marker_object.setM_id("" + m_clicked_marker.getPosition());
+		// m_marker_object.setM_id("" + m_clicked_marker.getPosition());
 		m_tv_title.setText(m_marker_object.getM_address());
 		m_dialog.show();
 	}
@@ -604,46 +623,26 @@ public class MapActivity extends Activity implements OnMapClickListener,
 		return myContentView;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.google.android.gms.maps.GoogleMap.OnMarkerClickListener#onMarkerClick
-	 * (com.google.android.gms.maps.model.Marker)
-	 */
 	@Override
 	public boolean onMarkerClick(Marker _marker) {
 		m_clicked_marker = _marker;
-		m_marker_object = getMarkerObject("" + _marker.getPosition());
+		m_marker_object = getMarkerObject(m_clicked_marker.getPosition());
+		Log.i("OnMarkerClick", "Marker with id:" + m_marker_object.getM_id()
+				+ " was clicked");
 		return false;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.google.android.gms.maps.GoogleMap.InfoWindowAdapter#getInfoContents
-	 * (com.google.android.gms.maps.model.Marker)
-	 */
 	@Override
 	public View getInfoContents(Marker _marker) {
 
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener#
-	 * onInfoWindowClick(com.google.android.gms.maps.model.Marker)
-	 */
 	@Override
 	public void onInfoWindowClick(Marker _marker) {
 		TextView tvTitle = ((TextView) m_dialog.findViewById(R.id.tv_address));
 		tvTitle.setText(_marker.getTitle());
 		_marker.hideInfoWindow();
-
-		MarkerObject mymarker = getMarkerObject(m_clicked_marker.getPosition());
 
 		if (!m_superUser) {
 			Intent goToDetailsActivity = new Intent(this,
@@ -654,12 +653,11 @@ public class MapActivity extends Activity implements OnMapClickListener,
 					"" + m_clicked_marker.getPosition().latitude);
 			goToDetailsActivity.putExtra("lng",
 					"" + m_clicked_marker.getPosition().longitude);
-			goToDetailsActivity.putExtra("drinkable", mymarker.getM_checkbox());
-			m_marker_object = getMarkerObject("" + _marker.getPosition());
+			goToDetailsActivity.putExtra("attribute",
+					m_marker_object.getM_checkbox());
 			this.startActivity(goToDetailsActivity);
 
 		} else {
-			m_marker_object = getMarkerObject("" + _marker.getPosition());
 			m_dialog.show();
 		}
 	}
@@ -680,7 +678,7 @@ public class MapActivity extends Activity implements OnMapClickListener,
 		case R.id.b_position:
 			i = new Intent();
 			Intent map;
-			if (LoginActivity.superUser) {
+			if (LoginActivity.superUser) { // SUPERUSER
 				map = new Intent(this, ChooseMarkerActivity.class);
 				map.putExtra("user", true);
 			} else {
@@ -714,10 +712,10 @@ public class MapActivity extends Activity implements OnMapClickListener,
 				m_saved_marker_objects.add(m_marker_object);
 				sendMarkerToServer(m_marker_object);
 				m_dialog_checkbox.setChecked(m_marker_object.getM_checkbox());
-				Toast.makeText(this, "Marker gespeichert", Toast.LENGTH_LONG)
+				Toast.makeText(this, "Marker gespeichert", Toast.LENGTH_SHORT)
 						.show();
 			} else {
-				Toast.makeText(this, "Marker geupdatet", Toast.LENGTH_LONG)
+				Toast.makeText(this, "Marker geupdatet", Toast.LENGTH_SHORT)
 						.show();
 				m_clicked_marker.hideInfoWindow();
 				m_marker_object.setM_address(m_clicked_marker.getTitle());
@@ -728,10 +726,11 @@ public class MapActivity extends Activity implements OnMapClickListener,
 			m_dialog.dismiss();
 
 		} else if (_button.equals(m_btn_delete)) {
+			Log.i("DeleteTask", "delte: " + m_marker_object.getM_id());
 			if (m_saved_marker_objects.contains(m_marker_object)) {
 				m_saved_marker_objects.remove(m_marker_object);
 				deleteMarkerFromServer(m_marker_object);
-				Toast.makeText(this, "Marker geloescht", Toast.LENGTH_LONG)
+				Toast.makeText(this, "Marker geloescht", Toast.LENGTH_SHORT)
 						.show();
 			}
 			m_clicked_marker.remove();
@@ -851,7 +850,7 @@ public class MapActivity extends Activity implements OnMapClickListener,
 	 *            the _id
 	 * @return the marker object
 	 */
-	private MarkerObject getMarkerObject(String _id) {
+	private MyMarkerObject getMarkerObject(String _id) {
 		if (_id != null) {
 			for (int i = 0; i < m_saved_marker_objects.size(); i++) {
 				if (_id.equals(m_saved_marker_objects.get(i).getM_id())) {
@@ -864,8 +863,8 @@ public class MapActivity extends Activity implements OnMapClickListener,
 		return null;
 	}
 
-	private MarkerObject getMarkerObject(LatLng _latlng) {
-		MarkerObject mymarker = null;
+	private MyMarkerObject getMarkerObject(LatLng _latlng) {
+		MyMarkerObject mymarker = null;
 		if (_latlng != null) {
 			for (int i = 0; i < m_saved_marker_objects.size(); i++) {
 				mymarker = null;
@@ -926,7 +925,7 @@ public class MapActivity extends Activity implements OnMapClickListener,
 	 * 
 	 * @param _markerObject
 	 */
-	private void sendMarkerToServer(MarkerObject _markerObject) {
+	private void sendMarkerToServer(MyMarkerObject _markerObject) {
 		new SaveTask().execute(_markerObject);
 	}
 
@@ -935,14 +934,37 @@ public class MapActivity extends Activity implements OnMapClickListener,
 	 * 
 	 * @param _m
 	 */
-	private void deleteMarkerFromServer(MarkerObject _m) {
-		new DeleteTask().execute(_m.getM_latLng());
+	private void deleteMarkerFromServer(MyMarkerObject _marker) {
+		new DeleteTask().execute(_marker);
 	}
 
 	/**
-	 * Load the data from the server, e.g the database
+	 * Load the fountains from the server, e.g the database
 	 */
 	private void getAllFountains() {
+		// sets the method which should be called from php
+		getMethod = GETFOUNTAINS;
+		Log.i("GETFountain", "Get all fountain" + getMethod);
+		new RetrieveTask().execute();
+	}
+
+	/**
+	 * Load the toilets from the server, e.g the database
+	 */
+	private void getAllToilets() {
+		// sets the method which should be called from php
+		getMethod = GETTOILETS;
+		Log.i("GETTOILET", "Get all toilets" + getMethod);
+		new RetrieveTask().execute();
+	}
+
+	/**
+	 * Load the healingsprings from the server, e.g the database
+	 */
+	private void getAllHealingSprings() {
+		// sets the method which should be called from php
+		getMethod = GETHEALINGSPRINGS;
+		Log.i("GETHEALING", "Get all healingsprings" + getMethod);
 		new RetrieveTask().execute();
 	}
 
@@ -951,7 +973,7 @@ public class MapActivity extends Activity implements OnMapClickListener,
 	 * 
 	 * @param _marker_object
 	 */
-	private void updateDataOnServer(MarkerObject _marker_object) {
+	private void updateDataOnServer(MyMarkerObject _marker_object) {
 
 		new UpdateTask().execute(_marker_object);
 	}
@@ -959,19 +981,22 @@ public class MapActivity extends Activity implements OnMapClickListener,
 	/**
 	 * Background save-task
 	 */
-	private class SaveTask extends AsyncTask<MarkerObject, Void, Void> {
+	private class SaveTask extends AsyncTask<MyMarkerObject, Void, Void> {
 		@Override
-		protected Void doInBackground(MarkerObject... params) {
-
-			Log.d("SAVETASK", "starting to send objects to database: "+params[0]);
-
+		protected Void doInBackground(MyMarkerObject... params) {
 			LatLng latLng = params[0].getM_latLng();
-
-			String id = params[0].getM_id();
 			String lat = Double.toString(latLng.latitude);
 			String lng = Double.toString(latLng.longitude);
 
 			String address = params[0].getM_address();
+			String[] split = address.split(",");
+			String street = split[0];
+			String subsplit = split[1].substring(1);
+			String zip = subsplit.substring(0, 4);
+			String city = subsplit.substring(5);
+
+			Log.i("addressAfterSplit", street + "---" + city);
+
 			String type = params[0].getM_type();
 			String attribute = params[0].getM_checkboxStringBool();
 			String comment = params[0].getM_comment();
@@ -979,37 +1004,43 @@ public class MapActivity extends Activity implements OnMapClickListener,
 			String url = "http://wasserapp.reecon.eu/marker_test.php";
 			HttpClient client = new DefaultHttpClient();
 			HttpPost post = new HttpPost(url);
-
+			
+			Log.d("SAVETASK", "Starting to send object: "
+					+ params[0].getM_type());
+			
 			// add header
 			post.setHeader("User-Agent", USER_AGENT);
-
+			
 			try {
 				List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
-				urlParameters.add(new BasicNameValuePair("function",
-						"insertFountain"));
-				urlParameters.add(new BasicNameValuePair("marker_table",
-						type));
-				urlParameters.add(new BasicNameValuePair("attribut_column",
-						"drinkable"));
-				urlParameters.add(new BasicNameValuePair("attribut", attribute));
-				urlParameters.add(new BasicNameValuePair("comment",
-						comment));
+				urlParameters.add(new BasicNameValuePair("function", "insert"));
+				urlParameters.add(new BasicNameValuePair("marker_table",type));
+				urlParameters.add(new BasicNameValuePair("street", street));
+				if (type.equals("fountain")) {
+					urlParameters.add(new BasicNameValuePair("attribut_column",
+							"drinkable"));
+				} else if (type.equals("toilet")) {
+					urlParameters.add(new BasicNameValuePair("attribut_column",
+							"barrier_free"));
+
+				}else{
+					urlParameters.add(new BasicNameValuePair("attribut_column",
+							""));
+				}
+				urlParameters
+						.add(new BasicNameValuePair("attribut", attribute));
+				urlParameters.add(new BasicNameValuePair("comment", comment));
 				urlParameters.add(new BasicNameValuePair("rating", "2"));
-				urlParameters
-						.add(new BasicNameValuePair("longitude", lng));
-				urlParameters
-						.add(new BasicNameValuePair("latitude", lat));
-				urlParameters.add(new BasicNameValuePair("street",
-						"teststreet"));
-				urlParameters.add(new BasicNameValuePair("city",
-						"testcity"));
-				urlParameters.add(new BasicNameValuePair("zip", "testzip"));
+				urlParameters.add(new BasicNameValuePair("longitude", lng));
+				urlParameters.add(new BasicNameValuePair("latitude", lat));
+				urlParameters.add(new BasicNameValuePair("city", city));
+				urlParameters.add(new BasicNameValuePair("zip", zip));
 
 				post.setEntity(new UrlEncodedFormEntity(urlParameters));
 				HttpResponse response = client.execute(post);
-				
-				Log.i("SAVETASK", ""+response.getStatusLine().getStatusCode());
-				
+
+				Log.i("SAVETASK", "" + response.getStatusLine().getStatusCode());
+
 			} catch (UnsupportedEncodingException e1) {
 				e1.printStackTrace();
 			} catch (ClientProtocolException e) {
@@ -1021,7 +1052,6 @@ public class MapActivity extends Activity implements OnMapClickListener,
 			}
 			return null;
 		}
-
 	}
 
 	/**
@@ -1046,8 +1076,8 @@ public class MapActivity extends Activity implements OnMapClickListener,
 			StringBuffer result = new StringBuffer();
 			try {
 				List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
-				urlParameters.add(new BasicNameValuePair("function",
-						"getAllFountains"));
+				urlParameters
+						.add(new BasicNameValuePair("function", getMethod));
 				post.setEntity(new UrlEncodedFormEntity(urlParameters));
 
 				HttpResponse response = client.execute(post);
@@ -1085,7 +1115,16 @@ public class MapActivity extends Activity implements OnMapClickListener,
 
 		@Override
 		protected List<HashMap<String, String>> doInBackground(String... params) {
-			MarkerJSONParser markerParser = new MarkerJSONParser();
+			String type = "";
+			if (getMethod.equals(GETFOUNTAINS)) {
+				type = "fountain";
+			} else {
+				if (getMethod.equals(GETTOILETS)) {
+					type = "wc";
+				}
+			}
+
+			MarkerJSONParser markerParser = new MarkerJSONParser(type);
 
 			List<HashMap<String, String>> markersList = new ArrayList<HashMap<String, String>>();
 			try {
@@ -1108,30 +1147,25 @@ public class MapActivity extends Activity implements OnMapClickListener,
 				LatLng latLng = new LatLng(lat, lng);
 				String id = parsermap.get("id");
 				String address = parsermap.get("address");
-				String street = parsermap.get("street");
-				String city = parsermap.get("city");
-				String zip = parsermap.get("zip");
-				
-				String drinkable = parsermap.get("drinkable");
 				String type = parsermap.get("type");
+				String attribute = parsermap.get("attribute");
 				String comment = parsermap.get("comment");
-				// String imglink = parsermap.get("imglink"); // a pic to
-				// display in details. maybe
 
-				MarkerObject m = new Fountain();
+				MyMarkerObject m = new Fountain();
 
 				m.setM_id(id);
 				m.setM_latLng(latLng);
 				m.setM_address(address);
-				m.setM_checkboxStringBool(drinkable);
-				if (drinkable.equals("Ja")) {
-					m.setM_icon(true);
-				} else {
-					m.setM_icon(false);
+				if (type.equals("wc") | type.equals("fountain")) {
+					m.setM_checkboxStringBool(attribute);
+					if (attribute.equals("Ja")) {
+						m.setM_icon(true);
+					} else {
+						m.setM_icon(false);
+					}
 				}
 				m.setM_comment(comment);
 				Log.e("getmarkerfromserver: ", m.getM_id());
-
 				// add the marker to the map
 				addMarkerFromMySqlServerToMap(m);
 			}
@@ -1144,7 +1178,7 @@ public class MapActivity extends Activity implements OnMapClickListener,
 	 * 
 	 * @param _m
 	 */
-	public void addMarkerFromMySqlServerToMap(MarkerObject _m) {
+	public void addMarkerFromMySqlServerToMap(MyMarkerObject _m) {
 		MarkerOptions m = new MarkerOptions();
 		m.title(_m.getM_address().toString());
 		m.position(_m.getM_latLng());
@@ -1158,64 +1192,50 @@ public class MapActivity extends Activity implements OnMapClickListener,
 	/**
 	 * The Class DeleteTask.
 	 */
-	private class DeleteTask extends AsyncTask<LatLng, Void, Void> {
+	private class DeleteTask extends AsyncTask<MyMarkerObject, Void, Void> {
 
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see android.os.AsyncTask#doInBackground(java.lang.Object[])
-		 */
+		private final String LOG_TAG_DELETE = "DELETETASK";
+
 		@Override
-		protected Void doInBackground(LatLng... params) {
+		protected Void doInBackground(MyMarkerObject... params) {
+			Log.i(LOG_TAG_DELETE, "delete object with id: " + params[0]
+					+ " from database");
+			MyMarkerObject mymarker = params[0];
+			String url = "http://wasserapp.reecon.eu/marker_test.php";
 
-			Log.d("send", "delete object from database");
+			HttpClient client = new DefaultHttpClient();
+			HttpPost post = new HttpPost(url);
 
-			System.out.println(params[0]);
-
-			String lat = Double.toString(params[0].latitude);
-			String lng = Double.toString(params[0].longitude);
-			Log.d("lat:", lat);
-			Log.d("lng:", lng);
-			String strUrl = "http://www.reecon.eu/ooewasser/api/v1/?request=delete";
-			URL url = null;
+			// add header
+			post.setHeader("User-Agent", USER_AGENT);
+			StringBuffer result = new StringBuffer();
 			try {
-				url = new URL(strUrl);
+				List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
+				urlParameters.add(new BasicNameValuePair("delete",
+						"deleteMarker"));
+				urlParameters.add(new BasicNameValuePair("marker_table",
+						mymarker.getM_type()));
+				urlParameters.add(new BasicNameValuePair("marker_id", mymarker.getM_id()));
+				post.setEntity(new UrlEncodedFormEntity(urlParameters));
 
-				HttpURLConnection connection = (HttpURLConnection) url
-						.openConnection();
-				connection.setRequestMethod("POST");
-				connection.setDoOutput(true);
-				OutputStreamWriter outputStreamWriter = new OutputStreamWriter(
-						connection.getOutputStream());
+				HttpResponse response = client.execute(post);
 
-				outputStreamWriter.write("lat=" + lat + "&lng=" + lng);
-				outputStreamWriter.flush();
-				outputStreamWriter.close();
+				if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+					BufferedReader rd = new BufferedReader(
+							new InputStreamReader(response.getEntity()
+									.getContent()));
 
-				InputStream iStream = connection.getInputStream();
-				BufferedReader reader = new BufferedReader(
-						new InputStreamReader(iStream));
-
-				StringBuffer sb = new StringBuffer();
-				Log.d("url", url.toString());
-
-				String line = "";
-
-				while ((line = reader.readLine()) != null) {
-					sb.append(line);
+					String line = "";
+					while ((line = rd.readLine()) != null) {
+						result.append(line);
+					}
+					System.out.println(result.toString());
 				}
-				Log.d("stringbuffer", sb.toString());
-
-				reader.close();
-				iStream.close();
-
-			} catch (MalformedURLException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
-
 			return null;
+
 		}
 
 	}
@@ -1224,7 +1244,7 @@ public class MapActivity extends Activity implements OnMapClickListener,
 	/**
 	 * The Class UpdateTask.
 	 */
-	private class UpdateTask extends AsyncTask<MarkerObject, Void, Void> {
+	private class UpdateTask extends AsyncTask<MyMarkerObject, Void, Void> {
 
 		/*
 		 * (non-Javadoc)
@@ -1232,7 +1252,7 @@ public class MapActivity extends Activity implements OnMapClickListener,
 		 * @see android.os.AsyncTask#doInBackground(java.lang.Object[])
 		 */
 		@Override
-		protected Void doInBackground(MarkerObject... params) {
+		protected Void doInBackground(MyMarkerObject... params) {
 
 			Log.d("update", "update object in database");
 			Log.d("lat", "" + Double.toString(params[0].getM_latLng().latitude));

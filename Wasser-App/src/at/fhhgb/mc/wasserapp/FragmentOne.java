@@ -61,7 +61,7 @@ public class FragmentOne extends Fragment implements OnClickListener {
 			map_wc = new Intent();
 			map_wc = new Intent(mContext, MapActivity.class);
 			map_wc.putExtra("user", false);
-			map_wc.putExtra("m_markertype", "wc");
+			map_wc.putExtra("m_markertype", "toilet");
 			startActivity(map_wc);
 			break;
 		case R.id.b_waterlevel:

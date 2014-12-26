@@ -19,7 +19,7 @@ import com.google.android.gms.maps.model.LatLng;
 /**
  * The Class MarkerObject.
  */
-public class MarkerObject  implements Serializable{
+public class MyMarkerObject  implements Serializable{
 	
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
@@ -58,7 +58,7 @@ public class MarkerObject  implements Serializable{
 	 * @param _imgLink the _img link
 	 */
 	
-	public MarkerObject( LatLng _latLng, String _address, String _type, boolean _bool, String _comment, String _imgLink)
+	public MyMarkerObject( LatLng _latLng, String _address, String _type, boolean _bool, String _comment, String _imgLink)
 	{
 		m_type = _type;
 		m_latLng = _latLng;
@@ -80,7 +80,7 @@ public class MarkerObject  implements Serializable{
 	/**
 	 * Instantiates a new marker object.
 	 */
-	public MarkerObject() {
+	public MyMarkerObject() {
 		m_checkboxProof = true;
 	}
 	
@@ -89,7 +89,7 @@ public class MarkerObject  implements Serializable{
 	 *
 	 * @param _latLng the _lat lng
 	 */
-	public MarkerObject(LatLng _latLng) {
+	public MyMarkerObject(LatLng _latLng) {
 		m_latLng=_latLng;
 	}
 

@@ -1,27 +1,21 @@
 package at.fhhgb.mc.wasserapp.mapactivity;
 
-import android.media.Image;
 import at.fhhgb.mc.wasserapp.R;
 
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 
-// TODO: Auto-generated Javadoc
-/**
- * The Class Fountain.
- */
-public class Fountain extends MyMarkerObject {
+public class Healingspring extends MyMarkerObject {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
-	public Fountain() {
+	public Healingspring() {
 		super();
-		setM_type("fountain");
+		setM_type("healingspring");
 	}
 
-	
 	/**
-	 * Here you can set the icon of the marker. You can choose between drinkable/not drinkable
+	 * WE NEED AN ICON
 	 */
 	public void setM_icon(boolean _isDrinkable) {
 		if (_isDrinkable) {

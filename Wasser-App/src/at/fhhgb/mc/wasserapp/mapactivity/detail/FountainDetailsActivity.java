@@ -50,7 +50,7 @@ import at.fhhgb.mc.wasserapp.R;
 import at.fhhgb.mc.wasserapp.R.id;
 import at.fhhgb.mc.wasserapp.R.layout;
 import at.fhhgb.mc.wasserapp.mapactivity.MapActivity;
-import at.fhhgb.mc.wasserapp.mapactivity.MarkerObject;
+import at.fhhgb.mc.wasserapp.mapactivity.MyMarkerObject;
 import at.fhhgb.mc.wasserapp.more.LoginActivity;
 import at.fhhgb.mc.wasserapp.more.MoreActivity;
 import at.fhhgb.mc.wasserapp.rssfeed.WebViewActivity;
@@ -101,7 +101,7 @@ public class FountainDetailsActivity extends Activity implements OnClickListener
 	private ArrayList<Comment> list_of_comments = new ArrayList<Comment>();
 	
 	/** The m_bool. */
-	private boolean m_drinkable;
+	private boolean m_attribute;
 
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
@@ -126,8 +126,9 @@ public class FountainDetailsActivity extends Activity implements OnClickListener
 		m_marker_address = i.getStringExtra("address");
 		m_marker_lat = i.getStringExtra("lat");
 		m_marker_lng = i.getStringExtra("lng");
-		m_drinkable = i.getBooleanExtra("drinkable", false);
-		if(m_drinkable){
+		m_attribute = i.getBooleanExtra("attribute", false);
+		
+		if(m_attribute){
 			TextView tv_drinkable = (TextView) findViewById(R.id.tv_drinkable);
 			tv_drinkable.setText("trinkbar");
 			Log.e("bool", "true");

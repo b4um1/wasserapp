@@ -108,8 +108,17 @@ public class ChooseMarkerActivity extends Activity implements OnClickListener {
 			map_wc = new Intent();
 			map_wc = new Intent(this, MapActivity.class);
 			map_wc.putExtra("user", true);
-			map_wc.putExtra("m_markertype", "wc");
+			map_wc.putExtra("m_markertype", "toilet");
 			startActivity(map_wc);
+			break;
+		case R.id.b_mark_hs:
+			i = new Intent();
+			Intent map_hs;
+			map_hs = new Intent();
+			map_hs = new Intent(this, MapActivity.class);
+			map_hs.putExtra("user", true);
+			map_hs.putExtra("m_markertype", "healingspring");
+			startActivity(map_hs);
 			break;
 		default:
 			i = new Intent();
