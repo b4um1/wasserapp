@@ -57,8 +57,8 @@
 
         <activity
             android:name=".HomeActivity"
-            android:theme="@android:style/Theme.Holo"
-            android:screenOrientation="nosensor" >
+            android:screenOrientation="nosensor"
+            android:theme="@android:style/Theme.Holo" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -104,6 +104,10 @@
         <activity
             android:name=".MainActivity"
             android:screenOrientation="nosensor" >
+        </activity>
+        <activity
+            android:name="at.fhhgb.mc.wasserapp.waterlevel.AllMeasuringpoints"
+            android:label="@string/title_activity_all_measuringpoints" >
         </activity>
     </application>
 

@@ -18,7 +18,7 @@
     <string name="map_mark">Mark Object</string>
     <string name="map_mark_fountain">Mark Fountain</string>
     <string name="map_mark_wc">Mark WC</string>
-     <string name="map_mark_hs">Mark Healingspring</string>
+    <string name="map_mark_hs">Mark Healingspring</string>
     <string name="s_marker_not_saved_info">Before you create a new marker, you have to save the actual marker</string>
     <string name="save">save</string>
     <string name="delete">delete</string>
@@ -70,5 +70,6 @@
     <string name="title_activity_main">MainActivity</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="title_activity_all_measuringpoints">AllMeasuringpoints</string>
 
 </resources>

@@ -99,9 +99,9 @@ public class WaterLevelsActivity extends Activity implements OnClickListener,
 		if (haveNetworkConnection()) {
 			mListFavs = new ArrayList<MeasuringPoint>();
 
-			loadMListFavs();
-			updateFavs();
-			storeMListFavs();
+//			loadMListFavs();
+//			updateFavs();
+//			storeMListFavs();
 
 			MyArrayAdapter adapter = new MyArrayAdapter(
 					getApplicationContext(), R.layout.list_waterlevel,
@@ -364,7 +364,7 @@ public class WaterLevelsActivity extends Activity implements OnClickListener,
 		// End Actionbar
 
 		case R.id.b_addFavorite:
-			i = new Intent(this, RiversActivity.class);
+			i = new Intent(this, AllMeasuringpoints.class);
 			break;
 		case R.id.b_back:
 			onBackPressed();
