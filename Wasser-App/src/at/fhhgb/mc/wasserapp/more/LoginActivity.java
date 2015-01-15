@@ -68,7 +68,7 @@ import at.fhhgb.mc.wasserapp.R;
 public class LoginActivity extends Activity implements OnClickListener {
 
 	/** The super user. */
-	public static boolean superUser = false;
+	public static boolean superUser;
 	public static int superUserId;
 
 	/**
