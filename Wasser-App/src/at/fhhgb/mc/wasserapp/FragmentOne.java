@@ -11,6 +11,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.webkit.WebView.FindListener;
 import android.widget.Button;
+import android.widget.Toast;
 import at.fhhgb.mc.wasserapp.mapactivity.MapActivity;
 import at.fhhgb.mc.wasserapp.waterlevel.WaterLevelsActivity;
 
@@ -34,7 +35,7 @@ public class FragmentOne extends Fragment implements OnClickListener {
         Button b_waterlevel = (Button) rootView.findViewById(R.id.b_waterlevel);
         b_waterlevel.setOnClickListener(this);
         
-        Button b_precipitation = (Button) rootView.findViewById(R.id.b_precipitation);
+        Button b_precipitation = (Button) rootView.findViewById(R.id.b_healing);
         b_precipitation.setOnClickListener(this);
         
         return rootView;
@@ -68,8 +69,9 @@ public class FragmentOne extends Fragment implements OnClickListener {
 			i = new Intent(mContext, WaterLevelsActivity.class);
 			startActivity(i);
 			break;
-		case R.id.b_precipitation:
+		case R.id.b_healing:
 			i = new Intent();
+			Toast.makeText(mContext, "Heilbrunnen!", 2000).show();
 			// i = new Intent(this, PrecipitationActivity.class);
 			break;
 		}

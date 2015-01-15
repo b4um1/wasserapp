@@ -92,7 +92,7 @@
                 android:layout_weight="1" >
 
                 <Button
-                    android:id="@+id/b_precipitation"
+                    android:id="@+id/b_healing"
                     style="@style/light"
                     android:layout_width="130dip"
                     android:layout_height="120dip"
@@ -100,9 +100,9 @@
                     android:layout_marginTop="10dp"
                     android:alpha="0.8"
                     android:background="@layout/button_home"
-                    android:drawableTop="@drawable/ic_precipitation"
+                    android:drawableTop="@drawable/ic_health"
                     android:paddingTop="20dp"
-                    android:text="@string/precipitation_precipitation"
+                    android:text="@string/healing_healingspring"
                     android:textAllCaps="true"
                     android:textColor="@color/whitegray" />
             </FrameLayout>
