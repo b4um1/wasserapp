@@ -204,9 +204,9 @@ public class MyMarkerObject  implements Serializable{
 	 */
 	public String getM_checkboxStringBool() {
 		if(m_checkboxProof){
-			return "Ja";
+			return "true";
 		}else{
-			return "Nein";
+			return "false";
 		}
 	}
 	//parameter( _checkbox) is string because the value in the mysql table is also a string value
@@ -216,7 +216,7 @@ public class MyMarkerObject  implements Serializable{
 	 * @param _checkbox the new m_checkbox string bool
 	 */
 	public void setM_checkboxStringBool(String _checkbox) {
-		if(_checkbox.equals("Ja")){
+		if(_checkbox.equals("true")){
 			m_checkboxProof = true;
 		}else{
 			m_checkboxProof = false;
