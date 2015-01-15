@@ -68,7 +68,8 @@ import at.fhhgb.mc.wasserapp.R;
 public class LoginActivity extends Activity implements OnClickListener {
 
 	/** The super user. */
-	public static boolean superUser = true;
+	public static boolean superUser = false;
+	public static int superUserId;
 
 	/**
 	 * The default email to populate the email field with.
@@ -237,10 +238,10 @@ public class LoginActivity extends Activity implements OnClickListener {
 		}
 	}
 
-	private class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
+	private class UserLoginTask extends AsyncTask<Void, Void, String> {
 
 		@Override
-		protected Boolean doInBackground(Void... params) {
+		protected String doInBackground(Void... params) {
 			Log.d("retrieve", "entere do in background of login task task: ");
 
 			String url = "http://wasserapp.reecon.eu/loginMobile.php";
@@ -254,8 +255,8 @@ public class LoginActivity extends Activity implements OnClickListener {
 			try {
 				List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
 				urlParameters.add(new BasicNameValuePair("function", "login"));
-				urlParameters.add(new BasicNameValuePair("email", "dan-n@gmx.at"));
-				urlParameters.add(new BasicNameValuePair("pass", "nad"));
+				urlParameters.add(new BasicNameValuePair("email", mName));
+				urlParameters.add(new BasicNameValuePair("pass", mKey));
 
 				post.setEntity(new UrlEncodedFormEntity(urlParameters));
 				HttpResponse response = client.execute(post);
@@ -274,7 +275,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			return true;
+			return result.toString();
 		}
 
 		/*
@@ -282,12 +283,27 @@ public class LoginActivity extends Activity implements OnClickListener {
 		 * 
 		 * @see android.os.AsyncTask#onPostExecute(java.lang.Object)
 		 */
-		protected void onPostExecute(final Boolean success) {
+		protected void onPostExecute(final String _resultString) {
 			mAuthTask = null;
 			showProgress(false);
 
-			if (success) {
+			boolean correctPassword = true;
+			boolean correctEmail = true;
+
+			if (_resultString == null || _resultString == "") {
+				correctPassword = false;
+			}
+
+			if (_resultString.equals("no user with this email " + mName)) {
+				correctEmail = false;
+			}
+
+			if (correctPassword && correctEmail) {
 				superUser = true;
+
+				int id = Integer.parseInt(_resultString.substring(6, _resultString.indexOf(",")));
+				superUserId = id;
+				
 				Toast.makeText(getApplicationContext(), "login successful",
 						2000).show();
 				Intent i = new Intent(getApplicationContext(),
@@ -295,8 +311,13 @@ public class LoginActivity extends Activity implements OnClickListener {
 				startActivity(i);
 				finish();
 			} else {
-				mKeyView.setError(getString(R.string.error_incorrect_password));
-				mKeyView.requestFocus();
+				if (!correctPassword) {
+					mKeyView.setError(getString(R.string.error_incorrect_password));
+					mKeyView.requestFocus();
+				} else {
+					mNameView.setError(getString(R.string.error_invalid_email));
+					mNameView.requestFocus();
+				}
 			}
 		}
 	}
