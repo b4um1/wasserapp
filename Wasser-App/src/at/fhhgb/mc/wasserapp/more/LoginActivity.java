@@ -13,8 +13,18 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -61,16 +71,6 @@ public class LoginActivity extends Activity implements OnClickListener {
 	public static boolean superUser = true;
 
 	/**
-	 * A dummy authentication store containing known user names and passwords.
-	 * TODO: remove after connecting to a real authentication system.
-	 */
-
-	private static ArrayList<String> list_of_credentials = new ArrayList<String>();
-	
-	/** The list_of_keys. */
-	private static ArrayList<String> list_of_keys = new ArrayList<String>();
-
-	/**
 	 * The default email to populate the email field with.
 	 */
 	public static final String EXTRA_EMAIL = "com.example.android.authenticatordemo.extra.EMAIL";
@@ -80,36 +80,40 @@ public class LoginActivity extends Activity implements OnClickListener {
 	 */
 	private UserLoginTask mAuthTask = null;
 
+	private final String USER_AGENT = "Mozilla/5.0";
+
 	// Values for email and password at the time of the login attempt.
 	/** The m name. */
 	private String mName;
-	
+
 	/** The m key. */
 	private String mKey;
 
 	// UI references.
 	/** The m name view. */
 	private EditText mNameView;
-	
+
 	/** The m key view. */
 	private EditText mKeyView;
-	
+
 	/** The m login form view. */
 	private View mLoginFormView;
-	
+
 	/** The m login status view. */
 	private View mLoginStatusView;
-	
+
 	/** The m login status message view. */
 	private TextView mLoginStatusMessageView;
-	
+
 	/** The m remove text name. */
 	private Button mRemoveTextName;
-	
+
 	/** The m remove text key. */
 	private Button mRemoveTextKey;
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
 	 */
 	@Override
@@ -122,9 +126,9 @@ public class LoginActivity extends Activity implements OnClickListener {
 		vf.setDisplayedChild(10);
 		overridePendingTransition(0, 0);
 
-		HomeActivity.setAllButtonListener((ViewGroup)findViewById(R.id.rootActionbar), this);
+		HomeActivity.setAllButtonListener(
+				(ViewGroup) findViewById(R.id.rootActionbar), this);
 		HomeActivity.setPositionToMark(this);
-
 
 		// Set up the login form.
 		mName = getIntent().getStringExtra(EXTRA_EMAIL);
@@ -159,300 +163,9 @@ public class LoginActivity extends Activity implements OnClickListener {
 		mRemoveTextKey.setOnClickListener(this);
 	}
 
-	/**
-	 * Fill list of login data.
-	 */
-	public void fillListOfLoginData() {
-
-		// TODO: parse data from DB
-
-		// fill list of keys
-		String retrieveKeys = "";
-		try {
-			retrieveKeys = new RetrieveTaskKeys().execute().get();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		Set<String> fieldNames = new HashSet<String>();
-		StajParser stajParser = null;
-		stajParser = new StajParser(retrieveKeys);
-		int counter = 0;
-		// evaluate, how many entries are in the database
-		while (stajParser.hasNext()) {
-			JsonStreamElement next = stajParser.next();
-			if (next.jsonStreamElementType() == JsonStreamElementType.START_FIELD) {
-				fieldNames.add(next.text());
-				counter++;
-			}
-		}
-
-		for (int i = 0; i < counter - 1; i++) {
-			try {
-				list_of_keys.add(new JdomParser().parse(retrieveKeys)
-						.getStringValue("keys", i, "key"));
-			} catch (InvalidSyntaxException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-
-		// fill list of credentials
-
-		String retrieveUser = "";
-		try {
-			retrieveUser = new RetrieveTaskUser().execute().get();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		fieldNames = new HashSet<String>();
-		stajParser = null;
-		stajParser = new StajParser(retrieveUser);
-		counter = 0;
-		// evaluate, how many entries are in the database
-		while (stajParser.hasNext()) {
-			JsonStreamElement next = stajParser.next();
-			if (next.jsonStreamElementType() == JsonStreamElementType.START_FIELD) {
-				fieldNames.add(next.text());
-				counter++;
-			}
-		}
-
-		for (int i = 0; i < (counter - 1) / 2; i++) {
-			try {
-				String email = new JdomParser().parse(retrieveUser)
-						.getStringValue("user", i, "email");
-				String key = new JdomParser().parse(retrieveUser)
-						.getStringValue("user", i, "key");
-				list_of_credentials.add(email + ":" + key);
-			} catch (InvalidSyntaxException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-
-	}
-
-	/**
-	 * The Class RetrieveTaskUser.
-	 */
-	private class RetrieveTaskUser extends AsyncTask<Void, Void, String> {
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see android.os.AsyncTask#doInBackground(java.lang.Object[])
-		 */
-		@Override
-		protected String doInBackground(Void... params) {
-			Log.e("retrieve", "entere do in background of retrieve task: ");
-
-			String strUrl = "http://www.reecon.eu/ooewasser/api/v1/?request=retrieveUser";
-			URL url = null;
-			StringBuffer sb = new StringBuffer();
-			try {
-				url = new URL(strUrl);
-				HttpURLConnection connection = (HttpURLConnection) url
-						.openConnection();
-				connection.connect();
-				InputStream iStream = connection.getInputStream();
-				BufferedReader reader = new BufferedReader(
-						new InputStreamReader(iStream));
-				String line = "";
-				while ((line = reader.readLine()) != null) {
-					sb.append(line);
-				}
-
-				reader.close();
-				iStream.close();
-
-			} catch (MalformedURLException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			return sb.toString();
-		}
-	}
-
-	/**
-	 * The Class RetrieveTaskKeys.
-	 */
-	private class RetrieveTaskKeys extends AsyncTask<Void, Void, String> {
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see android.os.AsyncTask#doInBackground(java.lang.Object[])
-		 */
-		@Override
-		protected String doInBackground(Void... params) {
-			Log.e("retrieve", "entere do in background of retrieve task: ");
-
-			String strUrl = "http://www.reecon.eu/ooewasser/api/v1/?request=retrieveKeys";
-			URL url = null;
-			StringBuffer sb = new StringBuffer();
-			try {
-				url = new URL(strUrl);
-				HttpURLConnection connection = (HttpURLConnection) url
-						.openConnection();
-				connection.connect();
-				InputStream iStream = connection.getInputStream();
-				BufferedReader reader = new BufferedReader(
-						new InputStreamReader(iStream));
-				String line = "";
-				while ((line = reader.readLine()) != null) {
-					sb.append(line);
-				}
-
-				reader.close();
-				iStream.close();
-
-			} catch (MalformedURLException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			return sb.toString();
-		}
-	}
-
-	/**
-	 * The Class DeleteTaskKey.
-	 */
-	private class DeleteTaskKey extends AsyncTask<String, Void, Void> {
-
-		/* (non-Javadoc)
-		 * @see android.os.AsyncTask#doInBackground(java.lang.Object[])
-		 */
-		@Override
-		protected Void doInBackground(String... params) {
-
-			Log.e("send", "delete object from database");
-
-			System.out.println(params[0]);
-
-			String key = params[0];
-			Log.d("key:", key);
-			String strUrl = "http://www.reecon.eu/ooewasser/api/v1/?request=deleteKey";
-			URL url = null;
-			try {
-				url = new URL(strUrl);
-
-				HttpURLConnection connection = (HttpURLConnection) url
-						.openConnection();
-				connection.setRequestMethod("POST");
-				connection.setDoOutput(true);
-				OutputStreamWriter outputStreamWriter = new OutputStreamWriter(
-						connection.getOutputStream());
-
-				outputStreamWriter.write("key=" + key);
-				outputStreamWriter.flush();
-				outputStreamWriter.close();
-
-				InputStream iStream = connection.getInputStream();
-				BufferedReader reader = new BufferedReader(
-						new InputStreamReader(iStream));
-
-				StringBuffer sb = new StringBuffer();
-				Log.e("url", url.toString());
-
-				String line = "";
-
-				while ((line = reader.readLine()) != null) {
-					sb.append(line);
-				}
-				Log.e("stringbuffer", sb.toString());
-
-				reader.close();
-				iStream.close();
-
-			} catch (MalformedURLException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-
-			return null;
-		}
-
-	}
-
-	/**
-	 * The Class SaveTaskUser.
-	 */
-	private class SaveTaskUser extends AsyncTask<String, Void, Void> {
-
-		/* (non-Javadoc)
-		 * @see android.os.AsyncTask#doInBackground(java.lang.Object[])
-		 */
-		@Override
-		protected Void doInBackground(String... params) {
-
-			Log.e("send", "send object to database");
-
-			System.out.println(params[0]);
-
-			String[] pieces = params[0].split(":");
-
-			String email = pieces[0];
-			String key = pieces[1];
-
-			Log.d("email:", pieces[0]);
-			Log.d("key:", pieces[1]);
-			String strUrl = "http://www.reecon.eu/ooewasser/api/v1/?request=saveUser";
-			URL url = null;
-			try {
-				url = new URL(strUrl);
-
-				HttpURLConnection connection = (HttpURLConnection) url
-						.openConnection();
-				connection.setRequestMethod("POST");
-				connection.setDoOutput(true);
-				OutputStreamWriter outputStreamWriter = new OutputStreamWriter(
-						connection.getOutputStream());
-
-				outputStreamWriter.write("email=" + email + "&key=" + key);
-				outputStreamWriter.flush();
-				outputStreamWriter.close();
-
-				InputStream iStream = connection.getInputStream();
-				BufferedReader reader = new BufferedReader(
-						new InputStreamReader(iStream));
-
-				StringBuffer sb = new StringBuffer();
-
-				String line = "";
-
-				while ((line = reader.readLine()) != null) {
-					sb.append(line);
-				}
-				Log.e("save sb:", sb.toString());
-
-				reader.close();
-				iStream.close();
-
-			} catch (MalformedURLException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-
-			return null;
-		}
-
-	}
-
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see android.app.Activity#onOptionsItemSelected(android.view.MenuItem)
 	 */
 	@Override
@@ -467,16 +180,15 @@ public class LoginActivity extends Activity implements OnClickListener {
 		}
 	}
 
-
 	/**
 	 * Attempts to sign in or register the account specified by the login form.
 	 * If there are form errors (invalid email, missing fields, etc.), the
 	 * errors are presented and no actual login attempt is made.
 	 */
 	public void attemptLogin() {
-		if (mAuthTask != null) {
-			return;
-		}
+		// if (mAuthTask != null) {
+		// return;
+		// }
 
 		// Reset errors.
 		mNameView.setError(null);
@@ -494,7 +206,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 			mKeyView.setError(getString(R.string.error_field_required));
 			focusView = mKeyView;
 			cancel = true;
-		} else if (mKey.length() < 4) {
+		} else if (mKey.length() < 2) {
 			mKeyView.setError(getString(R.string.error_invalid_password));
 			focusView = mKeyView;
 			cancel = true;
@@ -525,10 +237,75 @@ public class LoginActivity extends Activity implements OnClickListener {
 		}
 	}
 
+	private class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
+
+		@Override
+		protected Boolean doInBackground(Void... params) {
+			Log.d("retrieve", "entere do in background of login task task: ");
+
+			String url = "http://wasserapp.reecon.eu/loginMobile.php";
+
+			HttpClient client = new DefaultHttpClient();
+			HttpPost post = new HttpPost(url);
+
+			// add header
+			post.setHeader("User-Agent", USER_AGENT);
+			StringBuffer result = new StringBuffer();
+			try {
+				List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
+				urlParameters.add(new BasicNameValuePair("function", "login"));
+				urlParameters.add(new BasicNameValuePair("email", "dan-n@gmx.at"));
+				urlParameters.add(new BasicNameValuePair("pass", "nad"));
+
+				post.setEntity(new UrlEncodedFormEntity(urlParameters));
+				HttpResponse response = client.execute(post);
+
+				if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+					BufferedReader rd = new BufferedReader(
+							new InputStreamReader(response.getEntity()
+									.getContent()));
+
+					String line = "";
+					while ((line = rd.readLine()) != null) {
+						result.append(line);
+					}
+					// System.out.println(result.toString());
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return true;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see android.os.AsyncTask#onPostExecute(java.lang.Object)
+		 */
+		protected void onPostExecute(final Boolean success) {
+			mAuthTask = null;
+			showProgress(false);
+
+			if (success) {
+				superUser = true;
+				Toast.makeText(getApplicationContext(), "login successful",
+						2000).show();
+				Intent i = new Intent(getApplicationContext(),
+						ChooseMarkerActivity.class);
+				startActivity(i);
+				finish();
+			} else {
+				mKeyView.setError(getString(R.string.error_incorrect_password));
+				mKeyView.requestFocus();
+			}
+		}
+	}
+
 	/**
 	 * Shows the progress UI and hides the login form.
 	 *
-	 * @param show the show
+	 * @param show
+	 *            the show
 	 */
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
 	private void showProgress(final boolean show) {
@@ -544,25 +321,25 @@ public class LoginActivity extends Activity implements OnClickListener {
 
 			mLoginStatusView.setVisibility(View.VISIBLE);
 			mLoginStatusView.animate().setDuration(shortAnimTime)
-			.alpha(show ? 1 : 0)
-			.setListener(new AnimatorListenerAdapter() {
-				@Override
-				public void onAnimationEnd(Animator animation) {
-					mLoginStatusView.setVisibility(show ? View.VISIBLE
-							: View.GONE);
-				}
-			});
+					.alpha(show ? 1 : 0)
+					.setListener(new AnimatorListenerAdapter() {
+						@Override
+						public void onAnimationEnd(Animator animation) {
+							mLoginStatusView.setVisibility(show ? View.VISIBLE
+									: View.GONE);
+						}
+					});
 
 			mLoginFormView.setVisibility(View.VISIBLE);
 			mLoginFormView.animate().setDuration(shortAnimTime)
-			.alpha(show ? 0 : 1)
-			.setListener(new AnimatorListenerAdapter() {
-				@Override
-				public void onAnimationEnd(Animator animation) {
-					mLoginFormView.setVisibility(show ? View.GONE
-							: View.VISIBLE);
-				}
-			});
+					.alpha(show ? 0 : 1)
+					.setListener(new AnimatorListenerAdapter() {
+						@Override
+						public void onAnimationEnd(Animator animation) {
+							mLoginFormView.setVisibility(show ? View.GONE
+									: View.VISIBLE);
+						}
+					});
 		} else {
 			// The ViewPropertyAnimator APIs are not available, so simply show
 			// and hide the relevant UI components.
@@ -571,72 +348,9 @@ public class LoginActivity extends Activity implements OnClickListener {
 		}
 	}
 
-	/**
-	 * Represents an asynchronous login/registration task used to authenticate
-	 * the user.
-	 */
-	public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
-		
-		/* (non-Javadoc)
-		 * @see android.os.AsyncTask#doInBackground(java.lang.Object[])
-		 */
-		@Override
-		protected Boolean doInBackground(Void... params) {
-			// TODO: attempt authentication against a network service.
-
-			// new user?
-			for (String keys : list_of_keys) {
-				if (keys.equals(mKey)) {
-					list_of_credentials.add(mName + ":" + mKey);
-					new SaveTaskUser().execute(mName + ":" + mKey);
-					list_of_keys.remove(keys);
-					new DeleteTaskKey().execute(keys);
-					return true;
-				}
-			}
-
-			for (String credential : list_of_credentials) {
-				String[] pieces = credential.split(":");
-				if (pieces[0].toUpperCase().equals(mName.toUpperCase())) {
-					return pieces[1].equals(mKey);
-				}
-			}
-
-			return false;
-		}
-
-		/* (non-Javadoc)
-		 * @see android.os.AsyncTask#onPostExecute(java.lang.Object)
-		 */
-		@Override
-		protected void onPostExecute(final Boolean success) {
-			mAuthTask = null;
-			showProgress(false);
-
-			if (success) {
-				superUser = true;
-				Toast.makeText(getApplicationContext(), "login successful",
-						2000).show();
-				Intent i = new Intent(getApplicationContext(), ChooseMarkerActivity.class);
-				startActivity(i);				
-				finish();
-			} else {
-				mKeyView.setError(getString(R.string.error_incorrect_password));
-				mKeyView.requestFocus();
-			}
-		}
-
-		/* (non-Javadoc)
-		 * @see android.os.AsyncTask#onCancelled()
-		 */
-		@Override
-		protected void onCancelled() {
-			mAuthTask = null;
-			showProgress(false);
-		}
-	}
-
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see android.view.View.OnClickListener#onClick(android.view.View)
 	 */
 	@Override
@@ -644,19 +358,19 @@ public class LoginActivity extends Activity implements OnClickListener {
 		Intent i = new Intent();
 		switch (_v.getId()) {
 
-		//Actionbar
+		// Actionbar
 		case R.id.b_home:
 			i = new Intent(this, HomeActivity.class);
 			break;
 		case R.id.b_position:
 			i = new Intent();
 			Intent map;
-			if(LoginActivity.superUser){
+			if (LoginActivity.superUser) {
 				map = new Intent(this, ChooseMarkerActivity.class);
 				map.putExtra("user", true);
-			} else{
+			} else {
 				map = new Intent(this, MapActivity.class);
-				map.putExtra("user", false);	
+				map.putExtra("user", false);
 				map.putExtra("m_markertype", "all");
 			}
 			startActivity(map);
@@ -667,7 +381,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 		case R.id.b_more:
 			i = new Intent(this, MoreActivity.class);
 			break;
-			//End Actionbar
+		// End Actionbar
 
 		case R.id.btn_login_removeName:
 			mNameView.setText("");
@@ -676,7 +390,6 @@ public class LoginActivity extends Activity implements OnClickListener {
 			mKeyView.setText("");
 			break;
 		case R.id.sign_in_button:
-			fillListOfLoginData();
 			attemptLogin();
 			break;
 		case R.id.b_back:
@@ -684,9 +397,9 @@ public class LoginActivity extends Activity implements OnClickListener {
 			onBackPressed();
 			break;
 		}
-		if(i != null && i.getComponent() != null){
-				i.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-			startActivity(i);	
+		if (i != null && i.getComponent() != null) {
+			i.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+			startActivity(i);
 		}
 	}
 }
