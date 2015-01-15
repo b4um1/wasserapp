@@ -304,7 +304,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 				int id = Integer.parseInt(_resultString.substring(6, _resultString.indexOf(",")));
 				superUserId = id;
 				
-				Toast.makeText(getApplicationContext(), "login successful",
+				Toast.makeText(getApplicationContext(), R.string.more_loginSuccessfully,
 						2000).show();
 				Intent i = new Intent(getApplicationContext(),
 						ChooseMarkerActivity.class);

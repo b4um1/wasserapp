@@ -136,6 +136,7 @@ public class MoreActivity extends Activity implements OnClickListener {
 		case R.id.b_logout:
 			LoginActivity.superUser = false;
 			LoginActivity.superUserId = -1;
+			Toast.makeText(getApplicationContext(), R.string.more_logutSuccessfully, 2000).show();
 			i = new Intent(this, HomeActivity.class);
 			break;
 		case R.id.b_about:
