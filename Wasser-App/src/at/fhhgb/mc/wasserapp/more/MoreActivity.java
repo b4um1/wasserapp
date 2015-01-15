@@ -63,11 +63,9 @@ public class MoreActivity extends Activity implements OnClickListener {
 		mLogout.setOnClickListener(this);
 		
 		if (LoginActivity.superUser) {
-			Log.i("TEST", "superUser = true");
 			mLogin.setVisibility(View.GONE);
 			mLogout.setVisibility(View.VISIBLE);
 		} else {
-			Log.i("TEST", "superUser = false");
 			mLogin.setVisibility(View.VISIBLE);
 			mLogout.setVisibility(View.GONE);
 		}
@@ -85,11 +83,9 @@ public class MoreActivity extends Activity implements OnClickListener {
 		actionBarButton.setPressed(true);
 		
 		if (LoginActivity.superUser) {
-			Log.i("TEST", "superUser = true");
 			mLogin.setVisibility(View.GONE);
 			mLogout.setVisibility(View.VISIBLE);
 		} else {
-			Log.i("TEST", "superUser = false");
 			mLogin.setVisibility(View.VISIBLE);
 			mLogout.setVisibility(View.GONE);
 		}
