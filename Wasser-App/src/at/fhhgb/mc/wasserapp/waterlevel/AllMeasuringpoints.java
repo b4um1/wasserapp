@@ -50,7 +50,8 @@ public class AllMeasuringpoints extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_all_measuringpoints);
 
-		getAllMeasuringpoints();
+		
+		getAllMeasuringpoints(); // + fill the list
 		
 		
 	}
@@ -66,7 +67,6 @@ public class AllMeasuringpoints extends Activity {
 	
 	public void getAllMeasuringpoints() {
 		new RetrieveTask().execute();
-
 	}
 	
 	/**
@@ -91,7 +91,7 @@ public class AllMeasuringpoints extends Activity {
 			try {
 				List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
 				urlParameters
-						.add(new BasicNameValuePair("function", "function:getAllMeasuringpoints"));
+						.add(new BasicNameValuePair("function", "getAllMeasuringpoints"));
 				post.setEntity(new UrlEncodedFormEntity(urlParameters));
 				HttpResponse response = client.execute(post);
 
@@ -114,9 +114,7 @@ public class AllMeasuringpoints extends Activity {
 		@Override
 		protected void onPostExecute(String _result) {
 			super.onPostExecute(_result);
-			Log.i("RetrievePostExecute", _result);
 			new ParserTask().execute(_result);
-
 		}
 	}
 	
@@ -130,15 +128,15 @@ public class AllMeasuringpoints extends Activity {
 		@Override
 		protected List<HashMap<String, String>> doInBackground(String... params) {
 
-			MeasuringpointsJSONParser markerParser = new MeasuringpointsJSONParser();
+			MeasuringpointsJSONParser measuringpointsParser = new MeasuringpointsJSONParser();
 
-			List<HashMap<String, String>> markersList = new ArrayList<HashMap<String, String>>();
+			List<HashMap<String, String>> measuringpointList = new ArrayList<HashMap<String, String>>();
 			try {
-				markersList = markerParser.parse(params[0]);
+				measuringpointList = measuringpointsParser.parse(params[0]);
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}
-			return markersList;
+			return measuringpointList;
 		}
 		
 		@Override
@@ -147,9 +145,7 @@ public class AllMeasuringpoints extends Activity {
 			ArrayList<String> names = new ArrayList<String>();
 			for (int i = 0; i < result.size(); i++) {
 				HashMap<String, String> parsermap = result.get(i);
-
 				String ret = parsermap.get("measuringpointName");
-				
 				names.add(ret);
 			}
 			displayMeasuringpoints(names);
