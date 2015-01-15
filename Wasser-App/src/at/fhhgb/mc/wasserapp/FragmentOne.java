@@ -43,13 +43,10 @@ public class FragmentOne extends Fragment implements OnClickListener {
 
 	@Override
 	public void onClick(View _button) {
-		Intent i;
 		_button.setPressed(true);
 		switch (_button.getId()) {
 		case R.id.b_fountain:
-			i = new Intent();
 			Intent map_fontain;
-			map_fontain = new Intent();
 			map_fontain = new Intent(mContext, MapActivity.class);
 			map_fontain.putExtra("user", false);
 			map_fontain.putExtra("m_markertype", "fountain");
@@ -57,22 +54,23 @@ public class FragmentOne extends Fragment implements OnClickListener {
 	
 			break;
 		case R.id.b_wc:
-			i = new Intent();
 			Intent map_wc;
-			map_wc = new Intent();
 			map_wc = new Intent(mContext, MapActivity.class);
 			map_wc.putExtra("user", false);
 			map_wc.putExtra("m_markertype", "toilet");
 			startActivity(map_wc);
 			break;
 		case R.id.b_waterlevel:
-			i = new Intent(mContext, WaterLevelsActivity.class);
-			startActivity(i);
+			Intent waterlevel;
+			waterlevel = new Intent(mContext, WaterLevelsActivity.class);
+			startActivity(waterlevel);
 			break;
 		case R.id.b_healing:
-			i = new Intent();
-			Toast.makeText(mContext, "Heilbrunnen!", 2000).show();
-			// i = new Intent(this, PrecipitationActivity.class);
+			Intent hs;
+			hs = new Intent(mContext, MapActivity.class);
+			hs.putExtra("user", false);
+			hs.putExtra("m_markertype", "healingspring");
+			startActivity(hs);
 			break;
 		}
 	}

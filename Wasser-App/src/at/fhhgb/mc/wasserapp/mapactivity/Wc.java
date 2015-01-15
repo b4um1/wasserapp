@@ -23,7 +23,7 @@ public class Wc extends MyMarkerObject {
 	public Wc (){
 		super();
 		setM_icon(true);
-		setM_type("wc");
+		setM_type("toilet");
 	}
 	
 	/* (non-Javadoc)

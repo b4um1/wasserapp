@@ -130,12 +130,12 @@ public class FountainDetailsActivity extends Activity implements OnClickListener
 		
 		if(m_attribute){
 			TextView tv_drinkable = (TextView) findViewById(R.id.tv_drinkable);
-			tv_drinkable.setText("trinkbar");
+			tv_drinkable.setText("Ja");
 			Log.e("bool", "true");
 			
 		}else{
 			TextView tv_drinkable = (TextView) findViewById(R.id.tv_drinkable);
-			tv_drinkable.setText("untrinkbar");
+			tv_drinkable.setText("Nein");
 			Log.e("bool", "false");
 		}
 		tv_address = (TextView) findViewById(R.id.tv_address);
@@ -343,7 +343,7 @@ public class FountainDetailsActivity extends Activity implements OnClickListener
 	 */
 	@Override
 	public void onClick(View v) {
-		EditText tf = (EditText) findViewById(R.id.tf_comment);
+		/*EditText tf = (EditText) findViewById(R.id.tf_comment);
 		m_comment = tf.getText().toString();
 //		Toast.makeText(getApplicationContext(), "Kommentar wurde gespeichert",
 //				Toast.LENGTH_SHORT).show();
@@ -352,7 +352,7 @@ public class FountainDetailsActivity extends Activity implements OnClickListener
 		new SaveTask().execute();
 		parseJson();
 		adapter.notifyDataSetChanged();
-		
+		*/
 		Intent i = new Intent();
 		switch (v.getId()) {
 
