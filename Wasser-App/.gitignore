@@ -26,6 +26,7 @@ hs_err_pid*
 # Java class files
 *.class
 *.classpath
+*.properties
 
 # Generated files
 bin/

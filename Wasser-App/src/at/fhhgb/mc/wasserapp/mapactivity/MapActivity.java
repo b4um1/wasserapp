@@ -104,7 +104,8 @@ public class MapActivity extends Activity implements OnMapClickListener,
 	private String getMethod = "";
 	private final String GETFOUNTAINS = "getAllFountains";
 	private final String GETTOILETS = "getAllToilets";
-	private final String GETHEALINGSPRINGS = "getAllHealingsSprings";
+	private final String GETHEALINGSPRINGS = "getAllHealingsprings";
+	private final String FTPURLOFPHPFUNCTIONS = "http://wasserapp.reecon.eu/marker.php";
 
 	private final String USER_AGENT = "Mozilla/5.0";
 	/** The m_btn_save. */
@@ -243,6 +244,9 @@ public class MapActivity extends Activity implements OnMapClickListener,
 				m_dialog_checkbox.setText(getString(R.string.accessible));
 			} else if (m_markertype.equals("fountain")) {
 				m_dialog_checkbox.setText(getString(R.string.drinkable));
+			} else if (m_markertype.equals("healingspring")) {
+				m_dialog_checkbox
+						.setText(getString(R.string.healing_healingspring));
 			}
 			m_checkbox = true;
 			m_dialog_checkbox.setOnCheckedChangeListener(this);
@@ -378,7 +382,7 @@ public class MapActivity extends Activity implements OnMapClickListener,
 		while (m_currentLocation == null) {
 			m_currentLocation = getLocation();
 			try {
-				Thread.sleep(1000);
+				Thread.sleep(500);
 			} catch (Exception e) {
 			}
 			if (m_currentLocation == null) {
@@ -543,7 +547,6 @@ public class MapActivity extends Activity implements OnMapClickListener,
 		}
 	}
 
-	
 	@Override
 	public void onMapClick(LatLng _latLng) {
 		// get the address of the position where the user taps on the map.
@@ -1001,32 +1004,31 @@ public class MapActivity extends Activity implements OnMapClickListener,
 			String attribute = params[0].getM_checkboxStringBool();
 			String comment = params[0].getM_comment();
 
-			String url = "http://wasserapp.reecon.eu/marker_test.php";
+			String url = FTPURLOFPHPFUNCTIONS;
+
 			HttpClient client = new DefaultHttpClient();
 			HttpPost post = new HttpPost(url);
-			
-			Log.d("SAVETASK", "Starting to send object: "
-					+ params[0].getM_type());
-			
+
+			Log.d("SAVETASK",
+					"Starting to send object: " + params[0].getM_type());
+
 			// add header
 			post.setHeader("User-Agent", USER_AGENT);
-			
+
 			try {
 				List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
 				urlParameters.add(new BasicNameValuePair("function", "insert"));
-				urlParameters.add(new BasicNameValuePair("marker_table",type));
+				urlParameters.add(new BasicNameValuePair("marker_table", type));
 				urlParameters.add(new BasicNameValuePair("street", street));
-				if (type.equals("fountain")) {
-					urlParameters.add(new BasicNameValuePair("attribut_column",
-							"drinkable"));
-				} else if (type.equals("toilet")) {
-					urlParameters.add(new BasicNameValuePair("attribut_column",
-							"barrier_free"));
-
-				}else{
-					urlParameters.add(new BasicNameValuePair("attribut_column",
-							""));
-				}
+				/*
+				 * if (type.equals("fountain")) { urlParameters.add(new
+				 * BasicNameValuePair("attribut_column", "drinkable")); } else
+				 * if (type.equals("toilet")) { urlParameters.add(new
+				 * BasicNameValuePair("attribut_column", "barrier_free"));
+				 * 
+				 * }else{ urlParameters.add(new
+				 * BasicNameValuePair("attribut_column", "")); }
+				 */
 				urlParameters
 						.add(new BasicNameValuePair("attribut", attribute));
 				urlParameters.add(new BasicNameValuePair("comment", comment));
@@ -1035,6 +1037,9 @@ public class MapActivity extends Activity implements OnMapClickListener,
 				urlParameters.add(new BasicNameValuePair("latitude", lat));
 				urlParameters.add(new BasicNameValuePair("city", city));
 				urlParameters.add(new BasicNameValuePair("zip", zip));
+				urlParameters.add(new BasicNameValuePair("user_id", "15")); // Mario
+																			// Baumgartner
+																			// LoginActivity.m_userid
 
 				post.setEntity(new UrlEncodedFormEntity(urlParameters));
 				HttpResponse response = client.execute(post);
@@ -1066,7 +1071,7 @@ public class MapActivity extends Activity implements OnMapClickListener,
 		protected String doInBackground(Void... params) {
 			Log.d("retrieve", "entere do in background of retrieve task: ");
 
-			String url = "http://wasserapp.reecon.eu/marker_test.php";
+			String url = FTPURLOFPHPFUNCTIONS;
 
 			HttpClient client = new DefaultHttpClient();
 			HttpPost post = new HttpPost(url);
@@ -1121,6 +1126,8 @@ public class MapActivity extends Activity implements OnMapClickListener,
 			} else {
 				if (getMethod.equals(GETTOILETS)) {
 					type = "wc";
+				} else {
+					type = "healingspring";
 				}
 			}
 
@@ -1151,14 +1158,21 @@ public class MapActivity extends Activity implements OnMapClickListener,
 				String attribute = parsermap.get("attribute");
 				String comment = parsermap.get("comment");
 
-				MyMarkerObject m = new Fountain();
+				MyMarkerObject m = null;
+				if (type.equals("wc")) {
+					m = new Wc();
+				} else if (type.equals("fountain")) {
+					m = new Fountain();
+				} else {
+					m = new Healingspring();
+				}
 
 				m.setM_id(id);
 				m.setM_latLng(latLng);
 				m.setM_address(address);
 				if (type.equals("wc") | type.equals("fountain")) {
 					m.setM_checkboxStringBool(attribute);
-					if (attribute.equals("Ja")) {
+					if (attribute.equals("true")) {
 						m.setM_icon(true);
 					} else {
 						m.setM_icon(false);
@@ -1201,7 +1215,7 @@ public class MapActivity extends Activity implements OnMapClickListener,
 			Log.i(LOG_TAG_DELETE, "delete object with id: " + params[0]
 					+ " from database");
 			MyMarkerObject mymarker = params[0];
-			String url = "http://wasserapp.reecon.eu/marker_test.php";
+			String url = FTPURLOFPHPFUNCTIONS;
 
 			HttpClient client = new DefaultHttpClient();
 			HttpPost post = new HttpPost(url);
@@ -1215,7 +1229,8 @@ public class MapActivity extends Activity implements OnMapClickListener,
 						"deleteMarker"));
 				urlParameters.add(new BasicNameValuePair("marker_table",
 						mymarker.getM_type()));
-				urlParameters.add(new BasicNameValuePair("marker_id", mymarker.getM_id()));
+				urlParameters.add(new BasicNameValuePair("marker_id", mymarker
+						.getM_id()));
 				post.setEntity(new UrlEncodedFormEntity(urlParameters));
 
 				HttpResponse response = client.execute(post);
@@ -1240,9 +1255,12 @@ public class MapActivity extends Activity implements OnMapClickListener,
 
 	}
 
-	// Background task to update locations attributes on the remote mysql server
 	/**
-	 * The Class UpdateTask.
+	 * Update Task which updates the marker with the specific data which has
+	 * changed
+	 * 
+	 * @author mariobaumgartner
+	 *
 	 */
 	private class UpdateTask extends AsyncTask<MyMarkerObject, Void, Void> {
 
