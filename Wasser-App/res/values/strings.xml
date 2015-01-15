@@ -46,7 +46,13 @@
 
     <!-- lakes -->
     <string name="lakes_lakes">Lakes</string>
+    
+    <!-- Laborbus -->
+    <string name="labbus_labbus">Labbus</string>
 
+    <!-- Emergency Management -->
+    <string name="emergencyManagement_emergencyManagement">Emergency Management</string>
+    
     <!-- more -->
     <string name="more_login">Login</string>
     <string name="more_logout">Logout</string>

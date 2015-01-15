@@ -40,6 +40,12 @@
     <!-- lakes -->
     <string name="lakes_lakes">Seen</string>
     
+    <!-- Laborbus -->
+    <string name="labbus_labbus">Laborbus</string>
+    
+    <!-- Emergency Management -->
+    <string name="emergencyManagement_emergencyManagement">Katastrophenschutz</string>
+    
     <!-- more -->
     <string name="more_email">E-Mail</string>
     <string name="more_password">Passwort</string>
