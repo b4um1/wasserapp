@@ -31,6 +31,20 @@
                 android:orientation="vertical" >
 
                 <Button
+                    android:id="@+id/b_logout"
+                    style="@style/Button_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="70dp"
+                    android:background="@layout/button_list"
+                    android:drawableLeft="@drawable/ic_login"
+                    android:drawablePadding="20dp"
+                    android:drawableRight="@drawable/ic_arrow"
+                    android:paddingRight="10dp"
+                    android:text="@string/more_logout"
+                    android:textAllCaps="true"
+                    android:textColor="@color/whitegray" />
+
+                <Button
                     android:id="@+id/b_login"
                     style="@style/Button_list"
                     android:layout_width="match_parent"

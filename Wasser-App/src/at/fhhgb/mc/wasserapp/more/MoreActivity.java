@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.opengl.Visibility;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -32,6 +33,9 @@ import at.fhhgb.mc.wasserapp.rssfeed.WebViewActivity;
  */
 public class MoreActivity extends Activity implements OnClickListener {
 
+	Button mLogin;
+	Button mLogout;
+	
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
 	 */
@@ -53,6 +57,20 @@ public class MoreActivity extends Activity implements OnClickListener {
 		HomeActivity.setAllButtonListener((ViewGroup)findViewById(R.id.rootActionbar), this);
 		HomeActivity.setPositionToMark(this);
 		
+		mLogin = (Button) findViewById(R.id.b_login);
+		mLogout = (Button) findViewById(R.id.b_logout);
+		
+		mLogout.setOnClickListener(this);
+		
+		if (LoginActivity.superUser) {
+			Log.i("TEST", "superUser = true");
+			mLogin.setVisibility(View.GONE);
+			mLogout.setVisibility(View.VISIBLE);
+		} else {
+			Log.i("TEST", "superUser = false");
+			mLogin.setVisibility(View.VISIBLE);
+			mLogout.setVisibility(View.GONE);
+		}
 	}
 
 	/* (non-Javadoc)
@@ -65,6 +83,16 @@ public class MoreActivity extends Activity implements OnClickListener {
 		HomeActivity.setPositionToMark(this);
 		Button actionBarButton = (Button)findViewById(R.id.b_more);
 		actionBarButton.setPressed(true);
+		
+		if (LoginActivity.superUser) {
+			Log.i("TEST", "superUser = true");
+			mLogin.setVisibility(View.GONE);
+			mLogout.setVisibility(View.VISIBLE);
+		} else {
+			Log.i("TEST", "superUser = false");
+			mLogin.setVisibility(View.VISIBLE);
+			mLogout.setVisibility(View.GONE);
+		}
 	}
 
 	/* (non-Javadoc)
@@ -104,6 +132,11 @@ public class MoreActivity extends Activity implements OnClickListener {
 			} else {
 				i = new Intent();
 			}
+			break;
+		case R.id.b_logout:
+			LoginActivity.superUser = false;
+			LoginActivity.superUserId = -1;
+			i = new Intent(this, HomeActivity.class);
 			break;
 		case R.id.b_about:
 			i = new Intent(this, AboutActivity.class);
