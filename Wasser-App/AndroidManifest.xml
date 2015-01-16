@@ -82,7 +82,8 @@
             android:screenOrientation="nosensor" />
         <activity
             android:name=".waterlevel.ShowMeasuringPointActivity"
-            android:screenOrientation="nosensor" />
+            android:screenOrientation="nosensor"
+            android:theme="@android:style/Theme.Holo" />
         <activity
             android:name=".rssfeed.RssActivity"
             android:screenOrientation="nosensor" />

@@ -39,42 +39,13 @@
         android:layout_height="match_parent"
         android:orientation="vertical" >
 
-        <LinearLayout
+        <android.support.v4.view.ViewPager
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/pager_wl"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical" >
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:alpha="0.8"
-                android:background="@color/blue"
-                android:padding="5dp" >
-
-                <TextView
-                    android:id="@+id/tv_waterlevels_show_measuring_point_diagram"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:text="@string/waterlevel_waterlevel_diagram"
-                    android:textColor="@color/whitegray"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
-            </FrameLayout>
-
-            <LinearLayout
-                android:id="@+id/Chart_layout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="1dp"
-                android:alpha="0.8"
-                android:background="@color/blue"
-                android:orientation="vertical"
-                android:padding="5dp" >
-            </LinearLayout>
-        </LinearLayout>
+            android:layout_weight="0.2" >
+        </android.support.v4.view.ViewPager>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -135,7 +106,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:layout_weight="0"
-            android:orientation="vertical" >
+            android:orientation="vertical"
+            android:paddingBottom="10dp" >
 
             <FrameLayout
                 android:layout_width="match_parent"
