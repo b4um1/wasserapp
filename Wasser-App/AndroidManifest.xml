@@ -106,8 +106,12 @@
             android:screenOrientation="nosensor" >
         </activity>
         <activity
-            android:name="at.fhhgb.mc.wasserapp.waterlevel.AllMeasuringpoints"
+            android:name=".waterlevel.AllMeasuringpoints"
             android:label="@string/title_activity_all_measuringpoints" >
+        </activity>
+        <activity
+            android:name="at.fhhgb.mc.wasserapp.labbus.LabbusActivity"
+            android:label="@string/title_activity_labbus" >
         </activity>
     </application>
 
