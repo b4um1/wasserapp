@@ -11,9 +11,21 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.simple.parser.ParseException;
 
 import at.fhhgb.mc.wasserapp.ChooseMarkerActivity;
 import at.fhhgb.mc.wasserapp.HomeActivity;
@@ -49,48 +61,50 @@ import argo.staj.StajParser;
 /**
  * The Class RiversActivity.
  */
-public class RiversActivity extends Activity implements OnItemClickListener, OnClickListener {
+public class RiversActivity extends Activity implements OnItemClickListener,
+		OnClickListener {
+
+	private final String USER_AGENT = "Mozilla/5.0";
 
 	/** The m list. */
 	private ArrayList<River> mList;
-	
-	/** The Constant CLICKED_ID. */
-	private static final String CLICKED_ID = "clickedRiver";
 
-	/* (non-Javadoc)
+	/** The Constant CLICKED_ID. */
+	private static final String RIVER_ID = "riverId";
+	
+	private static final String RIVER_NAME = "riverName";
+
+	private final String GETRIVERS = "getAllRivers";
+	private final String FTPURLOFPHPFUNCTIONS = "http://wasserapp.reecon.eu/rivers.php";
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
 	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.actionbar);
-		
+
 		ViewFlipper vf = (ViewFlipper) findViewById(R.id.viewflipper);
 		vf.setDisplayedChild(4);
 		overridePendingTransition(0, 0);
-		
-		HomeActivity.setAllButtonListener((ViewGroup)findViewById(R.id.rootActionbar), this);
+
+		HomeActivity.setAllButtonListener(
+				(ViewGroup) findViewById(R.id.rootActionbar), this);
 		HomeActivity.setPositionToMark(this);
 
 		mList = new ArrayList<River>();
 		
 		if (haveNetworkConnection()) {
 			fillArrayList();
-
-			// fill the list
-			MyArrayAdapterRivers adapter = new MyArrayAdapterRivers(getApplicationContext(), R.layout.list_layout, mList);
-			
-			Log.i("mList", mList.get(0).getmRiverName());
-
-			ListView v = (ListView) findViewById(R.id.container_rivers);
-			v.setOnItemClickListener(this);
-			v.setAdapter(adapter);
-		} else {
-			finish();
 		}
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see android.app.Activity#onResume()
 	 */
 	@Override
@@ -99,7 +113,7 @@ public class RiversActivity extends Activity implements OnItemClickListener, OnC
 		overridePendingTransition(0, 0);
 		HomeActivity.setPositionToMark(this);
 	}
-	
+
 	/**
 	 * This method checks if the app is connected to the internet Then it
 	 * returns true, else it returns false.
@@ -122,141 +136,135 @@ public class RiversActivity extends Activity implements OnItemClickListener, OnC
 		}
 		if (!(haveConnectedWifi || haveConnectedMobile)) {
 			Toast.makeText(this,
-					getString(R.string.waterlevel_turn_on_internet), Toast.LENGTH_LONG).show();
+					getString(R.string.waterlevel_turn_on_internet),
+					Toast.LENGTH_LONG).show();
 		}
 
 		return haveConnectedWifi || haveConnectedMobile;
+	}
+	
+	public void displayRivers() {
+		
+		MyArrayAdapterRivers adapter = new MyArrayAdapterRivers(this, R.layout.list_layout, mList);
+		
+		ListView v = (ListView) findViewById(R.id.container_rivers);
+		v.setOnItemClickListener(this);
+		v.setAdapter(adapter);
 	}
 
 	/**
 	 * fill the ArrayLists with data from the DB.
 	 */
 	public void fillArrayList() {
-		String retrieveQuery = "";
-		try {
-			retrieveQuery = new RetrieveTask().execute().get();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		Set<String> fieldNames = new HashSet<String>();
-		StajParser stajParser = null;
-		stajParser = new StajParser(retrieveQuery);
-		int counter = 0;
-		// evaluate, how many entries are in the database
-		while (stajParser.hasNext()) {
-			JsonStreamElement next = stajParser.next();
-			if (next.jsonStreamElementType() == JsonStreamElementType.START_FIELD) {
-				fieldNames.add(next.text());
-				counter++;
-			}
-		}
-
-		ArrayList<MeasuringPoint> mpointList = new ArrayList<MeasuringPoint>();
-		ArrayList<String> riverStringList = new ArrayList<String>();
-		ArrayList<River> riverList = new ArrayList<River>();
-
-		for (int i = 0; i < (counter - 1) / 3; i++) {
-			try {
-				String measuringpointname = new JdomParser().parse(
-						retrieveQuery).getStringValue("measuringpoint", i,
-						"measuringpointname");
-				float waterlevel = Float.parseFloat(new JdomParser().parse(
-						retrieveQuery).getStringValue("measuringpoint", i,
-						"waterlevel"));
-				String river = new JdomParser().parse(retrieveQuery)
-						.getStringValue("measuringpoint", i, "river");
-
-				mpointList.add(new MeasuringPoint(measuringpointname,
-						waterlevel, river));
-
-			} catch (InvalidSyntaxException e) {
-				e.printStackTrace();
-			}
-		}
-
-		// fill the list, so that each river is in the list (only once)
-		for (int i = 0; i < mpointList.size(); i++) {
-			if (!(riverStringList.contains(mpointList.get(i).getmRiverName()))) {
-				riverStringList.add(mpointList.get(i).getmRiverName());
-				riverList.add(new River(mpointList.get(i).getmRiverName()));
-			}
-		}
-
-		ArrayList<MeasuringPoint> mpList = new ArrayList<MeasuringPoint>();
-
-		// add to the final ArrayLists
-		for (int i = 0; i < riverStringList.size(); i++) {
-			for (int j = 0; j < mpointList.size(); j++) {
-				if (riverStringList.get(i).equals(
-						mpointList.get(j).getmRiverName())) {
-					mpList.add(mpointList.get(j));
-				}
-			}
-			mList.add(new River(riverStringList.get(i), mpList));
-			mpList = new ArrayList<MeasuringPoint>();
-		}
+		new RetrieveRivers().execute();
 	}
 
-	/* (non-Javadoc)
-	 * @see android.widget.AdapterView.OnItemClickListener#onItemClick(android.widget.AdapterView, android.view.View, int, long)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * android.widget.AdapterView.OnItemClickListener#onItemClick(android.widget
+	 * .AdapterView, android.view.View, int, long)
 	 */
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
 		Intent i = new Intent(this, MeasuringPointActivity.class);
-		i.putExtra(CLICKED_ID, id);
-		i.putExtra("ArrayList", mList);
+		i.putExtra(RIVER_ID, mList.get(position).getmRiverId());
+		i.putExtra(RIVER_NAME, mList.get(position).getmRiverName());
+		
 		startActivity(i);
 	}
+
+	// RETRIEVE
 
 	/**
 	 * The Class RetrieveTask.
 	 *
 	 * @author Thomas Kranzer
 	 */
-	private class RetrieveTask extends AsyncTask<Void, Void, String> {
+	private class RetrieveRivers extends AsyncTask<Void, Void, String> {
 
-		/* (non-Javadoc)
-		 * @see android.os.AsyncTask#doInBackground(java.lang.Object[])
-		 */
 		@Override
 		protected String doInBackground(Void... params) {
-			Log.e("retrieve", "entere do in background of retrieve task: ");
+			Log.d("retrieve", "entere do in background of retrieve all rivers task: ");
 
-			String strUrl = "http://www.reecon.eu/ooewasser/api/v1/?request=retrieveMeasuringpoints";
-			URL url = null;
-			StringBuffer sb = new StringBuffer();
+			HttpClient client = new DefaultHttpClient();
+			HttpPost post = new HttpPost(FTPURLOFPHPFUNCTIONS);
+
+			// add header
+			post.setHeader("User-Agent", USER_AGENT);
+			StringBuffer result = new StringBuffer();
 			try {
-				url = new URL(strUrl);
-				HttpURLConnection connection = (HttpURLConnection) url
-						.openConnection();
-				connection.connect();
-				InputStream iStream = connection.getInputStream();
-				BufferedReader reader = new BufferedReader(
-						new InputStreamReader(iStream));
-				String line = "";
-				while ((line = reader.readLine()) != null) {
-					sb.append(line);
+				List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
+				urlParameters
+						.add(new BasicNameValuePair("function", GETRIVERS));
+				post.setEntity(new UrlEncodedFormEntity(urlParameters));
+				HttpResponse response = client.execute(post);
+
+				if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+					BufferedReader rd = new BufferedReader(
+							new InputStreamReader(response.getEntity()
+									.getContent()));
+
+					String line = "";
+					while ((line = rd.readLine()) != null) {
+						result.append(line);
+					}
+					// System.out.println(result.toString());
 				}
-
-				reader.close();
-				iStream.close();
-
-			} catch (MalformedURLException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			return sb.toString();
+			return result.toString();
+		}
+
+		@Override
+		protected void onPostExecute(String _result) {
+			super.onPostExecute(_result);
+			new ParserTask().execute(_result);
 		}
 	}
-	
-	/* (non-Javadoc)
+
+	/**
+	 * Background Parser-Task
+	 */
+	private class ParserTask extends
+			AsyncTask<String, Void, List<HashMap<String, String>>> {
+
+		@Override
+		protected List<HashMap<String, String>> doInBackground(String... params) {
+
+			RiverJSONParser riversParser = new RiverJSONParser();
+
+			List<HashMap<String, String>> riverList = new ArrayList<HashMap<String, String>>();
+			try {
+				riverList = riversParser.parse(params[0]);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+			return riverList;
+		}
+
+		@Override
+		protected void onPostExecute(List<HashMap<String, String>> result) {
+			String name;
+			int id;
+			for (int i = 0; i < result.size(); i++) {
+				HashMap<String, String> parsermap = result.get(i);
+				name = parsermap.get("riverName");
+				id = Integer.parseInt(parsermap.get("riverId").toString());
+				mList.add(new River(id, name));
+			}
+			displayRivers();
+		}
+	}
+
+	// END RETRIEVE
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see android.view.View.OnClickListener#onClick(android.view.View)
 	 */
 	@Override
@@ -264,7 +272,7 @@ public class RiversActivity extends Activity implements OnItemClickListener, OnC
 		Intent i = new Intent();
 
 		switch (_button.getId()) {
-		//Actionbar
+		// Actionbar
 		case R.id.b_home:
 			i = new Intent(this, HomeActivity.class);
 			break;
@@ -286,13 +294,13 @@ public class RiversActivity extends Activity implements OnItemClickListener, OnC
 		case R.id.b_more:
 			i = new Intent(this, MoreActivity.class);
 			break;
-			//End Actionbar
-			
+		// End Actionbar
+
 		case R.id.b_back:
 			onBackPressed();
 			break;
 		}
-		if(i != null && i.getComponent() != null){
+		if (i != null && i.getComponent() != null) {
 			i.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 			finish();
 			startActivity(i);

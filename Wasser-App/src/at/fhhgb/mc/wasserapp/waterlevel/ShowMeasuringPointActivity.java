@@ -111,7 +111,7 @@ public class ShowMeasuringPointActivity extends Activity implements
 		tv.setText(mMp.getmMeasuringPointName() + ", " + mMp.getmRiverName());
 
 		tv = (TextView) findViewById(R.id.tv_waterlevels_show_measuring_point_water_level_content);
-		tv.setText("" + mMp.getmWaterlevel() + " m");
+		//tv.setText("" + mMp.getmWaterlevel() + " m");
 
 		openChart();
 
@@ -139,19 +139,19 @@ public class ShowMeasuringPointActivity extends Activity implements
 			@Override
 			public void afterTextChanged(Editable s) {
 
-				float realValue = mMp.getmWaterlevel();
+				//float realValue = mMp.getmWaterlevel();
 
 				float myValue = 0;
 				if (et_notification.getText() != null && !et_notification.getText().toString().equals("")) {
 					myValue = Float.parseFloat(et_notification.getText().toString());
 				}
 
-				if (!et_notification.getText().toString().equals("")
-						&& myValue > realValue) {
-					m_tb_notification.setEnabled(true);
-				} else {
-					m_tb_notification.setEnabled(false);
-				}
+//				if (!et_notification.getText().toString().equals("")
+//						&& myValue > realValue) {
+//					m_tb_notification.setEnabled(true);
+//				} else {
+//					m_tb_notification.setEnabled(false);
+//				}
 
 			}
 		});
@@ -179,15 +179,15 @@ public class ShowMeasuringPointActivity extends Activity implements
 		int z[] = { 0, 1, 2, 3, 4, 5, 6, 7 };
 
 		// TODO: FILL THE ARRAY WITH VALUES FROM THE DB !!!!
-		float x[] = { 4, 2, 3, 3.6f, 4, 2, 3.5f, mMp.getmWaterlevel() };
+		//float x[] = { 4, 2, 3, 3.6f, 4, 2, 3.5f, mMp.getmWaterlevel() };
 
 		// Create XY Series for X Series.
 		XYSeries xSeries = new XYSeries("X Series");
 
 		// Adding data to the X Series.
-		for (int i = 0; i < z.length; i++) {
-			xSeries.add(z[i], x[i]);
-		}
+//		for (int i = 0; i < z.length; i++) {
+//			xSeries.add(z[i], x[i]);
+//		}
 
 		// Create a Dataset to hold the XSeries.
 

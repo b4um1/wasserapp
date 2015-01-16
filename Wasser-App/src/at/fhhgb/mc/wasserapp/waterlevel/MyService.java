@@ -107,51 +107,51 @@ public class MyService extends Service implements Serializable {
 								.get(i).getmMp().getmMeasuringPointName()
 								.equals(mListFavs.get(j)
 										.getmMeasuringPointName())))) {
-							if (m_notification_list.get(i)
-									.getmNotificationValue() <= mListFavs
-									.get(j).getmWaterlevel()) {
-
-								remind.add(i);
-
-								String rivername = m_notification_list.get(i)
-										.getmMp().getmRiverName();
-								String measuringpointname = m_notification_list
-										.get(i).getmMp()
-										.getmMeasuringPointName();
-								float waterlevel = m_notification_list.get(i)
-										.getmNotificationValue();
-
-								String msgText = getString(R.string.notification_msg_1) + rivername
-										+ getString(R.string.notification_msg_2) + measuringpointname
-										+ getString(R.string.notification_msg_3)
-										+ waterlevel + getString(R.string.notification_msg_4);
-								
-//								Intent showIntent = new Intent(this, ShowMeasuringPointActivity.class);
-//								MeasuringPoint mp = m_notification_list.get(i).getmMp();
-//								showIntent.putExtra("measuringpoint", mp);
-
-								NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-								PendingIntent pi = PendingIntent.getActivity(
-										this, 0, new Intent(this, WaterLevelsActivity.class), 0);
-								android.app.Notification.Builder builder = new Notification.Builder(
-										this);
-								builder.setContentTitle(
-										"Wasser App Benachrichtigung")
-										.setContentText("Big text Notification")
-										.setDefaults(Notification.DEFAULT_ALL)
-										.setSmallIcon(R.drawable.app_icon)
-										.setAutoCancel(true)
-										.setPriority(Notification.PRIORITY_HIGH)
-										.addAction(R.drawable.app_icon,
-												"Pegelstaende anzeigen ...", pi);
-									
-								Notification notification = new Notification.BigTextStyle(
-										builder).bigText(msgText).build();
-
-								notificationManager.notify(0, notification);
-
-
-							}
+//							if (m_notification_list.get(i)
+//									.getmNotificationValue() <= mListFavs
+//									.get(j).getmWaterlevel()) {
+//
+//								remind.add(i);
+//
+//								String rivername = m_notification_list.get(i)
+//										.getmMp().getmRiverName();
+//								String measuringpointname = m_notification_list
+//										.get(i).getmMp()
+//										.getmMeasuringPointName();
+//								float waterlevel = m_notification_list.get(i)
+//										.getmNotificationValue();
+//
+//								String msgText = getString(R.string.notification_msg_1) + rivername
+//										+ getString(R.string.notification_msg_2) + measuringpointname
+//										+ getString(R.string.notification_msg_3)
+//										+ waterlevel + getString(R.string.notification_msg_4);
+//								
+////								Intent showIntent = new Intent(this, ShowMeasuringPointActivity.class);
+////								MeasuringPoint mp = m_notification_list.get(i).getmMp();
+////								showIntent.putExtra("measuringpoint", mp);
+//
+//								NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+//								PendingIntent pi = PendingIntent.getActivity(
+//										this, 0, new Intent(this, WaterLevelsActivity.class), 0);
+//								android.app.Notification.Builder builder = new Notification.Builder(
+//										this);
+//								builder.setContentTitle(
+//										"Wasser App Benachrichtigung")
+//										.setContentText("Big text Notification")
+//										.setDefaults(Notification.DEFAULT_ALL)
+//										.setSmallIcon(R.drawable.app_icon)
+//										.setAutoCancel(true)
+//										.setPriority(Notification.PRIORITY_HIGH)
+//										.addAction(R.drawable.app_icon,
+//												"Pegelstaende anzeigen ...", pi);
+//									
+//								Notification notification = new Notification.BigTextStyle(
+//										builder).bigText(msgText).build();
+//
+//								notificationManager.notify(0, notification);
+//
+//
+//							}
 						}
 					}
 				}
@@ -207,8 +207,8 @@ public class MyService extends Service implements Serializable {
 				String river = new JdomParser().parse(retrieveQuery)
 						.getStringValue("measuringpoint", i, "river");
 
-				mpointList.add(new MeasuringPoint(measuringpointname,
-						waterlevel, river));
+//				mpointList.add(new MeasuringPoint(measuringpointname,
+//						waterlevel, river));
 
 			} catch (InvalidSyntaxException e) {
 				e.printStackTrace();
@@ -221,8 +221,8 @@ public class MyService extends Service implements Serializable {
 						.equals(mListFavs.get(j).getmRiverName()) && (mpointList
 						.get(i).getmMeasuringPointName().equals(mListFavs
 						.get(j).getmMeasuringPointName())))) {
-					mListFavs.get(j).setmWaterlevel(
-							mpointList.get(i).getmWaterlevel());
+//					mListFavs.get(j).setmWaterlevel(
+//							mpointList.get(i).getmWaterlevel());
 				}
 			}
 		}
