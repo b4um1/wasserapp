@@ -4,7 +4,8 @@
     android:layout_height="match_parent"
     android:layout_marginBottom="50dp"
     android:background="@drawable/bg_water"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:visibility="visible" >
 
     <FrameLayout
         android:id="@+id/l_navigationbar"
@@ -32,7 +33,7 @@
             android:textColor="@color/whitegray" />
 
         <Button
-            android:id="@+id/b_addFavorite"
+            android:id="@+id/fl_fav_header"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="right"
@@ -48,17 +49,21 @@
 
         <LinearLayout
             android:id="@+id/LinearLayout1"
+            style="@style/bold"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:orientation="vertical" >
+            android:orientation="vertical"
+            android:visibility="visible" >
 
             <FrameLayout
+                android:id="@id/fl_fav_header"
                 android:layout_width="fill_parent"
                 android:layout_height="40dp"
                 android:layout_gravity="top"
                 android:alpha="0.8"
-                android:background="@color/blue" >
+                android:background="@color/blue"
+                android:visibility="visible" >
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -75,13 +80,47 @@
                     android:layout_marginRight="60dp"
                     android:text="@string/waterlevel_waterlevel"
                     android:textColor="@color/whitegray" />
+
             </FrameLayout>
 
             <ListView
-                android:id="@+id/container_waterlevels"
+                android:id="@+id/container_waterlevel"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
+                android:layout_height="wrap_content"
+                android:visibility="visible" >
+
             </ListView>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/LinearLayout2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone" >
+
+            <ImageView
+                android:id="@+id/imageView1"
+                android:layout_width="248dp"
+                android:layout_height="150dp"
+                android:layout_gravity="right"
+                android:src="@drawable/ic_arrow_waterlevel" />
+
+            <TextView
+                android:id="@+id/tv_addFav"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:text="@string/waterlevel_addFav"
+                android:textAlignment="center"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:visibility="visible" />
+
         </LinearLayout>
 
     </FrameLayout>
