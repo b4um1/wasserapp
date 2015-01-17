@@ -30,6 +30,8 @@
     <string name="waterlevel_actual_waterlevel">Pegelstand aktuell</string>
     <string name="waterlevel_notification">Benachrichtigung bei einem Pegelstand von</string>
     <string name="waterlevel_turn_on_internet">Bitte stellen Sie eine Internetverbindung her!</string>
+    <string name="waterlevel_addFav">Sie können hier eine Messstelle zu Ihren Favoriten hinzufügen!</string>
+    
 
      <!-- precipitation -->
     <string name="precipitation_precipitation">Niederschlag</string>
@@ -40,9 +42,17 @@
     <!-- lakes -->
     <string name="lakes_lakes">Seen</string>
     
+    <!-- Laborbus -->
+    <string name="labbus_labbus">Laborbus</string>
+    
+    <!-- Emergency Management -->
+    <string name="emergencyManagement_emergencyManagement">Katastrophenschutz</string>
+    
     <!-- more -->
     <string name="more_email">E-Mail</string>
     <string name="more_password">Passwort</string>
+    <string name="more_logutSuccessfully">Sie wurden erfolgreich ausgeloggt!</string>
+    <string name="more_loginSuccessfully">Sie wurden erfolgreich eingeloggt!</string>
     
     <!-- details -->
     <string name="details_fountain">Brunnen Details</string>

@@ -37,6 +37,7 @@
     <string name="waterlevel_actual_waterlevel">Actual Water Level</string>
     <string name="waterlevel_notification">Remind me at a water level of</string>
     <string name="waterlevel_turn_on_internet">Please turn on your internet connection!</string>
+    <string name="waterlevel_addFav">You can add measuringpoint to your favs here!</string>
 
     <!-- precipitation -->
     <string name="precipitation_precipitation">Precipitation</string>
@@ -47,12 +48,20 @@
     <!-- lakes -->
     <string name="lakes_lakes">Lakes</string>
 
+    <!-- Laborbus -->
+    <string name="labbus_labbus">Labbus</string>
+
+    <!-- Emergency Management -->
+    <string name="emergencyManagement_emergencyManagement">Emergency Management</string>
+
     <!-- more -->
     <string name="more_login">Login</string>
     <string name="more_logout">Logout</string>
     <string name="more_about">About</string>
     <string name="more_email">e-mail</string>
     <string name="more_password">password</string>
+    <string name="more_logutSuccessfully">you have been successfully logged out!</string>
+    <string name="more_loginSuccessfully">you are logged in!</string>
 
     <!-- details -->
     <string name="details_fountain">Fountain Details</string>
@@ -72,5 +81,6 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_all_measuringpoints">AllMeasuringpoints</string>
+    <string name="title_activity_labbus">LabbusActivity</string>
 
 </resources>

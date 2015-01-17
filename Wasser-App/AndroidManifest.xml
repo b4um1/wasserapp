@@ -82,7 +82,8 @@
             android:screenOrientation="nosensor" />
         <activity
             android:name=".waterlevel.ShowMeasuringPointActivity"
-            android:screenOrientation="nosensor" />
+            android:screenOrientation="nosensor"
+            android:theme="@android:style/Theme.Holo" />
         <activity
             android:name=".rssfeed.RssActivity"
             android:screenOrientation="nosensor" />
@@ -106,8 +107,12 @@
             android:screenOrientation="nosensor" >
         </activity>
         <activity
-            android:name="at.fhhgb.mc.wasserapp.waterlevel.AllMeasuringpoints"
+            android:name=".waterlevel.AllMeasuringpoints"
             android:label="@string/title_activity_all_measuringpoints" >
+        </activity>
+        <activity
+            android:name="at.fhhgb.mc.wasserapp.labbus.LabbusActivity"
+            android:label="@string/title_activity_labbus" >
         </activity>
     </application>
 

@@ -11,14 +11,15 @@ import org.json.simple.parser.ParseException;
 
 import android.util.Log;
 
-public class MeasuringpointsJSONParser {
-	
-	private final String MEASURINGPOINT_NAME = "measuringpoint_name";
-	private final String LOGTAG = "MeasuringpointsJSONParser";
+public class RiverJSONParser {
+
+	private final String RIVER_ID = "id";
+	private final String RIVER_NAME = "river_name";
+	private final String LOGTAG = "RiversJSONParser";
 
 	/**
 	 * Receives an String which is an json encoded array It returns an array of
-	 * measuringpointnames
+	 * rivers
 	 * 
 	 * @param _jsonResult
 	 * @return
@@ -27,46 +28,53 @@ public class MeasuringpointsJSONParser {
 	public List<HashMap<String, String>> parse(String _jsonResult)
 			throws ParseException {
 		Log.i(LOGTAG, "Parsing-process started");
-	
+
 		JSONParser parser = new JSONParser();
 		Object obj = parser.parse(_jsonResult);
 		JSONArray array = (JSONArray) obj;
-	
-		return getMeasuringpoints(array);
+
+		return getRivers(array);
 	}
-	
+
 	/**
-	 * Returns a List of Hashmaps which represents all the measuringpoints
+	 * Returns a List of Hashmaps which represents all the rivers
 	 * 
 	 * @param _jArray
 	 * @return List<Hashmap<String,String>>
 	 */
-	private List<HashMap<String, String>> getMeasuringpoints(JSONArray _jArray) {
+	private List<HashMap<String, String>> getRivers(JSONArray _jArray) {
 		int count = _jArray.size();
-		List<HashMap<String, String>> measuringpointList = new ArrayList<HashMap<String, String>>();
-		HashMap<String, String> measuringpoint = null;
+		List<HashMap<String, String>> riverList = new ArrayList<HashMap<String, String>>();
+		HashMap<String, String> river = null;
 
 		for (int i = 0; i < count; i++) {
-			measuringpoint = getMeasuringpoint((JSONObject) _jArray.get(i));
-			measuringpointList.add(measuringpoint);
+			river = getRiver((JSONObject) _jArray.get(i));
+			riverList.add(river);
 		}
-		return measuringpointList;
+		return riverList;
 	}
+
 	/**
 	 * Parses the json-object into a Hashmap<Key,value>
 	 * 
-	 * @param _jMeasuringpoint
+	 * @param _jRiver
 	 * @return
 	 */
-	private HashMap<String, String> getMeasuringpoint(JSONObject _jMeasuringpoint) {
+	private HashMap<String, String> getRiver(JSONObject _jRiver) {
 
 		HashMap<String, String> map = new HashMap<String, String>();
-		String measuringpointName = "-NA-";
 
-		if (_jMeasuringpoint.containsKey(MEASURINGPOINT_NAME)) {
-			measuringpointName = "" + _jMeasuringpoint.get(MEASURINGPOINT_NAME);
+		String riverId = "-NA-";
+		String riverName = "-NA-";
+
+		if (_jRiver.containsKey(RIVER_ID)) {
+			riverId = "" + _jRiver.get(RIVER_ID);
 		}
-		map.put("measuringpointName", measuringpointName);
+		if (_jRiver.containsKey(RIVER_NAME)) {
+			riverName = "" + _jRiver.get(RIVER_NAME);
+		}
+		map.put("riverId", riverId);
+		map.put("riverName", riverName);
 
 		return map;
 	}

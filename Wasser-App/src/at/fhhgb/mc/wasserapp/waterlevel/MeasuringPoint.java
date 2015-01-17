@@ -14,14 +14,16 @@ import android.os.Parcelable;
  */
 public class MeasuringPoint implements Serializable{
 	
+	/** The m measuring point id. */
+	private int mMeasuringPointId;
+	
 	/** The m measuring point name. */
 	private String mMeasuringPointName;
 	
-	/** The m waterlevel. */
-	private float mWaterlevel;
-	
 	/** The m river name. */
 	private String mRiverName;
+	
+	private String mWaterlevel;
 	
 	/**
 	 * Instantiates a new measuring point.
@@ -30,12 +32,21 @@ public class MeasuringPoint implements Serializable{
 	 * @param waterlevel the waterlevel
 	 * @param riverName the river name
 	 */
-	public MeasuringPoint(String measuringPointName, float waterlevel, String riverName) {
+	public MeasuringPoint(int measuringPointId, String measuringPointName, String riverName, String waterlevel) {
+		mMeasuringPointId = measuringPointId;
 		mMeasuringPointName = measuringPointName;
-		mWaterlevel = waterlevel;
 		mRiverName = riverName;
+		mWaterlevel = waterlevel;
 	}
 	
+	public String getmWaterlevel() {
+		return mWaterlevel;
+	}
+
+	public void setmWaterlevel(String mWaterlevel) {
+		this.mWaterlevel = mWaterlevel;
+	}
+
 	/**
 	 * Gets the m measuring point name.
 	 *
@@ -53,24 +64,6 @@ public class MeasuringPoint implements Serializable{
 	public void setmMeasuringPointName(String mMeasuringPointName) {
 		this.mMeasuringPointName = mMeasuringPointName;
 	}
-	
-	/**
-	 * Gets the m waterlevel.
-	 *
-	 * @return the m waterlevel
-	 */
-	public float getmWaterlevel() {
-		return mWaterlevel;
-	}
-	
-	/**
-	 * Sets the m waterlevel.
-	 *
-	 * @param mWaterlevel the new m waterlevel
-	 */
-	public void setmWaterlevel(float mWaterlevel) {
-		this.mWaterlevel = mWaterlevel;
-	}
 
 	/**
 	 * Gets the m river name.
@@ -79,6 +72,14 @@ public class MeasuringPoint implements Serializable{
 	 */
 	public String getmRiverName() {
 		return mRiverName;
+	}
+
+	public int getmMeasuringPointId() {
+		return mMeasuringPointId;
+	}
+
+	public void setmMeasuringPointId(int mMeasuringPointId) {
+		this.mMeasuringPointId = mMeasuringPointId;
 	}
 
 	/**

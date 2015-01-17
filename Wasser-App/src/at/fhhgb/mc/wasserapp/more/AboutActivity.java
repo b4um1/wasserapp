@@ -55,6 +55,8 @@ public class AboutActivity extends Activity implements OnClickListener {
 		TextView programmers = (TextView) findViewById(R.id.tv_about_programmers);
 		programmers
 				.setText("Dan Neatu, Eduard Berbecaru,\nThomas Kranzer, Mario Baumgartner");
+		
+		
 	}
 
 	/* (non-Javadoc)
