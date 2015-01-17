@@ -1,7 +1,7 @@
 /*
  * 
  */
-package at.fhhgb.mc.wasserapp.waterlevel;
+package at.fhhgb.mc.wasserapp.waterlevel.model;
 
 import java.io.Serializable;
 

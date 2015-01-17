@@ -26,6 +26,8 @@ import at.fhhgb.mc.wasserapp.mapactivity.MapActivity;
 import at.fhhgb.mc.wasserapp.more.LoginActivity;
 import at.fhhgb.mc.wasserapp.more.MoreActivity;
 import at.fhhgb.mc.wasserapp.rssfeed.WebViewActivity;
+import at.fhhgb.mc.wasserapp.waterlevel.adapter.ChartsPagerAdapter;
+import at.fhhgb.mc.wasserapp.waterlevel.model.MeasuringPoint;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.AlarmManager;
@@ -73,13 +75,6 @@ public class ShowMeasuringPointActivity extends FragmentActivity implements Acti
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -3925323245801208989L;
 	
-	/** The m chart. */
-	private GraphicalView mChart;
-	
-	/** The m day. */
-	private String[] mDay = new String[] { "7", "6", "5", "4", "3", "2", "1",
-			"0" };
-	
 	/** The m mp. */
 	private MeasuringPoint mMp;
 
@@ -97,6 +92,9 @@ public class ShowMeasuringPointActivity extends FragmentActivity implements Acti
 	private ActionBar actionBar;
 	// Tab titles
 	private String[] tabs = { "One Day", "Seven Days" };
+	
+	LinearLayout llOne;
+	LinearLayout llTwo;
 
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
@@ -124,15 +122,16 @@ public class ShowMeasuringPointActivity extends FragmentActivity implements Acti
 		tv.setText(mMp.getmMeasuringPointName() + ", " + mMp.getmRiverName());
 
 		tv = (TextView) findViewById(R.id.tv_waterlevels_show_measuring_point_water_level_content);
-		//tv.setText("" + mMp.getmWaterlevel() + " m");
+		tv.setText(mMp.getmWaterlevel() + " cm");
 
-		//openChart();
 		
+		llOne = (LinearLayout) findViewById(R.id.waterlevel_page_one);
+		llTwo = (LinearLayout) findViewById(R.id.waterlevel_page_two);
 		
 		// Initilization
         viewPager = (ViewPager) findViewById(R.id.pager_wl);
         actionBar = getActionBar();
-        mAdapter = new ChartsPagerAdapter(getSupportFragmentManager());
+        mAdapter = new ChartsPagerAdapter(getSupportFragmentManager(), mMp.getmMeasuringPointId());
  
         viewPager.setAdapter(mAdapter);
         actionBar.setHomeButtonEnabled(false);
@@ -156,6 +155,13 @@ public class ShowMeasuringPointActivity extends FragmentActivity implements Acti
                 // on changing the page
                 // make respected tab selected
                 actionBar.setSelectedNavigationItem(position);
+                if (position == 0) {
+            		llOne.setVisibility(View.VISIBLE);
+            		llTwo.setVisibility(View.GONE);
+                } else {
+            		llOne.setVisibility(View.GONE);
+            		llTwo.setVisibility(View.VISIBLE);
+                }
             }
          
             @Override
@@ -222,91 +228,6 @@ public class ShowMeasuringPointActivity extends FragmentActivity implements Acti
 		super.onResume();
 		overridePendingTransition(0, 0);
 		HomeActivity.setPositionToMark(this);
-	}
-
-	/**
-	 * draws the line chart.
-	 */
-	private void openChart() {
-//		// Define the number of elements you want in the chart.
-//		int z[] = { 0, 1, 2, 3, 4, 5, 6, 7 };
-//
-//		// TODO: FILL THE ARRAY WITH VALUES FROM THE DB !!!!
-//		float x[] = { 4, 2, 3, 3.6f, 4, 2, 3.5f, 5 };
-//
-//		// Create XY Series for X Series.
-//		XYSeries xSeries = new XYSeries("X Series");
-//
-//		// Adding data to the X Series.
-//		for (int i = 0; i < z.length; i++) {
-//			xSeries.add(z[i], x[i]);
-//		}
-//
-//		// Create a Dataset to hold the XSeries.
-//
-//		XYMultipleSeriesDataset dataset = new XYMultipleSeriesDataset();
-//
-//		// Add X series to the Dataset.
-//		dataset.addSeries(xSeries);
-//
-//		// Create XYSeriesRenderer to customize XSeries
-//
-//		XYSeriesRenderer Xrenderer = new XYSeriesRenderer();
-//		Xrenderer.setColor(Color.WHITE);
-//		Xrenderer.setPointStyle(PointStyle.DIAMOND);
-//		Xrenderer.setDisplayChartValues(false);
-//		Xrenderer.setLineWidth(8);
-//		Xrenderer.setFillPoints(true);
-//
-//		// Create XYMultipleSeriesRenderer to customize the whole chart
-//
-//		XYMultipleSeriesRenderer mRenderer = new XYMultipleSeriesRenderer();
-//
-//		mRenderer.setXTitle(getString(R.string.waterlevel_daysago));
-//		mRenderer.setYTitle(getString(R.string.waterlevel_meter));
-//		mRenderer.setZoomButtonsVisible(false);
-//		mRenderer.setZoomEnabled(false, false);
-//		mRenderer.setXLabels(0);
-//		mRenderer.setPanEnabled(false);
-//		mRenderer.setAxesColor(Color.WHITE);
-//
-//		mRenderer.setLabelsColor(Color.WHITE);
-//		mRenderer.setYLabelsAlign(Align.LEFT);
-//		mRenderer.setYLabelsColor(0, Color.WHITE);
-//		mRenderer.setXLabelsColor(Color.WHITE);
-//
-//		//mRenderer.setYLabelsPadding();
-//
-//		mRenderer.setApplyBackgroundColor(true);
-//		mRenderer.setMarginsColor(Color.argb(0x00, 0x01, 0x01, 0x01));
-//		mRenderer.setBackgroundColor(Color.TRANSPARENT);
-//
-//		mRenderer.setLabelsTextSize(30);
-//		mRenderer.setAxisTitleTextSize(30);
-//		mRenderer.setChartTitleTextSize(30);
-//
-//		mRenderer.setShowGrid(true);
-//		mRenderer.setClickEnabled(false);
-//		mRenderer.setShowLegend(false);
-//
-//		for (int i = 0; i < z.length; i++) {
-//			mRenderer.addXTextLabel(i, mDay[i]);
-//		}
-//
-//		// Adding the XSeriesRenderer to the MultipleRenderer.
-//		mRenderer.addSeriesRenderer(Xrenderer);
-//
-//		LinearLayout chart_container = (LinearLayout) findViewById(R.id.Chart_layout);
-//
-//		// Creating an intent to plot line chart using dataset and
-//		// multipleRenderer
-//
-//		mChart = (GraphicalView) ChartFactory.getLineChartView(
-//				getBaseContext(), dataset, mRenderer);
-//
-//		// Add the graphical view mChart object into the Linear layout .
-//		chart_container.addView(mChart);
-
 	}
 
 	/* (non-Javadoc)

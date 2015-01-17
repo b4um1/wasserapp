@@ -5,6 +5,8 @@ package at.fhhgb.mc.wasserapp.waterlevel;
 
 import java.io.Serializable;
 
+import at.fhhgb.mc.wasserapp.waterlevel.model.MeasuringPoint;
+
 // TODO: Auto-generated Javadoc
 /**
  * The Class NotificationModel.

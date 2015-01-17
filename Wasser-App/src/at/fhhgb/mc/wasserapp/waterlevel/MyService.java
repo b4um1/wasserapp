@@ -45,6 +45,7 @@ import argo.staj.JsonStreamElement;
 import argo.staj.JsonStreamElementType;
 import argo.staj.StajParser;
 import at.fhhgb.mc.wasserapp.R;
+import at.fhhgb.mc.wasserapp.waterlevel.model.MeasuringPoint;
 
 // TODO: Auto-generated Javadoc
 /**

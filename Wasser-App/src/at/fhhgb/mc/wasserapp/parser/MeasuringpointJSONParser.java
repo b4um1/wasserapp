@@ -1,4 +1,4 @@
-package at.fhhgb.mc.wasserapp.waterlevel;
+package at.fhhgb.mc.wasserapp.parser;
 
 import java.util.ArrayList;
 import java.util.HashMap;

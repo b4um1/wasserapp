@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
+import at.fhhgb.mc.wasserapp.waterlevel.model.MeasuringPoint;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
