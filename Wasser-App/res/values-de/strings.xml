@@ -31,7 +31,9 @@
     <string name="waterlevel_notification">Benachrichtigung bei einem Pegelstand von</string>
     <string name="waterlevel_turn_on_internet">Bitte stellen Sie eine Internetverbindung her!</string>
     <string name="waterlevel_addFav">Sie können hier eine Messstelle zu Ihren Favoriten hinzufügen!</string>
-    
+    <string name="waterlevel_noDataFound">Zu dieser Messstelle sind keine Daten vorhanden!</string>
+    <string name="waterlevel_daySight">Tagesansicht</string>
+    <string name="waterlevel_weekSight">Wochenansicht</string>
 
      <!-- precipitation -->
     <string name="precipitation_precipitation">Niederschlag</string>

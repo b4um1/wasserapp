@@ -50,7 +50,10 @@ import at.fhhgb.mc.wasserapp.R;
 import at.fhhgb.mc.wasserapp.mapactivity.MapActivity;
 import at.fhhgb.mc.wasserapp.more.LoginActivity;
 import at.fhhgb.mc.wasserapp.more.MoreActivity;
+import at.fhhgb.mc.wasserapp.parser.MeasuringpointJSONParser;
 import at.fhhgb.mc.wasserapp.rssfeed.WebViewActivity;
+import at.fhhgb.mc.wasserapp.waterlevel.adapter.MyArrayAdapterMeasuringPoint;
+import at.fhhgb.mc.wasserapp.waterlevel.model.MeasuringPoint;
 
 
 // TODO: Auto-generated Javadoc
@@ -273,7 +276,7 @@ OnItemClickListener, OnClickListener {
 				HashMap<String, String> parsermap = result.get(i);
 				id = Integer.parseInt(parsermap.get("measuringpointId").toString());
 				name = parsermap.get("measuringpointName");
-				mList.add(new MeasuringPoint(id, name, mRiverName, "-"));
+				mList.add(new MeasuringPoint(id, name, mRiverName, "-", "-"));
 			}
 			displayMeasuringpoints();
 		}

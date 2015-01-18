@@ -1,7 +1,7 @@
 /*
  * 
  */
-package at.fhhgb.mc.wasserapp.waterlevel;
+package at.fhhgb.mc.wasserapp.waterlevel.model;
 
 import java.io.Serializable;
 
@@ -25,6 +25,16 @@ public class MeasuringPoint implements Serializable{
 	
 	private String mWaterlevel;
 	
+	private String mTimestamp;
+	
+	public String getmTimestamp() {
+		return mTimestamp;
+	}
+
+	public void setmTimestamp(String mTimestamp) {
+		this.mTimestamp = mTimestamp;
+	}
+
 	/**
 	 * Instantiates a new measuring point.
 	 *
@@ -32,11 +42,12 @@ public class MeasuringPoint implements Serializable{
 	 * @param waterlevel the waterlevel
 	 * @param riverName the river name
 	 */
-	public MeasuringPoint(int measuringPointId, String measuringPointName, String riverName, String waterlevel) {
+	public MeasuringPoint(int measuringPointId, String measuringPointName, String riverName, String waterlevel, String timestamp) {
 		mMeasuringPointId = measuringPointId;
 		mMeasuringPointName = measuringPointName;
 		mRiverName = riverName;
 		mWaterlevel = waterlevel;
+		mTimestamp = timestamp;
 	}
 	
 	public String getmWaterlevel() {

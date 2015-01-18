@@ -37,15 +37,65 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical" >
+        android:orientation="vertical"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp" >
 
         <android.support.v4.view.ViewPager
             xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/pager_wl"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="0.2" >
+            android:layout_weight="0.9" >
+
         </android.support.v4.view.ViewPager>
+
+        <LinearLayout
+            android:id="@+id/waterlevel_page_one"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp" >
+
+            <ImageView
+                android:id="@+id/img_view1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingRight="8dp"
+                android:src="@drawable/ic_circle_1" />
+
+            <ImageView
+                android:id="@+id/imageView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="8dp"
+                android:src="@drawable/ic_circle_0" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/waterlevel_page_two"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:visibility="gone" >
+
+            <ImageView
+                android:id="@+id/ImageView01"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingRight="8dp"
+                android:src="@drawable/ic_circle_0" />
+
+            <ImageView
+                android:id="@+id/ImageView02"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="8dp"
+                android:src="@drawable/ic_circle_1" />
+
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -70,6 +120,17 @@
                     android:textColor="@color/whitegray"
                     android:textSize="12sp"
                     android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:text="@string/waterlevel_actual_waterlevel"
+                    android:textColor="@color/whitegray"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
             </FrameLayout>
 
             <FrameLayout
@@ -106,8 +167,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:layout_weight="0"
-            android:orientation="vertical"
-            android:paddingBottom="10dp" >
+            android:orientation="vertical" >
 
             <FrameLayout
                 android:layout_width="match_parent"
@@ -149,7 +209,7 @@
                         android:layout_gravity="center_vertical"
                         android:background="@layout/custom_textfield_shape"
                         android:ems="10"
-                        android:inputType="numberDecimal"
+                        android:inputType="number"
                         android:singleLine="true"
                         android:textAlignment="center"
                         android:textColor="@color/whitegray" />
@@ -160,7 +220,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_marginLeft="5dp"
-                        android:text="m"
+                        android:text="cm"
                         android:textColor="@color/whitegray"
                         android:textSize="25sp" />
                 </LinearLayout>
@@ -172,7 +232,15 @@
                     android:layout_gravity="center_vertical|right"
                     android:background="@layout/custom_marker_dialog_button"
                     android:padding="5dp"
-                    android:text="ToggleButton" />
+                    android:text="ToggleButton"
+                    android:visibility="gone" />
+
+                <CheckBox
+                    android:id="@+id/checkBoxNotification"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right|center_vertical"
+                    android:padding="5dp" />
                 
             </FrameLayout>
         </LinearLayout>

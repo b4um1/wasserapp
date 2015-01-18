@@ -1,4 +1,4 @@
-package at.fhhgb.mc.wasserapp.waterlevel;
+package at.fhhgb.mc.wasserapp.parser;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,15 +11,16 @@ import org.json.simple.parser.ParseException;
 
 import android.util.Log;
 
-public class WaterlevelJSONParser {
-	
-	private final String MEASURINGPOINT_ID = "measuringpoint_id";
+public class DataOneDayJSONParser {
+
+	private final String TIMESTAMP = "time_stamp";
 	private final String WATERLEVEL = "waterlevel";
-	private final String LOGTAG = "WaterlevelJSONParser";
-	
+
+	private final String LOGTAG = "DataOneDayJSONParser";
+
 	/**
 	 * Receives an String which is an json encoded array It returns an array of
-	 * waterlevels
+	 * measuringpoints
 	 * 
 	 * @param _jsonResult
 	 * @return
@@ -33,49 +34,47 @@ public class WaterlevelJSONParser {
 		Object obj = parser.parse(_jsonResult);
 		JSONArray array = (JSONArray) obj;
 
-		return getWaterlevels(array);
+		return getDataOneDays(array);
 	}
-	
+
 	/**
-	 * Returns a List of Hashmaps which represents all the waterlevels
+	 * Returns a List of Hashmaps which represents all the measuringpoints
 	 * 
 	 * @param _jArray
 	 * @return List<Hashmap<String,String>>
 	 */
-	private List<HashMap<String, String>> getWaterlevels(JSONArray _jArray) {
+	private List<HashMap<String, String>> getDataOneDays(JSONArray _jArray) {
 		int count = _jArray.size();
-		List<HashMap<String, String>> waterlevelList = new ArrayList<HashMap<String, String>>();
-		HashMap<String, String> waterlevel = null;
+		List<HashMap<String, String>> datalist = new ArrayList<HashMap<String, String>>();
+		HashMap<String, String> data = null;
 
 		for (int i = 0; i < count; i++) {
-			waterlevel = getWaterlevel((JSONObject) _jArray.get(i));
-			waterlevelList.add(waterlevel);
+			data = getDataOneDay((JSONObject) _jArray.get(i));
+			datalist.add(data);
 		}
-		return waterlevelList;
+		return datalist;
 	}
 
-	
 	/**
 	 * Parses the json-object into a Hashmap<Key,value>
 	 * 
-	 * @param _jWaterlevel
+	 * @param _jData
 	 * @return
 	 */
-	private HashMap<String, String> getWaterlevel(JSONObject _jWaterlevel) {
+	private HashMap<String, String> getDataOneDay(JSONObject _jData) {
 
 		HashMap<String, String> map = new HashMap<String, String>();
 
-		String measuringpointId = "-1";
-		String waterlevel = "-1";
+		String timestamp = "-NA-";
+		String waterlevel = "-NA-";
 
-		if (_jWaterlevel.containsKey(MEASURINGPOINT_ID)) {
-			measuringpointId = "" + _jWaterlevel.get(MEASURINGPOINT_ID);
+		if (_jData.containsKey(TIMESTAMP)) {
+			timestamp = "" + _jData.get(TIMESTAMP);
 		}
-		if (_jWaterlevel.containsKey(WATERLEVEL)) {
-			waterlevel = "" + _jWaterlevel.get(WATERLEVEL);
+		if (_jData.containsKey(WATERLEVEL)) {
+			waterlevel = "" + _jData.get(WATERLEVEL);
 		}
-
-		map.put("measuringpointId", measuringpointId);
+		map.put("timestamp", timestamp);
 		map.put("waterlevel", waterlevel);
 
 		return map;

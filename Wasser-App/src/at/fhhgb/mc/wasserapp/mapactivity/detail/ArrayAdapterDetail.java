@@ -20,7 +20,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import at.fhhgb.mc.wasserapp.R;
-import at.fhhgb.mc.wasserapp.waterlevel.MeasuringPoint;
+import at.fhhgb.mc.wasserapp.waterlevel.model.MeasuringPoint;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;

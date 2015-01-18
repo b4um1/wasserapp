@@ -1,4 +1,4 @@
-package at.fhhgb.mc.wasserapp.waterlevel;
+package at.fhhgb.mc.wasserapp.waterlevel.adapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +15,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import at.fhhgb.mc.wasserapp.HomeActivity;
 import at.fhhgb.mc.wasserapp.R;
+import at.fhhgb.mc.wasserapp.waterlevel.FavsRepository;
+import at.fhhgb.mc.wasserapp.waterlevel.WaterLevelsActivity;
+import at.fhhgb.mc.wasserapp.waterlevel.model.MeasuringPoint;
 
 public class MyArrayAdapterWaterlevel extends ArrayAdapter<MeasuringPoint>{
 

@@ -36,8 +36,11 @@ import at.fhhgb.mc.wasserapp.mapactivity.MapActivity;
 import at.fhhgb.mc.wasserapp.more.AboutActivity;
 import at.fhhgb.mc.wasserapp.more.LoginActivity;
 import at.fhhgb.mc.wasserapp.more.MoreActivity;
+import at.fhhgb.mc.wasserapp.parser.WaterlevelJSONParser;
 import at.fhhgb.mc.wasserapp.rssfeed.RssActivity;
 import at.fhhgb.mc.wasserapp.rssfeed.WebViewActivity;
+import at.fhhgb.mc.wasserapp.waterlevel.adapter.MyArrayAdapterWaterlevel;
+import at.fhhgb.mc.wasserapp.waterlevel.model.MeasuringPoint;
 
 import com.google.android.gms.drive.internal.f;
 import com.google.gson.Gson;
@@ -272,11 +275,13 @@ public class WaterLevelsActivity extends Activity implements OnClickListener,
 				
 				HashMap<String, String> parsermap = result.get(0);
 				String measuringpointId = parsermap.get("measuringpointId");
+				String timestamp = parsermap.get("timestamp");
 				String waterlevel = parsermap.get("waterlevel");
 	
 				for (int i = 0; i < mListFavs.size(); i++) {
 					if (mListFavs.get(i).getmMeasuringPointId() == Integer.parseInt(measuringpointId)) {
 						mListFavs.get(i).setmWaterlevel(waterlevel);
+						mListFavs.get(i).setmTimestamp(timestamp);
 					}
 				}
 			}
@@ -337,10 +342,14 @@ public class WaterLevelsActivity extends Activity implements OnClickListener,
 
 		//loadMListFavs();
 		if (mListFavs != null) {
-			Intent i = new Intent(this, ShowMeasuringPointActivity.class);
-			MeasuringPoint mp = mListFavs.get((int) id);
-			i.putExtra("measuringpoint", mp);
-			startActivity(i);
+			if (mListFavs.get((int)id).getmWaterlevel().equals("-")) {
+				Toast.makeText(getApplicationContext(), R.string.waterlevel_noDataFound, 2000).show();
+			} else {
+				Intent i = new Intent(this, ShowMeasuringPointActivity.class);
+				MeasuringPoint mp = mListFavs.get((int) id);
+				i.putExtra("measuringpoint", mp);
+				startActivity(i);
+			}
 		} else {
 			mListFavs = new ArrayList<MeasuringPoint>();
 			Toast.makeText(getApplicationContext(), "Error", 2000).show();
