@@ -28,6 +28,7 @@ import at.fhhgb.mc.wasserapp.more.MoreActivity;
 import at.fhhgb.mc.wasserapp.rssfeed.WebViewActivity;
 import at.fhhgb.mc.wasserapp.waterlevel.adapter.ChartsPagerAdapter;
 import at.fhhgb.mc.wasserapp.waterlevel.model.MeasuringPoint;
+import at.fhhgb.mc.wasserapp.waterlevel.model.NotificationModel;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.AlarmManager;
@@ -50,6 +51,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -86,6 +89,7 @@ public class ShowMeasuringPointActivity extends FragmentActivity implements Acti
 
 	/** The m_notification_list. */
 	public ArrayList<NotificationModel> m_notification_list;
+
 	
 	private ViewPager viewPager;
 	private ChartsPagerAdapter mAdapter;
@@ -95,6 +99,8 @@ public class ShowMeasuringPointActivity extends FragmentActivity implements Acti
 	
 	LinearLayout llOne;
 	LinearLayout llTwo;
+	
+	CheckBox cb;
 
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
@@ -112,7 +118,7 @@ public class ShowMeasuringPointActivity extends FragmentActivity implements Acti
 		HomeActivity.setPositionToMark(this);
 
 		Bundle bundle = getIntent().getExtras();
-
+		
 		mMp = (MeasuringPoint) bundle.getSerializable("measuringpoint");
 
 		TextView title = (TextView) findViewById(R.id.tv_waterlevels_show_measuring_point_title);
@@ -123,6 +129,13 @@ public class ShowMeasuringPointActivity extends FragmentActivity implements Acti
 
 		tv = (TextView) findViewById(R.id.tv_waterlevels_show_measuring_point_water_level_content);
 		tv.setText(mMp.getmWaterlevel() + " cm");
+		
+		
+		String[] dateTime = mMp.getmTimestamp().split(" ");
+		String[] date = dateTime[0].split("-");
+		String[] time = dateTime[1].split(":");
+		tv = (TextView) findViewById(R.id.tv_time);
+		tv.setText(date[2] + "." + date[1] + "." + date[0] + " / " + time[0] + ":" + time[1] + " Uhr");
 
 		
 		llOne = (LinearLayout) findViewById(R.id.waterlevel_page_one);
@@ -173,46 +186,26 @@ public class ShowMeasuringPointActivity extends FragmentActivity implements Acti
             }
         });
         
-
-		m_tb_notification = (ToggleButton) findViewById(R.id.toggleButton1);
-		m_tb_notification.setEnabled(false);
-		m_tb_notification.setOnClickListener(this);
-
+        
+        cb = (CheckBox) findViewById(R.id.checkBoxNotification);
+        cb.setOnClickListener(this);
+        
 		et_notification = (EditText) findViewById(R.id.et_waterlevels_show_measuring_point_notification_input);
+		
 		et_notification.addTextChangedListener(new TextWatcher() {
-
+			
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before,
 					int count) {
-				// TODO Auto-generated method stub
-
+				cb.setChecked(false);
 			}
 
 			@Override
 			public void beforeTextChanged(CharSequence s, int start, int count,
-					int after) {
-				// TODO Auto-generated method stub
-
-			}
+					int after) {}
 
 			@Override
-			public void afterTextChanged(Editable s) {
-
-				//float realValue = mMp.getmWaterlevel();
-
-				float myValue = 0;
-				if (et_notification.getText() != null && !et_notification.getText().toString().equals("")) {
-					myValue = Float.parseFloat(et_notification.getText().toString());
-				}
-
-//				if (!et_notification.getText().toString().equals("")
-//						&& myValue > realValue) {
-//					m_tb_notification.setEnabled(true);
-//				} else {
-//					m_tb_notification.setEnabled(false);
-//				}
-
-			}
+			public void afterTextChanged(Editable s) {}
 		});
 
 		m_notification_list = new ArrayList<NotificationModel>();
@@ -266,56 +259,73 @@ public class ShowMeasuringPointActivity extends FragmentActivity implements Acti
 		case R.id.b_back:
 			onBackPressed();
 			break;
-		case R.id.toggleButton1:
-			loadNotificationList();
-			if (m_tb_notification.isChecked()) {
-				boolean alreadyInTheList = false;
-				if (!(et_notification.getText().toString().equals(""))) {
+		case R.id.checkBoxNotification:
+            if(cb.isChecked()){
+                
+				int realValue = Integer.parseInt(mMp.getmWaterlevel());
+
+				int myValue = 0;
+				if (et_notification.getText() != null && !et_notification.getText().toString().equals("")) {
+					myValue = Integer.parseInt(et_notification.getText().toString());
+				}
+                
+				if (!et_notification.getText().toString().equals("")
+						&& myValue != realValue && myValue < 99999) {
+					Toast.makeText(getApplicationContext(), "Benachrichtigung aktiviert!", Toast.LENGTH_LONG).show();
+					
+					boolean alreadyInTheList = false;
+					
 					for (int j = 0; j < m_notification_list.size(); j++) {
-						if ((mMp.getmRiverName().equals(m_notification_list
-								.get(j).getmMp().getmRiverName()))
-								&& (mMp.getmMeasuringPointName()
-										.equals(m_notification_list.get(j)
-												.getmMp()
-												.getmMeasuringPointName()))) {
+						if (mMp.getmMeasuringPointId() == m_notification_list.get(j).getmMp().getmMeasuringPointId()) {
 							alreadyInTheList = true;
 						}
 					}
 					if (!alreadyInTheList) {
-						m_notification_list.add(new NotificationModel(mMp,
-								Float.parseFloat(et_notification.getText()
-										.toString())));
+						boolean isSmaller = false;
+						if (myValue < realValue) {
+							isSmaller = true;
+						}
+						m_notification_list.add(new NotificationModel(mMp, Integer.parseInt(et_notification.getText().toString()), isSmaller));
+					} else {
+						for (int j = 0; j < m_notification_list.size(); j++) {
+							if (mMp.getmMeasuringPointId() == m_notification_list
+									.get(j).getmMp().getmMeasuringPointId()) {
+								m_notification_list.remove(j);
+							}
+						}
+						boolean isSmaller = false;
+						if (myValue < realValue) {
+							isSmaller = true;
+						}
+						m_notification_list.add(new NotificationModel(mMp, Integer.parseInt(et_notification.getText().toString()), isSmaller));
 					}
-				}
-
-				Log.i("toggle", "isChecked true");
-				Intent serviceIntent = new Intent(this, MyService.class);
-				startService(serviceIntent);
-				Calendar cal = Calendar.getInstance();
-				Intent intent = new Intent(this, MyService.class);
-				PendingIntent pintent = PendingIntent.getService(this, 0,
-						intent, 0);
-
-				AlarmManager alarm = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-				// Start service every hour 3600*1000
-				alarm.setRepeating(AlarmManager.RTC_WAKEUP,
-						cal.getTimeInMillis(), 3600*1000, pintent);
-			} else {
-				Log.i("toggle", "isChecked false");
-
-				for (int j = 0; j < m_notification_list.size(); j++) {
-					if ((mMp.getmRiverName().equals(m_notification_list.get(j)
-							.getmMp().getmRiverName()))
-							&& (mMp.getmMeasuringPointName()
-									.equals(m_notification_list.get(j).getmMp()
-											.getmMeasuringPointName()))) {
-						m_notification_list.remove(j);
+					
+					Intent serviceIntent = new Intent(this, MyService.class);
+					startService(serviceIntent);
+					Calendar cal = Calendar.getInstance();
+					Intent intent = new Intent(this, MyService.class);
+					PendingIntent pintent = PendingIntent.getService(this, 0,
+							intent, 0);
+//
+//					AlarmManager alarm = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+//					// Start service every hour 3600*1000
+//					alarm.setRepeating(AlarmManager.RTC_WAKEUP,
+//							cal.getTimeInMillis(), 3600*1000, pintent);
+					
+				} else {
+					cb.setChecked(false);
+					for (int j = 0; j < m_notification_list.size(); j++) {
+						if (mMp.getmMeasuringPointId() == m_notification_list
+								.get(j).getmMp().getmMeasuringPointId()) {
+							m_notification_list.remove(j);
+						}
 					}
+//					stopService(new Intent(this, MyService.class));
 				}
-				stopService(new Intent(this, MyService.class));
-			}
-			storeNotificationList();
-
+				FavsRepository.storeNotificationList(getApplicationContext(), m_notification_list);
+            } else {
+            	et_notification.setText("");
+            }
 			break;
 		}
 		if(i != null && i.getComponent() != null){
@@ -329,49 +339,13 @@ public class ShowMeasuringPointActivity extends FragmentActivity implements Acti
 	 * Sets the notification state.
 	 */
 	public void setNotificationState() {
-		loadNotificationList();
+		m_notification_list = FavsRepository.loadNotificationList(getApplicationContext());
 		for (int j = 0; j < m_notification_list.size(); j++) {
-			if ((mMp.getmRiverName().equals(m_notification_list.get(j).getmMp()
-					.getmRiverName()))
-					&& (mMp.getmMeasuringPointName().equals(m_notification_list
-							.get(j).getmMp().getmMeasuringPointName()))) {
-				et_notification.setText(""
-						+ String.valueOf(m_notification_list.get(j)
-								.getmNotificationValue()));
-				m_tb_notification.setChecked(true);
+			if (mMp.getmMeasuringPointId() == m_notification_list.get(j).getmMp().getmMeasuringPointId()) {
+				et_notification.setText("" + String.valueOf(m_notification_list.get(j).getmNotificationValue()));
+				cb.setChecked(true);
 			}
 		}
-
-	}
-
-	/**
-	 * Load notification list.
-	 */
-	public void loadNotificationList() {
-		SharedPreferences prefs = PreferenceManager
-				.getDefaultSharedPreferences(getApplicationContext());
-		Gson gson = new Gson();
-		String json = prefs.getString("notification", "");
-		Type type = new TypeToken<ArrayList<NotificationModel>>() {
-		}.getType();
-		if (gson.fromJson(json, type) != null) {
-			m_notification_list = gson.fromJson(json, type);
-		} else {
-			m_notification_list = new ArrayList<NotificationModel>();
-		}
-	}
-
-	/**
-	 * Store notification list.
-	 */
-	public void storeNotificationList() {
-		SharedPreferences prefs = PreferenceManager
-				.getDefaultSharedPreferences(getApplicationContext());
-		Editor editor = prefs.edit();
-		Gson gson = new Gson();
-		String json = gson.toJson(m_notification_list);
-		editor.putString("notification", json);
-		editor.commit();
 	}
 
 	@Override

@@ -1,11 +1,9 @@
 /*
  * 
  */
-package at.fhhgb.mc.wasserapp.waterlevel;
+package at.fhhgb.mc.wasserapp.waterlevel.model;
 
 import java.io.Serializable;
-
-import at.fhhgb.mc.wasserapp.waterlevel.model.MeasuringPoint;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -17,7 +15,9 @@ public class NotificationModel implements Serializable{
 	private MeasuringPoint mMp;
 	
 	/** The m notification value. */
-	private float mNotificationValue;
+	private int mNotificationValue;
+	
+	private boolean mIsSmaller;
 
 
 	/**
@@ -26,18 +26,29 @@ public class NotificationModel implements Serializable{
 	 * @param mp the mp
 	 * @param notificationValue the notification value
 	 */
-	public NotificationModel(MeasuringPoint mp, float notificationValue) {
+	public NotificationModel(MeasuringPoint mp, int notificationValue, boolean isSmaller) {
 		mMp = mp;
 		mNotificationValue = notificationValue;
+		mIsSmaller = isSmaller;
 	}
 
 	
+	public boolean ismIsSmaller() {
+		return mIsSmaller;
+	}
+
+
+	public void setmIsSmaller(boolean mIsSmaller) {
+		this.mIsSmaller = mIsSmaller;
+	}
+
+
 	/**
 	 * Gets the m notification value.
 	 *
 	 * @return the m notification value
 	 */
-	public float getmNotificationValue() {
+	public int getmNotificationValue() {
 		return mNotificationValue;
 	}
 
@@ -46,7 +57,7 @@ public class NotificationModel implements Serializable{
 	 *
 	 * @param mNotificationValue the new m notification value
 	 */
-	public void setmNotificationValue(float mNotificationValue) {
+	public void setmNotificationValue(int mNotificationValue) {
 		this.mNotificationValue = mNotificationValue;
 	}
 

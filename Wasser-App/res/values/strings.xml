@@ -39,6 +39,8 @@
     <string name="waterlevel_turn_on_internet">Please turn on your internet connection!</string>
     <string name="waterlevel_addFav">You can add measuringpoint to your favs here!</string>
 	<string name="waterlevel_noDataFound">no Data found!</string>
+	<string name="waterlevel_daySight">day sight</string>
+	<string name="waterlevel_weekSight">week sight</string>
     
     <!-- precipitation -->
     <string name="precipitation_precipitation">Precipitation</string>
