@@ -276,7 +276,7 @@ OnItemClickListener, OnClickListener {
 				HashMap<String, String> parsermap = result.get(i);
 				id = Integer.parseInt(parsermap.get("measuringpointId").toString());
 				name = parsermap.get("measuringpointName");
-				mList.add(new MeasuringPoint(id, name, mRiverName, "-"));
+				mList.add(new MeasuringPoint(id, name, mRiverName, "-", "-"));
 			}
 			displayMeasuringpoints();
 		}

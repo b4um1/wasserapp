@@ -120,6 +120,17 @@
                     android:textColor="@color/whitegray"
                     android:textSize="12sp"
                     android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:text="@string/waterlevel_actual_waterlevel"
+                    android:textColor="@color/whitegray"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
             </FrameLayout>
 
             <FrameLayout
@@ -198,7 +209,7 @@
                         android:layout_gravity="center_vertical"
                         android:background="@layout/custom_textfield_shape"
                         android:ems="10"
-                        android:inputType="numberDecimal"
+                        android:inputType="number"
                         android:singleLine="true"
                         android:textAlignment="center"
                         android:textColor="@color/whitegray" />
@@ -209,7 +220,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_marginLeft="5dp"
-                        android:text="m"
+                        android:text="cm"
                         android:textColor="@color/whitegray"
                         android:textSize="25sp" />
                 </LinearLayout>
@@ -221,7 +232,15 @@
                     android:layout_gravity="center_vertical|right"
                     android:background="@layout/custom_marker_dialog_button"
                     android:padding="5dp"
-                    android:text="ToggleButton" />
+                    android:text="ToggleButton"
+                    android:visibility="gone" />
+
+                <CheckBox
+                    android:id="@+id/checkBoxNotification"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right|center_vertical"
+                    android:padding="5dp" />
                 
             </FrameLayout>
         </LinearLayout>

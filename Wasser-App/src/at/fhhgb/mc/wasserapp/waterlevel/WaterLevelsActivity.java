@@ -275,11 +275,13 @@ public class WaterLevelsActivity extends Activity implements OnClickListener,
 				
 				HashMap<String, String> parsermap = result.get(0);
 				String measuringpointId = parsermap.get("measuringpointId");
+				String timestamp = parsermap.get("timestamp");
 				String waterlevel = parsermap.get("waterlevel");
 	
 				for (int i = 0; i < mListFavs.size(); i++) {
 					if (mListFavs.get(i).getmMeasuringPointId() == Integer.parseInt(measuringpointId)) {
 						mListFavs.get(i).setmWaterlevel(waterlevel);
+						mListFavs.get(i).setmTimestamp(timestamp);
 					}
 				}
 			}

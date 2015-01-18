@@ -21,8 +21,8 @@
                 android:id="@+id/tv_waterlevels_show_measuring_point_diagram"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:text="One Day"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/waterlevel_daySight"
                 android:textColor="@color/whitegray"
                 android:textSize="12sp"
                 android:textStyle="bold" />

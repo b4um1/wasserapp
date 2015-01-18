@@ -14,9 +14,21 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.simple.parser.ParseException;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -38,6 +50,7 @@ import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+import android.widget.ListView;
 import android.widget.Toast;
 import argo.jdom.JdomParser;
 import argo.saj.InvalidSyntaxException;
@@ -45,7 +58,10 @@ import argo.staj.JsonStreamElement;
 import argo.staj.JsonStreamElementType;
 import argo.staj.StajParser;
 import at.fhhgb.mc.wasserapp.R;
+import at.fhhgb.mc.wasserapp.parser.WaterlevelJSONParser;
+import at.fhhgb.mc.wasserapp.waterlevel.adapter.MyArrayAdapterWaterlevel;
 import at.fhhgb.mc.wasserapp.waterlevel.model.MeasuringPoint;
+import at.fhhgb.mc.wasserapp.waterlevel.model.NotificationModel;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -55,6 +71,13 @@ public class MyService extends Service implements Serializable {
 
 	/** The log tag. */
 	private final String LOG_TAG = "Service";
+	
+	private final String GETLATESTMEASUREMENT = "getLatestMeasurmentById";
+	private final String FTPURLOFPHPFUNCTIONS = "http://wasserapp.reecon.eu/rivers.php";
+
+	private final String USER_AGENT = "Mozilla/5.0";
+	
+	private int mId;
 	
 	/** The m_notification_list. */
 	private ArrayList<NotificationModel> m_notification_list;
@@ -91,9 +114,11 @@ public class MyService extends Service implements Serializable {
 	 */
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		if (haveNetworkConnection()) {
-			loadNotificationList();
+			m_notification_list = FavsRepository.loadNotificationList(getApplicationContext());
 			if (m_notification_list != null && m_notification_list.size() != 0) {
 				refreshFavs();
+				
+				
 				Log.i(LOG_TAG,
 						"onStartCommand ... "
 								+ m_notification_list.get(0)
@@ -102,64 +127,61 @@ public class MyService extends Service implements Serializable {
 				ArrayList<Integer> remind = new ArrayList<Integer>();
 				for (int i = 0; i < m_notification_list.size(); i++) {
 					for (int j = 0; j < mListFavs.size(); j++) {
-						if ((m_notification_list.get(i).getmMp()
-								.getmRiverName()
-								.equals(mListFavs.get(j).getmRiverName()) && (m_notification_list
-								.get(i).getmMp().getmMeasuringPointName()
-								.equals(mListFavs.get(j)
-										.getmMeasuringPointName())))) {
-//							if (m_notification_list.get(i)
-//									.getmNotificationValue() <= mListFavs
-//									.get(j).getmWaterlevel()) {
-//
-//								remind.add(i);
-//
-//								String rivername = m_notification_list.get(i)
-//										.getmMp().getmRiverName();
-//								String measuringpointname = m_notification_list
-//										.get(i).getmMp()
-//										.getmMeasuringPointName();
-//								float waterlevel = m_notification_list.get(i)
-//										.getmNotificationValue();
-//
-//								String msgText = getString(R.string.notification_msg_1) + rivername
-//										+ getString(R.string.notification_msg_2) + measuringpointname
-//										+ getString(R.string.notification_msg_3)
-//										+ waterlevel + getString(R.string.notification_msg_4);
-//								
-////								Intent showIntent = new Intent(this, ShowMeasuringPointActivity.class);
-////								MeasuringPoint mp = m_notification_list.get(i).getmMp();
-////								showIntent.putExtra("measuringpoint", mp);
-//
-//								NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-//								PendingIntent pi = PendingIntent.getActivity(
-//										this, 0, new Intent(this, WaterLevelsActivity.class), 0);
-//								android.app.Notification.Builder builder = new Notification.Builder(
-//										this);
-//								builder.setContentTitle(
-//										"Wasser App Benachrichtigung")
-//										.setContentText("Big text Notification")
-//										.setDefaults(Notification.DEFAULT_ALL)
-//										.setSmallIcon(R.drawable.app_icon)
-//										.setAutoCancel(true)
-//										.setPriority(Notification.PRIORITY_HIGH)
-//										.addAction(R.drawable.app_icon,
-//												"Pegelstaende anzeigen ...", pi);
-//									
-//								Notification notification = new Notification.BigTextStyle(
-//										builder).bigText(msgText).build();
-//
-//								notificationManager.notify(0, notification);
-//
-//
-//							}
+						if ((m_notification_list.get(i).getmMp().getmMeasuringPointId() == mListFavs.get(j).getmMeasuringPointId())) {
+							boolean setNotification = false;
+							if (m_notification_list.get(i).ismIsSmaller()) {
+								if (m_notification_list.get(i).getmNotificationValue() >= Integer.parseInt(mListFavs.get(j).getmWaterlevel())) {
+									setNotification = true;
+								}
+							} else {
+								if (m_notification_list.get(i).getmNotificationValue() <= Integer.parseInt(mListFavs.get(j).getmWaterlevel())) {
+									setNotification = true;
+								}
+							}
+							if (setNotification) {
+								remind.add(i);
+
+								String rivername = m_notification_list.get(i).getmMp().getmRiverName();
+								String measuringpointname = m_notification_list.get(i).getmMp().getmMeasuringPointName();
+								float waterlevel = m_notification_list.get(i).getmNotificationValue();
+
+								String msgText = getString(R.string.notification_msg_1) + rivername
+										+ getString(R.string.notification_msg_2) + measuringpointname
+										+ getString(R.string.notification_msg_3)
+										+ waterlevel + getString(R.string.notification_msg_4);
+								
+								Intent showIntent = new Intent(this, ShowMeasuringPointActivity.class);
+								MeasuringPoint mp = m_notification_list.get(i).getmMp();
+								showIntent.putExtra("measuringpoint", mp);
+
+								NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+								PendingIntent pi = PendingIntent.getActivity(
+										this, 0, new Intent(this, WaterLevelsActivity.class), 0);
+								android.app.Notification.Builder builder = new Notification.Builder(
+										this);
+								builder.setContentTitle(
+										"Wasser App Benachrichtigung")
+										.setContentText("Big text Notification")
+										.setDefaults(Notification.DEFAULT_ALL)
+										.setSmallIcon(R.drawable.app_icon)
+										.setAutoCancel(true)
+										.setPriority(Notification.PRIORITY_HIGH)
+										.addAction(R.drawable.app_icon,
+												"Pegelstaende anzeigen ...", pi);
+									
+								Notification notification = new Notification.BigTextStyle(
+										builder).bigText(msgText).build();
+
+								notificationManager.notify(0, notification);
+
+							}
 						}
 					}
 				}
 				for (int i = 0; i < remind.size(); i++) {
-					m_notification_list.remove(i);
+					m_notification_list.remove(remind.get(i));
 				}
-				storeNotificationList();
+				FavsRepository.storeNotificationList(getApplicationContext(), m_notification_list);
 			} else {
 				stopSelf();
 			}
@@ -171,166 +193,102 @@ public class MyService extends Service implements Serializable {
 	 * Refresh favs.
 	 */
 	public void refreshFavs() {
-		loadMListFavs();
-		String retrieveQuery = "";
-		try {
-			retrieveQuery = new RetrieveTask().execute().get();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		mListFavs = FavsRepository.loadFavs(getApplicationContext());
+		for (int i = 0; i < m_notification_list.size(); i++) {
+			mId = m_notification_list.get(i).getmMp().getmMeasuringPointId();
+			new RetrieveLatestMeasurement().execute();
 		}
-
-		Set<String> fieldNames = new HashSet<String>();
-		StajParser stajParser = null;
-		stajParser = new StajParser(retrieveQuery);
-		int counter = 0;
-		// evaluate, how many entries are in the database
-		while (stajParser.hasNext()) {
-			JsonStreamElement next = stajParser.next();
-			if (next.jsonStreamElementType() == JsonStreamElementType.START_FIELD) {
-				fieldNames.add(next.text());
-				counter++;
-			}
-		}
-		ArrayList<MeasuringPoint> mpointList = new ArrayList<MeasuringPoint>();
-
-		for (int i = 0; i < (counter - 1) / 3; i++) {
-			try {
-				String measuringpointname = new JdomParser().parse(
-						retrieveQuery).getStringValue("measuringpoint", i,
-						"measuringpointname");
-				float waterlevel = Float.parseFloat(new JdomParser().parse(
-						retrieveQuery).getStringValue("measuringpoint", i,
-						"waterlevel"));
-				String river = new JdomParser().parse(retrieveQuery)
-						.getStringValue("measuringpoint", i, "river");
-
-//				mpointList.add(new MeasuringPoint(measuringpointname,
-//						waterlevel, river));
-
-			} catch (InvalidSyntaxException e) {
-				e.printStackTrace();
-			}
-		}
-
-		for (int i = 0; i < mpointList.size(); i++) {
-			for (int j = 0; j < mListFavs.size(); j++) {
-				if ((mpointList.get(i).getmRiverName()
-						.equals(mListFavs.get(j).getmRiverName()) && (mpointList
-						.get(i).getmMeasuringPointName().equals(mListFavs
-						.get(j).getmMeasuringPointName())))) {
-//					mListFavs.get(j).setmWaterlevel(
-//							mpointList.get(i).getmWaterlevel());
-				}
-			}
-		}
-		storeMListFavs();
 	}
 
 	/**
 	 * The Class RetrieveTask.
+	 *
+	 * @author Thomas Kranzer
 	 */
-	private class RetrieveTask extends AsyncTask<Void, Void, String> {
+	private class RetrieveLatestMeasurement extends
+			AsyncTask<Void, Void, String> {
 
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see android.os.AsyncTask#doInBackground(java.lang.Object[])
-		 */
 		@Override
 		protected String doInBackground(Void... params) {
-			Log.e("retrieve", "entere do in background of retrieve task: ");
+			Log.d("retrieve",
+					"entere do in background of retrieve all rivers task: ");
 
-			String strUrl = "http://www.reecon.eu/ooewasser/api/v1/?request=retrieveMeasuringpoints";
-			URL url = null;
-			StringBuffer sb = new StringBuffer();
+			HttpClient client = new DefaultHttpClient();
+			HttpPost post = new HttpPost(FTPURLOFPHPFUNCTIONS);
+
+			// add header
+			post.setHeader("User-Agent", USER_AGENT);
+			StringBuffer result = new StringBuffer();
 			try {
-				url = new URL(strUrl);
-				HttpURLConnection connection = (HttpURLConnection) url
-						.openConnection();
-				connection.connect();
-				InputStream iStream = connection.getInputStream();
-				BufferedReader reader = new BufferedReader(
-						new InputStreamReader(iStream));
-				String line = "";
-				while ((line = reader.readLine()) != null) {
-					sb.append(line);
+				List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
+				urlParameters.add(new BasicNameValuePair("function",
+						GETLATESTMEASUREMENT));
+				urlParameters.add(new BasicNameValuePair("measuringpoint_id",
+						"" + mListFavs.get(mId).getmMeasuringPointId()));
+				post.setEntity(new UrlEncodedFormEntity(urlParameters));
+				HttpResponse response = client.execute(post);
+
+				if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+					BufferedReader rd = new BufferedReader(
+							new InputStreamReader(response.getEntity()
+									.getContent()));
+
+					String line = "";
+					while ((line = rd.readLine()) != null) {
+						result.append(line);
+					}
+					// System.out.println(result.toString());
 				}
-
-				reader.close();
-				iStream.close();
-
-			} catch (MalformedURLException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			return sb.toString();
+			return result.toString();
+		}
+
+		@Override
+		protected void onPostExecute(String _result) {
+			super.onPostExecute(_result);
+			new ParserTask().execute(_result);
 		}
 	}
-
 	/**
-	 * Load notification list.
+	 * Background Parser-Task
 	 */
-	public void loadNotificationList() {
-		SharedPreferences prefs = PreferenceManager
-				.getDefaultSharedPreferences(getApplicationContext());
-		Gson gson = new Gson();
-		String json = prefs.getString("notification", "");
-		Type type = new TypeToken<ArrayList<NotificationModel>>() {
-		}.getType();
-		if (gson.fromJson(json, type) != null) {
-			m_notification_list = gson.fromJson(json, type);
-		} else {
-			m_notification_list = new ArrayList<NotificationModel>();
+	private class ParserTask extends
+			AsyncTask<String, Void, List<HashMap<String, String>>> {
+
+		@Override
+		protected List<HashMap<String, String>> doInBackground(String... params) {
+
+			WaterlevelJSONParser waterlevelParser = new WaterlevelJSONParser();
+
+			List<HashMap<String, String>> waterlevelList = new ArrayList<HashMap<String, String>>();
+			try {
+				waterlevelList = waterlevelParser.parse(params[0]);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+			return waterlevelList;
 		}
-	}
 
-	/**
-	 * Store notification list.
-	 */
-	public void storeNotificationList() {
-
-		SharedPreferences prefs = PreferenceManager
-				.getDefaultSharedPreferences(getApplicationContext());
-		Editor editor = prefs.edit();
-		Gson gson = new Gson();
-		String json = gson.toJson(m_notification_list);
-		editor.putString("notification", json);
-		editor.commit();
-	}
-
-	/**
-	 * Load m list favs.
-	 */
-	public void loadMListFavs() {
-		SharedPreferences prefs = PreferenceManager
-				.getDefaultSharedPreferences(getApplicationContext());
-		Gson gson = new Gson();
-		String json = prefs.getString("list", "");
-		Type type = new TypeToken<ArrayList<MeasuringPoint>>() {
-		}.getType();
-		if (gson.fromJson(json, type) != null) {
-			mListFavs = gson.fromJson(json, type);
-		} else {
-			mListFavs = new ArrayList<MeasuringPoint>();
+		@Override
+		protected void onPostExecute(List<HashMap<String, String>> result) {
+			if ((result != null) && (result.size() != 0)) {
+				
+				HashMap<String, String> parsermap = result.get(0);
+				String measuringpointId = parsermap.get("measuringpointId");
+				String timestamp = parsermap.get("timestamp");
+				String waterlevel = parsermap.get("waterlevel");
+	
+				for (int i = 0; i < mListFavs.size(); i++) {
+					if (mListFavs.get(i).getmMeasuringPointId() == Integer.parseInt(measuringpointId)) {
+						mListFavs.get(i).setmWaterlevel(waterlevel);
+						mListFavs.get(i).setmTimestamp(timestamp);
+					}
+				}
+			}
+			FavsRepository.storeFavs(getApplicationContext(), mListFavs);
 		}
-	}
-
-	/**
-	 * Store m list favs.
-	 */
-	public void storeMListFavs() {
-		SharedPreferences prefs = PreferenceManager
-				.getDefaultSharedPreferences(getApplicationContext());
-		Editor editor = prefs.edit();
-		Gson gson = new Gson();
-		String json = gson.toJson(mListFavs);
-		editor.putString("list", json);
-		editor.commit();
 	}
 
 	/**
