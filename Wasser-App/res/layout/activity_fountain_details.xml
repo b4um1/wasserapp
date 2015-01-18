@@ -164,23 +164,23 @@
                     android:paddingLeft="10dp" >
 
                     <ImageView
-                        android:id="@+id/imageView2"
+                        android:id="@+id/img_grade01"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_weight="1"
-                        android:src="@drawable/ic_drop_1" />
+                        android:src="@drawable/ic_drop_0" />
 
                     <ImageView
-                        android:id="@+id/imageView3"
+                        android:id="@+id/img_grade02"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_weight="1"
-                        android:src="@drawable/ic_drop_1" />
+                        android:src="@drawable/ic_drop_0" />
 
                     <ImageView
-                        android:id="@+id/imageView4"
+                        android:id="@+id/img_grade03"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -271,7 +271,7 @@
                     android:layout_gravity="center"
                     android:layout_weight="1"
                     android:background="@android:color/transparent"
-                    android:src="@drawable/ic_drop_1" />
+                    android:src="@drawable/ic_drop_0" />
 
                 <ImageButton
                     android:id="@+id/b_drop_2"
@@ -280,7 +280,7 @@
                     android:layout_gravity="center"
                     android:layout_weight="1"
                     android:background="@android:color/transparent"
-                    android:src="@drawable/ic_drop_1" />
+                    android:src="@drawable/ic_drop_0" />
 
                 <ImageButton
                     android:id="@+id/b_drop_3"
