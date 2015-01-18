@@ -14,43 +14,43 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpParams;
+import org.apache.http.params.HttpProtocolParams;
+import org.apache.http.protocol.HTTP;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import com.google.android.gms.maps.model.LatLng;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.ViewFlipper;
-import argo.jdom.JdomParser;
-import argo.saj.InvalidSyntaxException;
-import argo.staj.JsonStreamElement;
-import argo.staj.JsonStreamElementType;
-import argo.staj.StajParser;
 import at.fhhgb.mc.wasserapp.ChooseMarkerActivity;
 import at.fhhgb.mc.wasserapp.HomeActivity;
 import at.fhhgb.mc.wasserapp.R;
-import at.fhhgb.mc.wasserapp.R.id;
-import at.fhhgb.mc.wasserapp.R.layout;
 import at.fhhgb.mc.wasserapp.mapactivity.MapActivity;
-import at.fhhgb.mc.wasserapp.mapactivity.MyMarkerObject;
 import at.fhhgb.mc.wasserapp.more.LoginActivity;
 import at.fhhgb.mc.wasserapp.more.MoreActivity;
 import at.fhhgb.mc.wasserapp.rssfeed.WebViewActivity;
@@ -102,10 +102,13 @@ public class FountainDetailsActivity extends Activity implements OnClickListener
 	
 	/** The m_bool. */
 	private boolean m_attribute;
-
-	/* (non-Javadoc)
-	 * @see android.app.Activity#onCreate(android.os.Bundle)
-	 */
+	private String m_type;
+	private String m_marker_id;
+	
+	private final String FTPURLOFPHPFUNCTIONS = "http://wasserapp.reecon.eu/marker.php";
+	private final String USER_AGENT = "Mozilla/5.0";
+	
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -127,15 +130,41 @@ public class FountainDetailsActivity extends Activity implements OnClickListener
 		m_marker_lat = i.getStringExtra("lat");
 		m_marker_lng = i.getStringExtra("lng");
 		m_attribute = i.getBooleanExtra("attribute", false);
+		m_type = i.getStringExtra("type");
+		m_marker_id = i.getStringExtra("marker_id");
 		
+		Log.i("FountainDetails",m_type);
+		
+		TextView tv_title = (TextView) findViewById(R.id.tv_details_title);
+		ImageView img_view = (ImageView) findViewById(R.id.img_detailsview);
+		TextView tv_drinkable_accessible = null;
+		
+		
+		if (m_type.equals("fountain")){
+			tv_drinkable_accessible = (TextView) findViewById(R.id.tv_drinkable);
+			tv_title.setText("Brunnendetails");
+			img_view.setImageResource(R.drawable.pic_fountain);
+			
+			
+		}else{
+			if (m_type.equals("toilet")){
+				tv_drinkable_accessible = (TextView) findViewById(R.id.tv_details_drinkable_image);
+				tv_drinkable_accessible.setVisibility(View.GONE);
+				tv_drinkable_accessible = (TextView) findViewById(R.id.tv_details_accessible_image);
+				tv_drinkable_accessible.setVisibility(View.VISIBLE);
+				tv_title.setText("Toilettendetails");
+				img_view.setImageResource(R.drawable.pic_wc);
+			}else{
+				tv_title.setText("Heilquellendetails");
+			}
+		}
+		tv_drinkable_accessible = (TextView) findViewById(R.id.tv_drinkable);
 		if(m_attribute){
-			TextView tv_drinkable = (TextView) findViewById(R.id.tv_drinkable);
-			tv_drinkable.setText("Ja");
+			tv_drinkable_accessible.setText("Ja");
 			Log.e("bool", "true");
 			
 		}else{
-			TextView tv_drinkable = (TextView) findViewById(R.id.tv_drinkable);
-			tv_drinkable.setText("Nein");
+			tv_drinkable_accessible.setText("Nein");
 			Log.e("bool", "false");
 		}
 		tv_address = (TextView) findViewById(R.id.tv_address);
@@ -143,7 +172,7 @@ public class FountainDetailsActivity extends Activity implements OnClickListener
 		tv_address.setText(m_marker_address);
 
 		//parse MySQL query
-		//parseJson();
+		new RetrieveTaskComments().execute();
 		
 		adapter = new ArrayAdapterDetail(this, R.layout.list_comments, list_of_comments);
 		ListView v = (ListView) findViewById(R.id.lv_comments);
@@ -154,21 +183,11 @@ public class FountainDetailsActivity extends Activity implements OnClickListener
 	/**
 	 * Parses the JSON Stream in single Comment-Objects ann puts in into a arraylist - list_of_comments<Comment>.
 	 */
-	private void parseJson() {
+	private void parseJson(String _result) {
 		list_of_comments.removeAll(list_of_comments);
-		String comments = "";
-		try {
-			comments = new RetrieveTaskComments().execute().get();
-			Log.i("formdetails", comments);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		String comments = _result;
 		
-		JSONArray jComments = null;
+		/*JSONArray jComments = null;
 		JSONObject json = null;
 		Comment comm;
 		try {
@@ -177,23 +196,24 @@ public class FountainDetailsActivity extends Activity implements OnClickListener
 			e.printStackTrace();
 		}
 		try {
-			/** Retrieves all the elements in the 'markers' array */
+			// Retrieves all the elements in the 'markers' array 
 			jComments = json.getJSONArray("comments");
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
 		
 		int commCount = jComments.length();
-		/** Taking each marker, parses and adds to list object */
+		// Taking each marker, parses and adds to list object 
 		for(int i1=0; i1<commCount;i1++){
 			try {
-				/** Call getMarker with marker JSON object to parse the marker */
+				// Call getMarker with marker JSON object to parse the marker 
 				comm = getComment((JSONObject) jComments.get(i1));
 				list_of_comments.add(comm);
 			}catch (JSONException e){
 				e.printStackTrace();
 			}
 		}
+		*/
 		
 	}
 
@@ -229,61 +249,58 @@ public class FountainDetailsActivity extends Activity implements OnClickListener
 	 */
 	private class RetrieveTaskComments extends AsyncTask<Void, Void, String> {
 
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see android.os.AsyncTask#doInBackground(java.lang.Object[])
-		 */
 		@Override
 		protected String doInBackground(Void... params) {
-			Log.e("retrieve", "do in background of retrieve task: ");
+			Log.i("Retrieve comments of", m_type + ": "+m_marker_id);
 
-			String strUrl = "http://www.reecon.eu/ooewasser/api/v1/?request=retrieveComments";
-			URL url = null;
-			StringBuffer sb = new StringBuffer();
+			String url = FTPURLOFPHPFUNCTIONS;
+
+			HttpParams httpParameters = new BasicHttpParams();
+			HttpProtocolParams.setContentCharset(httpParameters, HTTP.UTF_8);
+			HttpProtocolParams
+					.setHttpElementCharset(httpParameters, HTTP.UTF_8);
+			
+			HttpClient client = new DefaultHttpClient(httpParameters);
+			HttpPost post = new HttpPost(url);
+
+			// add header
+			post.setHeader("User-Agent", USER_AGENT);
+			StringBuffer result = new StringBuffer();
 			try {
-				url = new URL(strUrl);
-				HttpURLConnection connection = (HttpURLConnection) url
-						.openConnection();
-				connection.setRequestMethod("POST");
-				connection.setDoOutput(true);
-				OutputStreamWriter outputStreamWriter = new OutputStreamWriter(
-						connection.getOutputStream());
+				List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
+				urlParameters.add(new BasicNameValuePair("function", "getAllCommentsOfAMarker"));
+				urlParameters.add(new BasicNameValuePair("marker_table", m_type)); //fountain, toilet, healingspring
+				urlParameters.add(new BasicNameValuePair("marker_id", m_marker_id));
+  				post.setEntity(new UrlEncodedFormEntity(urlParameters));
 
-				outputStreamWriter.write("lat=" + m_marker_lat + "&lng="
-						+ m_marker_lng);
-				outputStreamWriter.flush();
-				outputStreamWriter.close();
+				HttpResponse response = client.execute(post);
 
-				InputStream iStream = connection.getInputStream();
-				BufferedReader reader = new BufferedReader(
-						new InputStreamReader(iStream));
+				if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+					BufferedReader rd = new BufferedReader(
+							new InputStreamReader(response.getEntity()
+									.getContent()));
 
-				Log.d("url", url.toString());
-
-				String line = "";
-
-				while ((line = reader.readLine()) != null) {
-					sb.append(line);
+					String line = "";
+					while ((line = rd.readLine()) != null) {
+						result.append(line);
+					}
+					System.out.println(result.toString());
 				}
-				Log.d("stringbuffer", sb.toString());
-
-				reader.close();
-				iStream.close();
-
-			} catch (MalformedURLException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
-
-			return sb.toString();
+			return result.toString();
+		}
+		
+		@Override
+		protected void onPostExecute(String result) {
+			super.onPostExecute(result);
+			parseJson(result);
 		}
 	}
 
-	// Background thread to save the location in remote MySQL server
 	/**
-	 * The Class SaveTask.
+	 * This Task saves one comment into remote db
 	 */
 	private class SaveTask extends AsyncTask<Void, Void, Void> {
 

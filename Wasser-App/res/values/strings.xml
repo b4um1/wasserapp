@@ -12,8 +12,8 @@
 
     <!-- map -->
     <string name="map_fountain">Fountain</string>
-    <string name="map_wc">WC</string>
-    <string name="map_hs">Healingspring</string>
+    <string name="map_wc">Toilette</string>
+    <string name="map_hs">Heilquelle</string>
     <string name="map_all">All Objects</string>
     <string name="map_mark">Mark Object</string>
     <string name="map_mark_fountain">Mark Fountain</string>
@@ -65,7 +65,7 @@
 
     <!-- details -->
     <string name="details_fountain">Fountain Details</string>
-    <string name="details_wc">WC Details</string>
+    <string name="details_wc">Barrierefrei</string>
     <string name="details_lastverification">Last verification</string>
     <string name="details_rating">Rating</string>
     <string name="details_yourcomment">Your comment...</string>

@@ -152,7 +152,7 @@
                 android:src="@drawable/ic_circle_0" />
 
             <ImageView
-                android:id="@+id/img_view1"
+                android:id="@+id/img_detailsview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="10dp"
