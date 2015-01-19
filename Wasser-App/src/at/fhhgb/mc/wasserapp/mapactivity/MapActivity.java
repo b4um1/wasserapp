@@ -97,7 +97,7 @@ public class MapActivity extends Activity implements OnMapClickListener,
 	private String getMethod = "";
 	private final String GETFOUNTAINS = "getAllFountains";
 	private final String GETTOILETS = "getAllToilets";
-	private final String GETHEALINGSPRINGS = "getAllHealingsprings";
+	private final String GETHEALINGSPRINGS = "getAllHealingSprings";
 	private final String FTPURLOFPHPFUNCTIONS = "http://wasserapp.reecon.eu/marker.php";
 
 	private final String USER_AGENT = "Mozilla/5.0";
@@ -1041,7 +1041,7 @@ public class MapActivity extends Activity implements OnMapClickListener,
 				urlParameters.add(new BasicNameValuePair("street", street));
 				urlParameters
 						.add(new BasicNameValuePair("attribut", attribute));
-				urlParameters.add(new BasicNameValuePair("comment", comment));
+				//urlParameters.add(new BasicNameValuePair("comment", comment));
 				urlParameters.add(new BasicNameValuePair("rating", "2"));
 				urlParameters.add(new BasicNameValuePair("longitude", lng));
 				urlParameters.add(new BasicNameValuePair("latitude", lat));
