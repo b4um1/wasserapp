@@ -154,7 +154,7 @@ public class MarkerJSONParser {
 				attribute = "" + _jMarker.get(DRINKABLE);
 			}
 		}else{
-			if (mType.equals("wc")){
+			if (mType.equals("toilet")){
 				// Extracting drinkable, if available
 				if (_jMarker.containsKey(BARRIERFREE)) {
 					attribute = "" + _jMarker.get(BARRIERFREE);

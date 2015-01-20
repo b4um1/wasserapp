@@ -115,14 +115,14 @@
             android:layout_marginTop="10dp" >
 
             <ImageView
-                android:id="@+id/img_view1"
+                android:id="@+id/img_detailsview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="10dp"
                 android:src="@drawable/ic_circle_1" />
 
             <ImageView
-                android:id="@+id/imageView2"
+                android:id="@+id/img_grade1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="10dp"

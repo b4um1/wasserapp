@@ -2,17 +2,11 @@ package at.fhhgb.mc.wasserapp.mapactivity;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -20,7 +14,6 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
@@ -28,13 +21,10 @@ import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HTTP;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.json.simple.parser.ParseException;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.internal.gi;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter;
@@ -107,7 +97,7 @@ public class MapActivity extends Activity implements OnMapClickListener,
 	private String getMethod = "";
 	private final String GETFOUNTAINS = "getAllFountains";
 	private final String GETTOILETS = "getAllToilets";
-	private final String GETHEALINGSPRINGS = "getAllHealingsprings";
+	private final String GETHEALINGSPRINGS = "getAllHealingSprings";
 	private final String FTPURLOFPHPFUNCTIONS = "http://wasserapp.reecon.eu/marker.php";
 
 	private final String USER_AGENT = "Mozilla/5.0";
@@ -170,10 +160,9 @@ public class MapActivity extends Activity implements OnMapClickListener,
 
 	/** The m_super user. */
 	private boolean m_superUser;
-	
+
 	private int m_superUser_id = -1; // if there is nobody logged in.
-	
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -253,6 +242,7 @@ public class MapActivity extends Activity implements OnMapClickListener,
 			} else if (m_markertype.equals("healingspring")) {
 				m_dialog_checkbox
 						.setText(getString(R.string.healing_healingspring));
+				m_dialog_checkbox.setVisibility(View.INVISIBLE);
 			}
 			m_checkbox = true;
 			m_dialog_checkbox.setOnCheckedChangeListener(this);
@@ -589,7 +579,7 @@ public class MapActivity extends Activity implements OnMapClickListener,
 			m_marker_object.setM_type("fountain");
 		}
 		if (m_markertype.equals("toilet")) {
-			m_marker_object = new Wc();
+			m_marker_object = new Toilet();
 			m_marker_object.setM_type("toilet");
 		}
 		if (m_markertype.equals("healingspring")) {
@@ -659,15 +649,20 @@ public class MapActivity extends Activity implements OnMapClickListener,
 					FountainDetailsActivity.class);
 			goToDetailsActivity
 					.putExtra("address", m_clicked_marker.getTitle());
+			goToDetailsActivity
+			.putExtra("type", m_marker_object.getM_type());
 			goToDetailsActivity.putExtra("lat",
 					"" + m_clicked_marker.getPosition().latitude);
 			goToDetailsActivity.putExtra("lng",
 					"" + m_clicked_marker.getPosition().longitude);
 			goToDetailsActivity.putExtra("attribute",
 					m_marker_object.getM_checkbox());
+			goToDetailsActivity.putExtra("marker_id",
+					m_marker_object.getM_id());
 			this.startActivity(goToDetailsActivity);
 
 		} else {
+			m_dialog_checkbox.setChecked(m_marker_object.getM_checkbox());
 			m_dialog.show();
 		}
 	}
@@ -1003,21 +998,23 @@ public class MapActivity extends Activity implements OnMapClickListener,
 			String street = split[0];
 			String subsplit = split[1].substring(1);
 			String zip = subsplit.substring(0, 4);
-			String city = subsplit.substring(5);
+			String city = "";
+			if (subsplit.length() > 0) {
+				city = subsplit.substring(5);
+			}
 
-			Log.i("addressAfterSplit", street + " Length:"+street.length() +", " + city);
+			Log.i("addressAfterSplit", street + " Length:" + street.length()
+					+ ", " + city);
 			byte ptext[];
 			try {
 				ptext = street.getBytes("ISO-8859-1");
-				String newstreet = new String(ptext, "UTF-8"); 
+				String newstreet = new String(ptext, "UTF-8");
 				Log.i("afterutf8", newstreet);
 			} catch (UnsupportedEncodingException e2) {
 				// TODO Auto-generated catch block
 				e2.printStackTrace();
-			} 
-			
-			
-			
+			}
+
 			String type = params[0].getM_type();
 			String attribute = params[0].getM_checkboxStringBool();
 			String comment = params[0].getM_comment();
@@ -1026,7 +1023,8 @@ public class MapActivity extends Activity implements OnMapClickListener,
 
 			HttpParams httpParameters = new BasicHttpParams();
 			HttpProtocolParams.setContentCharset(httpParameters, HTTP.UTF_8);
-			HttpProtocolParams.setHttpElementCharset(httpParameters, HTTP.UTF_8);
+			HttpProtocolParams
+					.setHttpElementCharset(httpParameters, HTTP.UTF_8);
 
 			HttpClient client = new DefaultHttpClient(httpParameters);
 			HttpPost post = new HttpPost(url);
@@ -1040,18 +1038,19 @@ public class MapActivity extends Activity implements OnMapClickListener,
 				List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
 				urlParameters.add(new BasicNameValuePair("function", "insert"));
 				urlParameters.add(new BasicNameValuePair("marker_table", type));
-				urlParameters.add(new BasicNameValuePair("street",street));
+				urlParameters.add(new BasicNameValuePair("street", street));
 				urlParameters
 						.add(new BasicNameValuePair("attribut", attribute));
-				urlParameters.add(new BasicNameValuePair("comment", comment));
+				//urlParameters.add(new BasicNameValuePair("comment", comment));
 				urlParameters.add(new BasicNameValuePair("rating", "2"));
 				urlParameters.add(new BasicNameValuePair("longitude", lng));
 				urlParameters.add(new BasicNameValuePair("latitude", lat));
 				urlParameters.add(new BasicNameValuePair("city", city));
 				urlParameters.add(new BasicNameValuePair("zip", zip));
 				urlParameters.add(new BasicNameValuePair("user_id", "15"));
-																			
-				UrlEncodedFormEntity formEntity = new UrlEncodedFormEntity(urlParameters, HTTP.UTF_8);
+
+				UrlEncodedFormEntity formEntity = new UrlEncodedFormEntity(
+						urlParameters, HTTP.UTF_8);
 				post.setEntity(formEntity);
 				HttpResponse response = client.execute(post);
 
@@ -1171,7 +1170,7 @@ public class MapActivity extends Activity implements OnMapClickListener,
 
 				MyMarkerObject m = null;
 				if (type.equals("toilet")) {
-					m = new Wc();
+					m = new Toilet();
 				} else if (type.equals("fountain")) {
 					m = new Fountain();
 				} else {
@@ -1181,14 +1180,15 @@ public class MapActivity extends Activity implements OnMapClickListener,
 				m.setM_id(id);
 				m.setM_latLng(latLng);
 				m.setM_address(address);
-				if (type.equals("toilet") | type.equals("fountain")) {
+				if (type.equals("toilet") || type.equals("fountain")) {
+					Log.i("NEWMARKERADDING", type + ": "+attribute);
 					m.setM_checkboxStringBool(attribute);
 					if (attribute.equals("true")) {
 						m.setM_icon(true);
 					} else {
 						m.setM_icon(false);
 					}
-				}else{ //Healingspring
+				} else { // Healingspring
 					m.setM_checkboxStringBool(attribute);
 					m.setM_icon(true);
 				}
@@ -1226,8 +1226,9 @@ public class MapActivity extends Activity implements OnMapClickListener,
 
 		@Override
 		protected Void doInBackground(MyMarkerObject... params) {
-			Log.i(LOG_TAG_DELETE, "delete object with id: " + params[0].getM_id()+ "" +params[0].getM_type()
-					+ " from database");
+			Log.i(LOG_TAG_DELETE,
+					"delete object with id: " + params[0].getM_id() + ""
+							+ params[0].getM_type() + " from database");
 			MyMarkerObject mymarker = params[0];
 			String url = FTPURLOFPHPFUNCTIONS;
 
@@ -1239,8 +1240,7 @@ public class MapActivity extends Activity implements OnMapClickListener,
 			StringBuffer result = new StringBuffer();
 			try {
 				List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
-				urlParameters.add(new BasicNameValuePair("function",
-						"delete"));
+				urlParameters.add(new BasicNameValuePair("function", "delete"));
 				urlParameters.add(new BasicNameValuePair("marker_table",
 						mymarker.getM_type()));
 				urlParameters.add(new BasicNameValuePair("marker_id", mymarker
@@ -1285,27 +1285,10 @@ public class MapActivity extends Activity implements OnMapClickListener,
 		 */
 		@Override
 		protected Void doInBackground(MyMarkerObject... params) {
-			
-			LatLng latLng = params[0].getM_latLng();
-			String lat = Double.toString(latLng.latitude);
-			String lng = Double.toString(latLng.longitude);
-			
+
 			String id = params[0].getM_id();
-			
-			String address = params[0].getM_address();
-			String[] split = address.split(",");
-			String street = split[0];
-			String subsplit = split[1].substring(1);
-			String zip = subsplit.substring(0, 4);
-			String city = subsplit.substring(5);
-
-			Log.i("addressAfterSplit", street + "," + city);
-
-			String mystreet = street;
-			
 			String type = params[0].getM_type();
 			String attribute = params[0].getM_checkboxStringBool();
-			String comment = params[0].getM_comment();
 
 			String url = FTPURLOFPHPFUNCTIONS;
 
@@ -1322,21 +1305,15 @@ public class MapActivity extends Activity implements OnMapClickListener,
 				List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
 				urlParameters.add(new BasicNameValuePair("function", "update"));
 				urlParameters.add(new BasicNameValuePair("marker_table", type));
-				urlParameters.add(new BasicNameValuePair("street",mystreet));
-				urlParameters.add(new BasicNameValuePair("attribut", attribute));
-				urlParameters.add(new BasicNameValuePair("comment", comment));
-				urlParameters.add(new BasicNameValuePair("rating", "2"));
-				urlParameters.add(new BasicNameValuePair("longitude", lng));
-				urlParameters.add(new BasicNameValuePair("latitude", lat));
-				urlParameters.add(new BasicNameValuePair("city", city));
-				urlParameters.add(new BasicNameValuePair("zip", zip));
+				urlParameters
+						.add(new BasicNameValuePair("attribut", attribute));
 				urlParameters.add(new BasicNameValuePair("marker_id", id));
-																			
 
 				post.setEntity(new UrlEncodedFormEntity(urlParameters));
 				HttpResponse response = client.execute(post);
 
-				Log.i("Updatetask", "" + response.getStatusLine().getStatusCode());
+				Log.i("Updatetask", ""
+						+ response.getStatusLine().getStatusCode());
 
 			} catch (UnsupportedEncodingException e1) {
 				e1.printStackTrace();
@@ -1348,7 +1325,7 @@ public class MapActivity extends Activity implements OnMapClickListener,
 				e.printStackTrace();
 			}
 			return null;
-			}
+		}
 	}
 
 	/*

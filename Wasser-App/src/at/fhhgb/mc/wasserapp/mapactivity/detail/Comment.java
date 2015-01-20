@@ -3,58 +3,38 @@
  */
 package at.fhhgb.mc.wasserapp.mapactivity.detail;
 
-// TODO: Auto-generated Javadoc
+
 /**
- * The Class Comment.
+ * Model class Comment
+ * @author mariobaumgartner
+ *
  */
 public class Comment {
 	
-	/** The comment. */
-	private String comment;
+	private String m_comment;
+	private int m_grade;
 	
-	/** The rating. */
-	private String rating;
-	
-	/**
-	 * Gets the comment.
-	 *
-	 * @return the comment
-	 */
-	public String getComment() {
-		return comment;
+	public Comment(){
+		
+	}
+	public Comment(String _comment,int _grade){
+		m_comment = _comment;
+		m_grade = _grade;
 	}
 	
-	/**
-	 * Sets the comment.
-	 *
-	 * @param comment the new comment
-	 */
-	public void setComment(String comment) {
-		this.comment = comment;
+	public String getM_comment() {
+		return m_comment;
 	}
-	
-	/**
-	 * Gets the rating.
-	 *
-	 * @return the rating
-	 */
-	public String getRating() {
-		return rating;
+	public void setM_comment(String m_comment) {
+		this.m_comment = m_comment;
 	}
-	
-	/**
-	 * Sets the rating.
-	 *
-	 * @param rating the new rating
-	 */
-	public void setRating(String rating) {
-		this.rating = rating;
+	public int getM_grade() {
+		return m_grade;
 	}
-	
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
+	public void setM_grade(int m_grade) {
+		this.m_grade = m_grade;
+	}
 	public String toString(){
-		return comment + " " + rating;
+		return m_comment + " " + m_grade;
 	}
 }

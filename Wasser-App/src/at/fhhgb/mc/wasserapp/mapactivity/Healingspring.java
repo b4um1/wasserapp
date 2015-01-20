@@ -15,15 +15,10 @@ public class Healingspring extends MyMarkerObject {
 	}
 
 	/**
-	 * WE NEED AN ICON
+	 * Sets the icon of the healingspring
 	 */
 	public void setM_icon(boolean _isDrinkable) {
-		if (_isDrinkable) {
-			this.setM_icon(BitmapDescriptorFactory
-					.fromResource(R.drawable.ic_position_drinkable));
-		} else {
-			this.setM_icon(BitmapDescriptorFactory
-					.fromResource(R.drawable.ic_position_notdrinkable));
-		}
+		this.setM_icon(BitmapDescriptorFactory
+				.fromResource(R.drawable.ic_position_healingspring));
 	}
 }

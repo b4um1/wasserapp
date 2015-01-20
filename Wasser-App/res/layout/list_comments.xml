@@ -14,7 +14,7 @@
         android:alpha="0.8">
 
         <ImageView
-            android:id="@+id/img_view1"
+            android:id="@+id/img_detailsview"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -48,7 +48,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="1"
-                android:src="@drawable/ic_drop_1" />
+                android:src="@drawable/ic_drop_0" />
 
             <ImageView
                 android:id="@+id/iv_details_drop_2"
@@ -56,7 +56,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="1"
-                android:src="@drawable/ic_drop_1" />
+                android:src="@drawable/ic_drop_0" />
 
             <ImageView
                 android:id="@+id/iv_details_drop_3"
