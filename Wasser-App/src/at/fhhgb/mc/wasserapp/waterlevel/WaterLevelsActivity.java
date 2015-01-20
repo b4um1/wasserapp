@@ -71,6 +71,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
@@ -106,6 +107,8 @@ public class WaterLevelsActivity extends Activity implements OnClickListener,
 	ListView v;
 	OnItemClickListener onItemClickListener;
 	
+	ProgressBar progressBar;
+	
 	//static TextView tvFav;
 	static LinearLayout ll1;
 	static LinearLayout ll2;
@@ -130,6 +133,8 @@ public class WaterLevelsActivity extends Activity implements OnClickListener,
 		HomeActivity.setPositionToMark(this);
 		
 		onItemClickListener = this;
+		
+		progressBar = (ProgressBar) findViewById(R.id.progressBarWaterlevel);
 
 		if (haveNetworkConnection()) {
 			mListFavs = new ArrayList<MeasuringPoint>();
@@ -206,6 +211,12 @@ public class WaterLevelsActivity extends Activity implements OnClickListener,
 	private class RetrieveLatestMeasurement extends
 			AsyncTask<Void, Void, String> {
 
+		protected void onPreExecute() {
+			super.onPreExecute();
+			progressBar.setVisibility(View.VISIBLE);	
+			ll1.setVisibility(View.GONE);
+		}
+		
 		@Override
 		protected String doInBackground(Void... params) {
 			Log.d("retrieve",
@@ -292,6 +303,10 @@ public class WaterLevelsActivity extends Activity implements OnClickListener,
 			v = (ListView) findViewById(R.id.container_waterlevel);
 			v.setOnItemClickListener(onItemClickListener);
 			v.setAdapter(adapter);
+			
+			progressBar.setVisibility(View.GONE);
+			
+			ll1.setVisibility(View.VISIBLE);
 		}
 	}
 	
