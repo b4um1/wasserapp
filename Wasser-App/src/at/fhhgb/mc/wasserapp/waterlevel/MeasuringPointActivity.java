@@ -39,6 +39,7 @@ import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 import android.widget.AdapterView.OnItemClickListener;
@@ -82,6 +83,9 @@ OnItemClickListener, OnClickListener {
 	/** The Constant RIVER_ID. */
 	private static final String RIVER_ID = "riverId";
 	private static final String RIVER_NAME = "riverName";
+	
+	ProgressBar progressBar;
+	
 
 
 	/* (non-Javadoc)
@@ -98,6 +102,8 @@ OnItemClickListener, OnClickListener {
 		
 		HomeActivity.setAllButtonListener((ViewGroup)findViewById(R.id.rootActionbar), this);
 		HomeActivity.setPositionToMark(this);
+		
+		progressBar = (ProgressBar) findViewById(R.id.progressBarMeasuringpoint);
 		
 		mList = new ArrayList<MeasuringPoint>();
 
@@ -205,6 +211,11 @@ OnItemClickListener, OnClickListener {
 	 */
 	private class RetrieveMeasuringpoints extends AsyncTask<Void, Void, String> {
 
+		protected void onPreExecute() {
+			super.onPreExecute();
+			progressBar.setVisibility(View.VISIBLE);	
+		}
+		
 		@Override
 		protected String doInBackground(Void... params) {
 			Log.d("retrieve", "entere do in background of retrieve measuringpoints task: ");
@@ -279,6 +290,7 @@ OnItemClickListener, OnClickListener {
 				mList.add(new MeasuringPoint(id, name, mRiverName, "-", "-"));
 			}
 			displayMeasuringpoints();
+			progressBar.setVisibility(View.GONE);
 		}
 	}
 	

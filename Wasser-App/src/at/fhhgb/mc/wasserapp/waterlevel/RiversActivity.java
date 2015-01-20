@@ -38,6 +38,7 @@ import at.fhhgb.mc.wasserapp.rssfeed.WebViewActivity;
 import at.fhhgb.mc.wasserapp.waterlevel.adapter.MyArrayAdapterRivers;
 import at.fhhgb.mc.wasserapp.waterlevel.model.River;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -51,6 +52,7 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 import android.widget.AdapterView.OnItemClickListener;
@@ -260,6 +262,9 @@ public class RiversActivity extends Activity implements OnItemClickListener,
 				mList.add(new River(id, name));
 			}
 			displayRivers();
+			
+			ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBarRivers);
+			progressBar.setVisibility(View.GONE);
 		}
 	}
 
