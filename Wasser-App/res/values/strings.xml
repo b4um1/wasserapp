@@ -53,6 +53,8 @@
 
     <!-- Laborbus -->
     <string name="labbus_labbus">Labbus</string>
+    <string name="labbus_nextStops">Next Locations</string>
+    <string name="labbus_moreInfos">more information</string>
 
     <!-- Emergency Management -->
     <string name="emergencyManagement_emergencyManagement">Emergency Management</string>

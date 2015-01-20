@@ -56,6 +56,10 @@
         <include
             android:id="@+id/details"
             layout="@layout/activity_fountain_details" />
+        
+        <include
+            android:id="@+id/labbus"
+            layout="@layout/activity_labbus" />
     </ViewFlipper>
 
     <LinearLayout
