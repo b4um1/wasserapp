@@ -109,6 +109,8 @@ public class WaterLevelsActivity extends Activity implements OnClickListener,
 	
 	ProgressBar progressBar;
 	
+	FrameLayout flFavHeader;
+	
 	//static TextView tvFav;
 	static LinearLayout ll1;
 	static LinearLayout ll2;
@@ -135,13 +137,15 @@ public class WaterLevelsActivity extends Activity implements OnClickListener,
 		onItemClickListener = this;
 		
 		progressBar = (ProgressBar) findViewById(R.id.progressBarWaterlevel);
+		
+		flFavHeader = (FrameLayout) findViewById(R.id.fl_wl_header_favs);
+		
+		mCounter = 0;
 
 		if (haveNetworkConnection()) {
 			mListFavs = new ArrayList<MeasuringPoint>();
 			mListFavs = FavsRepository.loadFavs(getApplicationContext());
 			
-			
-			//tvFav = (TextView) findViewById(R.id.tv_addFav);
 			ll1 = (LinearLayout) findViewById(R.id.LinearLayout1);
 			ll2 = (LinearLayout) findViewById(R.id.LinearLayout2);
 			if (mListFavs.isEmpty()) {
@@ -149,6 +153,7 @@ public class WaterLevelsActivity extends Activity implements OnClickListener,
 			} else {
 				setHeaderText();
 			}
+			
 			updateFavs();
 		} else {
 			finish();
@@ -214,7 +219,7 @@ public class WaterLevelsActivity extends Activity implements OnClickListener,
 		protected void onPreExecute() {
 			super.onPreExecute();
 			progressBar.setVisibility(View.VISIBLE);	
-			ll1.setVisibility(View.GONE);
+			flFavHeader.setVisibility(View.GONE);
 		}
 		
 		@Override
@@ -305,8 +310,8 @@ public class WaterLevelsActivity extends Activity implements OnClickListener,
 			v.setAdapter(adapter);
 			
 			progressBar.setVisibility(View.GONE);
-			
-			ll1.setVisibility(View.VISIBLE);
+			FrameLayout flFavHeader = (FrameLayout) findViewById(R.id.fl_wl_header_favs);
+			flFavHeader.setVisibility(View.VISIBLE);
 		}
 	}
 	
@@ -320,8 +325,8 @@ public class WaterLevelsActivity extends Activity implements OnClickListener,
 		overridePendingTransition(0, 0);
 		HomeActivity.setPositionToMark(this);
 
-		mCounter = 0;
-		mListFavs = FavsRepository.loadFavs(getApplicationContext());
+		//mCounter = 0;
+		//mListFavs = FavsRepository.loadFavs(getApplicationContext());
 		Log.i("onResume", "onResume");
 		if (mListFavs.isEmpty()) {
 			setInfoText();
@@ -329,7 +334,7 @@ public class WaterLevelsActivity extends Activity implements OnClickListener,
 			setHeaderText();
 		}
 		
-		updateFavs();
+		//updateFavs();
 	}
 
 	/*
@@ -407,7 +412,7 @@ public class WaterLevelsActivity extends Activity implements OnClickListener,
 			break;
 		// End Actionbar
 
-		case R.id.fl_fav_header:
+		case R.id.fl_wl_header:
 			i = new Intent(this, RiversActivity.class);
 			break;
 		case R.id.b_back:
