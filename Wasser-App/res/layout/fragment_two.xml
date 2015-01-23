@@ -94,7 +94,7 @@
                     android:layout_marginTop="10dp"
                     android:alpha="0.8"
                     android:background="@layout/button_home"
-                    android:drawableTop="@drawable/ic_about"
+                    android:drawableTop="@drawable/ic_laborbus"
                     android:paddingTop="20dp"
                     android:text="@string/labbus_labbus"
                     android:textAllCaps="true"

@@ -71,10 +71,22 @@
             android:textColor="@color/whitegray" />
     </FrameLayout>
 
-    <ListView
-        android:id="@+id/lv_labbus"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
-    </ListView>
+
+        <ListView
+            android:id="@+id/lv_labbus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+        </ListView>
+
+        <ProgressBar
+            android:id="@+id/progressBarLabbus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical" />
+
+    </FrameLayout>
 
 </LinearLayout>

@@ -71,6 +71,13 @@ public class LabbusActivity extends Activity implements OnClickListener {
 	 * @author Thomas Kranzer
 	 */
 	private class RetrieveLabbusData extends AsyncTask<Void, Void, String> {
+		
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBarLabbus);
+			progressBar.setVisibility(View.VISIBLE);
+		}
 
 		@Override
 		protected String doInBackground(Void... params) {
@@ -102,7 +109,6 @@ public class LabbusActivity extends Activity implements OnClickListener {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			Log.i("result", result.toString());
 			return result.toString();
 		}
 
@@ -155,8 +161,8 @@ public class LabbusActivity extends Activity implements OnClickListener {
 			}
 			displayLabbusData();
 			
-//			ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBarRivers);
-//			progressBar.setVisibility(View.GONE);
+			ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBarLabbus);
+			progressBar.setVisibility(View.GONE);
 		}
 	}
 	
