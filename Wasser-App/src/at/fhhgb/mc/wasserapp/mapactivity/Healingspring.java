@@ -11,7 +11,7 @@ public class Healingspring extends MyMarkerObject {
 
 	public Healingspring() {
 		super();
-		setM_type("healingspring");
+		setM_type("healing_spring");
 	}
 
 	/**

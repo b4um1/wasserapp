@@ -74,7 +74,8 @@
 
                 <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="40dp" >
+                    android:layout_height="40dp"
+                    android:visibility="visible" >
 
                     <Button
                         android:id="@+id/btn_takepicture"
@@ -87,7 +88,7 @@
                         android:paddingLeft="10dp"
                         android:text="@string/takepicture"
                         android:textColor="@color/blue"
-                        android:textSize="13sp" />
+                        android:visibility="gone" />
 
                 </FrameLayout>
             </LinearLayout>

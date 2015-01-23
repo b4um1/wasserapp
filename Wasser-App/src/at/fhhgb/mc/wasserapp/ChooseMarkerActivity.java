@@ -117,7 +117,7 @@ public class ChooseMarkerActivity extends Activity implements OnClickListener {
 			map_hs = new Intent();
 			map_hs = new Intent(this, MapActivity.class);
 			map_hs.putExtra("user", true);
-			map_hs.putExtra("m_markertype", "healingspring");
+			map_hs.putExtra("m_markertype", "healing_spring");
 			startActivity(map_hs);
 			break;
 		default:

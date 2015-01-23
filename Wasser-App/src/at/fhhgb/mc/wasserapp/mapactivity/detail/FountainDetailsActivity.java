@@ -94,18 +94,19 @@ public class FountainDetailsActivity extends Activity implements
 
 	private String m_marker_lat;
 	private String m_marker_lng;
-	
+
 	/** The m_bool. */
 	private boolean m_attribute;
 	private String m_type;
 	private String m_marker_id;
 
-	private String m_newComment;
-	private String m_newGrade="0";
-	
+	private String m_newComment = "";
+	private String m_newGrade = "0";
+
 	private ImageButton btn_grade1;
 	private ImageButton btn_grade2;
 	private ImageButton btn_grade3;
+	private ImageButton btn_remove_written_comment;
 
 	private int m_total_grade = 0;
 
@@ -127,16 +128,18 @@ public class FountainDetailsActivity extends Activity implements
 
 		bt_send = (Button) findViewById(R.id.btn_send);
 		bt_send.setOnClickListener(this);
-		
+
 		btn_grade1 = (ImageButton) findViewById(R.id.b_drop_1);
 		btn_grade1.setOnClickListener(this);
-		
+
 		btn_grade2 = (ImageButton) findViewById(R.id.b_drop_2);
 		btn_grade2.setOnClickListener(this);
-		
+
 		btn_grade3 = (ImageButton) findViewById(R.id.b_drop_3);
 		btn_grade3.setOnClickListener(this);
-		
+
+		btn_remove_written_comment = (ImageButton) findViewById(R.id.b_details_removeComment);
+		btn_remove_written_comment.setOnClickListener(this);
 
 		Intent i = getIntent();
 		m_marker_address = i.getStringExtra("address");
@@ -192,34 +195,62 @@ public class FountainDetailsActivity extends Activity implements
 
 	}
 
+	private void calculateTotalGrade() {
+		int size = list_of_comments.size();
+		int sum_grade = 0;
+		for (Comment c : list_of_comments) {
+			sum_grade += c.getM_grade();
+		}
+
+		double exactgrade = ((double) sum_grade) / ((double) size);
+
+		if (exactgrade < 0.5) {
+			m_total_grade = 0;
+		} else if (exactgrade >= 0.5 && exactgrade < 1.5) {
+			m_total_grade = 1;
+		} else if (exactgrade >= 1.5 && exactgrade < 2.5) {
+			m_total_grade = 2;
+		} else if (exactgrade >= 2.5 && exactgrade <= 3) {
+			m_total_grade = 3;
+		}
+
+		Log.i("CALCULATION_OF_GRADE", "Exact: " + exactgrade
+				+ " m_total_grade: " + m_total_grade);
+
+		setTotalGradeinView();
+	}
+
 	private void setTotalGradeinView() {
 		ImageView drop1 = (ImageView) findViewById(R.id.img_grade01);
 		ImageView drop2 = (ImageView) findViewById(R.id.img_grade02);
 		ImageView drop3 = (ImageView) findViewById(R.id.img_grade03);
-		
+
 		int grade = m_total_grade;
-		
-		Log.i("SETTINGTOTALGRADE", ""+grade);
-		
-		if (grade == 1){
-			drop1.setImageResource(R.drawable.ic_drop_1); //drop1 voll drop0 leer
-		}else if (grade == 2){
-			drop1.setImageResource(R.drawable.ic_drop_1); //drop1 voll drop0 leer
+
+		Log.i("SETTINGTOTALGRADE", "" + grade);
+
+		if (grade == 0) {
+			drop1.setImageResource(R.drawable.ic_drop_0); // drop1 voll drop0
+			drop2.setImageResource(R.drawable.ic_drop_0);
+			drop3.setImageResource(R.drawable.ic_drop_0);
+		} else if (grade == 1) {
+			drop1.setImageResource(R.drawable.ic_drop_1);
+			drop2.setImageResource(R.drawable.ic_drop_0);
+			drop3.setImageResource(R.drawable.ic_drop_0);
+		} else if (grade == 2) {
+			drop1.setImageResource(R.drawable.ic_drop_1);
 			drop2.setImageResource(R.drawable.ic_drop_1);
-		}else{
-			drop1.setImageResource(R.drawable.ic_drop_1); //drop1 voll drop0 leer
+			drop3.setImageResource(R.drawable.ic_drop_0);
+		} else if (grade == 3) {
+			drop1.setImageResource(R.drawable.ic_drop_1);
 			drop2.setImageResource(R.drawable.ic_drop_1);
 			drop3.setImageResource(R.drawable.ic_drop_1);
 		}
-		
-		drop1.setImageResource(R.drawable.ic_drop_1); //drop1 voll drop0 leer
-		drop2.setImageResource(R.drawable.ic_drop_1);
-		//drop3.setImageResource(R.drawable.ic_drop_0);
-		
 	}
 
 	/**
-	 * The Class RetrieveTaskComments.
+	 * The Class retrieves all comments of the specific marker e.g fountain,
+	 * toilet, healingspring
 	 */
 	private class RetrieveTaskComments extends AsyncTask<Void, Void, String> {
 
@@ -308,24 +339,17 @@ public class FountainDetailsActivity extends Activity implements
 			m_total_grade = 0;
 			for (int i = 0; i < _resultlist.size(); i++) {
 				HashMap<String, String> parsermap = _resultlist.get(i);
-
 				String grade = parsermap.get("grade");
 				String comment = parsermap.get("comment");
-				Log.i("Comments", "Grade: " + grade + " Comment: " + comment);
-
-				int int_grade = 1;
+				int int_grade = 0;
 				if (grade.length() > 0) {
 					int_grade = Integer.parseInt(grade);
 				}
-
-				m_total_grade += int_grade;
-
 				Comment c = new Comment(comment, int_grade);
 				Log.i("CommentParserTask", "" + c);
 				list_of_comments.add(c);
 			}
-			m_total_grade /= _resultlist.size();
-			Log.i("Totalbewertung des Markers", "" + m_total_grade);
+			calculateTotalGrade();
 			setTotalGradeinView();
 		}
 	}
@@ -351,13 +375,15 @@ public class FountainDetailsActivity extends Activity implements
 
 			try {
 				List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
-				urlParameters.add(new BasicNameValuePair("function", "insertComment"));
+				urlParameters.add(new BasicNameValuePair("function",
+						"insertComment"));
 				urlParameters
 						.add(new BasicNameValuePair("marker_table", m_type));
 				urlParameters.add(new BasicNameValuePair("marker_id",
 						m_marker_id));
 				urlParameters.add(new BasicNameValuePair("grade", m_newGrade));
-				urlParameters.add(new BasicNameValuePair("comment", m_newComment));
+				urlParameters.add(new BasicNameValuePair("comment",
+						m_newComment));
 
 				UrlEncodedFormEntity formEntity = new UrlEncodedFormEntity(
 						urlParameters, HTTP.UTF_8);
@@ -379,7 +405,6 @@ public class FountainDetailsActivity extends Activity implements
 		}
 	}
 
-	
 	@Override
 	public void onClick(View v) {
 		Intent i = new Intent();
@@ -416,12 +441,13 @@ public class FountainDetailsActivity extends Activity implements
 			m_newComment = tf.getText().toString();
 			tf.setText("");
 			new SaveTask().execute();
-			
-			Comment c= new Comment (m_newComment,Integer.parseInt(m_newGrade));
+
+			Comment c = new Comment(m_newComment, Integer.parseInt(m_newGrade));
 			list_of_comments.add(c);
+			calculateTotalGrade();
 			adapter.notifyDataSetChanged();
 			break;
-			
+
 		case R.id.b_drop_1:
 			m_newGrade = "1";
 			btn_grade1.setImageResource(R.drawable.ic_drop_1);
@@ -440,7 +466,12 @@ public class FountainDetailsActivity extends Activity implements
 			btn_grade2.setImageResource(R.drawable.ic_drop_1);
 			btn_grade3.setImageResource(R.drawable.ic_drop_1);
 			break;
-			
+
+		case R.id.b_details_removeComment:
+			EditText comment = (EditText) findViewById(R.id.tf_comment);
+			comment.setText("");
+
+			break;
 		case R.id.b_back:
 			i = new Intent();
 			onBackPressed();

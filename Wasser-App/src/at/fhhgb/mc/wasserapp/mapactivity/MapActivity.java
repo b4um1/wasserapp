@@ -185,7 +185,7 @@ public class MapActivity extends Activity implements OnMapClickListener,
 
 			Button actionBarButton = (Button) findViewById(R.id.b_position);
 
-			if (m_superUser
+			if (LoginActivity.superUser
 					&& actionBarButton.getText().equals(
 							getString(R.string.actionbar_mark))) {
 				actionBarButton.setPressed(true);
@@ -239,19 +239,13 @@ public class MapActivity extends Activity implements OnMapClickListener,
 				m_dialog_checkbox.setText(getString(R.string.accessible));
 			} else if (m_markertype.equals("fountain")) {
 				m_dialog_checkbox.setText(getString(R.string.drinkable));
-			} else if (m_markertype.equals("healingspring")) {
+			} else if (m_markertype.equals("healing_spring")) {
 				m_dialog_checkbox
 						.setText(getString(R.string.healing_healingspring));
 				m_dialog_checkbox.setVisibility(View.INVISIBLE);
 			}
 			m_checkbox = true;
 			m_dialog_checkbox.setOnCheckedChangeListener(this);
-
-			Button b = (Button) m_dialog.findViewById(R.id.btn_takepicture);
-			b.setVisibility(View.GONE);
-			if (m_markertype.equals("fountain")) {
-				b.setVisibility(View.VISIBLE);
-			}
 
 		} else {
 			Toast.makeText(this,
@@ -269,7 +263,6 @@ public class MapActivity extends Activity implements OnMapClickListener,
 	private void initializeMapWithCertainData() {
 		Intent i = getIntent();
 		Log.e("intent in mapactivity", i.getStringExtra("m_markertype"));
-		m_superUser = i.getBooleanExtra("user", false);
 		m_superUser = LoginActivity.superUser;
 		m_superUser_id = LoginActivity.superUserId;
 		m_markertype = i.getStringExtra("m_markertype");
@@ -302,7 +295,7 @@ public class MapActivity extends Activity implements OnMapClickListener,
 			} else {
 				tv.setText(getString(R.string.map_wc));
 			}
-		} else if (m_markertype.equals("healingspring")) {
+		} else if (m_markertype.equals("healing_spring")) {
 			getAllHealingSprings();
 			Toast.makeText(getApplicationContext(),
 					"Heilquellen wurden erfolgreich geladen",
@@ -328,7 +321,7 @@ public class MapActivity extends Activity implements OnMapClickListener,
 			overridePendingTransition(0, 0);
 			HomeActivity.setPositionToMark(this);
 			Button actionBarButton = (Button) findViewById(R.id.b_position);
-			if (m_superUser
+			if (LoginActivity.superUser
 					&& actionBarButton.getText().equals(
 							getString(R.string.actionbar_mark))) {
 				actionBarButton.setPressed(true);
@@ -576,15 +569,15 @@ public class MapActivity extends Activity implements OnMapClickListener,
 				+ addresslist.get(0).getAddressLine(1);
 		if (m_markertype.equals("fountain")) {
 			m_marker_object = new Fountain();
-			m_marker_object.setM_type("fountain");
+			//m_marker_object.setM_type("fountain");
 		}
 		if (m_markertype.equals("toilet")) {
 			m_marker_object = new Toilet();
-			m_marker_object.setM_type("toilet");
+			//m_marker_object.setM_type("toilet");
 		}
-		if (m_markertype.equals("healingspring")) {
+		if (m_markertype.equals("healing_spring")) {
 			m_marker_object = new Healingspring();
-			m_marker_object.setM_type("healingspring");
+			//m_marker_object.setM_type("healingspring");
 		}
 
 		m_marker_object.setM_latLng(_latLng);
@@ -1039,15 +1032,12 @@ public class MapActivity extends Activity implements OnMapClickListener,
 				urlParameters.add(new BasicNameValuePair("function", "insert"));
 				urlParameters.add(new BasicNameValuePair("marker_table", type));
 				urlParameters.add(new BasicNameValuePair("street", street));
-				urlParameters
-						.add(new BasicNameValuePair("attribut", attribute));
-				//urlParameters.add(new BasicNameValuePair("comment", comment));
-				urlParameters.add(new BasicNameValuePair("rating", "2"));
+				urlParameters.add(new BasicNameValuePair("attribut", attribute));
 				urlParameters.add(new BasicNameValuePair("longitude", lng));
 				urlParameters.add(new BasicNameValuePair("latitude", lat));
 				urlParameters.add(new BasicNameValuePair("city", city));
 				urlParameters.add(new BasicNameValuePair("zip", zip));
-				urlParameters.add(new BasicNameValuePair("user_id", "15"));
+				urlParameters.add(new BasicNameValuePair("user_id", ""+m_superUser_id));
 
 				UrlEncodedFormEntity formEntity = new UrlEncodedFormEntity(
 						urlParameters, HTTP.UTF_8);
@@ -1131,7 +1121,7 @@ public class MapActivity extends Activity implements OnMapClickListener,
 		@Override
 		protected List<HashMap<String, String>> doInBackground(String... params) {
 			String type = "";
-			if (getMethod.equals(GETFOUNTAINS)) {
+			/*if (getMethod.equals(GETFOUNTAINS)) {
 				type = "fountain";
 			} else {
 				if (getMethod.equals(GETTOILETS)) {
@@ -1139,7 +1129,8 @@ public class MapActivity extends Activity implements OnMapClickListener,
 				} else {
 					type = "healingspring";
 				}
-			}
+			}*/
+			type = m_markertype;
 
 			MarkerJSONParser markerParser = new MarkerJSONParser(type);
 
@@ -1308,6 +1299,7 @@ public class MapActivity extends Activity implements OnMapClickListener,
 				urlParameters
 						.add(new BasicNameValuePair("attribut", attribute));
 				urlParameters.add(new BasicNameValuePair("marker_id", id));
+				urlParameters.add(new BasicNameValuePair("user_id", ""+m_superUser_id));
 
 				post.setEntity(new UrlEncodedFormEntity(urlParameters));
 				HttpResponse response = client.execute(post);

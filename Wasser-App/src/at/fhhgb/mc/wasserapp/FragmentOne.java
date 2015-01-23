@@ -69,7 +69,7 @@ public class FragmentOne extends Fragment implements OnClickListener {
 			Intent hs;
 			hs = new Intent(mContext, MapActivity.class);
 			hs.putExtra("user", false);
-			hs.putExtra("m_markertype", "healingspring");
+			hs.putExtra("m_markertype", "healing_spring");
 			startActivity(hs);
 			break;
 		}

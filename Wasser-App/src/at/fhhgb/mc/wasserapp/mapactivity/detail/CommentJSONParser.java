@@ -35,8 +35,6 @@ private final String GRADE = "grade";
 	 */
 	public List<HashMap<String, String>> parse(String _jsonResult)
 			throws ParseException {
-		Log.i(LOGTAG, "Parsing-process started");
-
 		JSONParser parser = new JSONParser();
 		Object obj = parser.parse(_jsonResult);
 		JSONArray array = (JSONArray) obj;
@@ -81,8 +79,6 @@ private final String GRADE = "grade";
 		if (_jComment.containsKey(GRADE)) {
 			grade = "" + _jComment.get(GRADE);
 		}
-		
-		Log.i(LOGTAG, GRADE+": "+grade);
 		
 		commentHashmap.put(COMMENT, comment);
 		commentHashmap.put(GRADE, grade);

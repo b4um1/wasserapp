@@ -63,33 +63,40 @@ public class ArrayAdapterDetail extends ArrayAdapter<Comment> {
 	public View getView(int _position, View _convertView, ViewGroup _parent) {
 		if (_convertView == null) {
 			Context c = getContext();
-			LayoutInflater inflater = (LayoutInflater) c.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			LayoutInflater inflater = (LayoutInflater) c
+					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			_convertView = inflater.inflate(R.layout.list_comments, null);
 		}
 		Comment comm = mList.get(_position);
-		
+
 		if (comm != null) {
 			TextView v = (TextView) _convertView
 					.findViewById(R.id.textView_list_comment);
 			v.setText(comm.getM_comment());
-			
-			//set Grade
-			ImageView grade1 = (ImageView) _convertView.findViewById(R.id.iv_details_drop_1);
-			ImageView grade2 = (ImageView) _convertView.findViewById(R.id.iv_details_drop_2);
-			ImageView grade3 = (ImageView) _convertView.findViewById(R.id.iv_details_drop_3);
-			
+
+			// set Grade
+			ImageView grade1 = (ImageView) _convertView
+					.findViewById(R.id.iv_details_drop_1);
+			ImageView grade2 = (ImageView) _convertView
+					.findViewById(R.id.iv_details_drop_2);
+			ImageView grade3 = (ImageView) _convertView
+					.findViewById(R.id.iv_details_drop_3);
+
 			int grade = comm.getM_grade();
-			if (grade == 1){
+
+			if (grade == 0) {
+				//do nothing :D
+			} else if (grade == 1) {
 				grade1.setImageResource(R.drawable.ic_drop_1);
-			}else if(grade ==2){
+			} else if (grade == 2) {
 				grade1.setImageResource(R.drawable.ic_drop_1);
 				grade2.setImageResource(R.drawable.ic_drop_1);
-			}else{
+			} else if (grade == 3) {
 				grade1.setImageResource(R.drawable.ic_drop_1);
 				grade2.setImageResource(R.drawable.ic_drop_1);
 				grade3.setImageResource(R.drawable.ic_drop_1);
 			}
-			
+
 		}
 		return _convertView;
 	}
