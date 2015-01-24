@@ -137,6 +137,7 @@ public class WaterLevelsActivity extends Activity implements OnClickListener,
 		onItemClickListener = this;
 		
 		progressBar = (ProgressBar) findViewById(R.id.progressBarWaterlevel);
+		progressBar.setVisibility(View.GONE);
 		
 		flFavHeader = (FrameLayout) findViewById(R.id.fl_wl_header_favs);
 		

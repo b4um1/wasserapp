@@ -1,6 +1,7 @@
 package at.fhhgb.mc.wasserapp.labbus;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,7 +18,10 @@ import org.apache.http.message.BasicNameValuePair;
 import org.json.simple.parser.ParseException;
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -26,8 +30,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.webkit.WebView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 import android.widget.ViewFlipper;
 import at.fhhgb.mc.wasserapp.ChooseMarkerActivity;
 import at.fhhgb.mc.wasserapp.HomeActivity;
@@ -40,11 +47,12 @@ import at.fhhgb.mc.wasserapp.parser.RiverJSONParser;
 import at.fhhgb.mc.wasserapp.rssfeed.WebViewActivity;
 
 public class LabbusActivity extends Activity implements OnClickListener {
-	
+
 	private final String GETLABBUSDATA = "getAllLaborbusDataInFuture";
 	private final String FTPURLOFPHPFUNCTIONS = "http://wasserapp.reecon.eu/laborbus.php";
+	private final String PDFURLLABORBUS = "http://wasserapp.reecon.eu/Laborbus.pdf";
 	private final String USER_AGENT = "Mozilla/5.0";
-	
+
 	ArrayList<Labbus> mLabbusList;
 
 	@Override
@@ -56,22 +64,25 @@ public class LabbusActivity extends Activity implements OnClickListener {
 		vf.setDisplayedChild(12);
 		overridePendingTransition(0, 0);
 
-		HomeActivity.setAllButtonListener((ViewGroup) findViewById(R.id.rootActionbar), this);
+		HomeActivity.setAllButtonListener(
+				(ViewGroup) findViewById(R.id.rootActionbar), this);
 		HomeActivity.setPositionToMark(this);
-		
+
+		Button bMoreInfos = (Button) findViewById(R.id.b_labbus_moreinformation);
+		bMoreInfos.setOnClickListener(this);
+
 		mLabbusList = new ArrayList<Labbus>();
-		
+
 		new RetrieveLabbusData().execute();
 	}
 
-	
 	/**
 	 * The Class RetrieveTask.
 	 *
 	 * @author Thomas Kranzer
 	 */
 	private class RetrieveLabbusData extends AsyncTask<Void, Void, String> {
-		
+
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
@@ -81,7 +92,8 @@ public class LabbusActivity extends Activity implements OnClickListener {
 
 		@Override
 		protected String doInBackground(Void... params) {
-			Log.d("retrieve", "entere do in background of retrieve labbus task: ");
+			Log.d("retrieve",
+					"entere do in background of retrieve labbus task: ");
 
 			HttpClient client = new DefaultHttpClient();
 			HttpPost post = new HttpPost(FTPURLOFPHPFUNCTIONS);
@@ -91,7 +103,8 @@ public class LabbusActivity extends Activity implements OnClickListener {
 			StringBuffer result = new StringBuffer();
 			try {
 				List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
-				urlParameters.add(new BasicNameValuePair("function", GETLABBUSDATA));
+				urlParameters.add(new BasicNameValuePair("function",
+						GETLABBUSDATA));
 				post.setEntity(new UrlEncodedFormEntity(urlParameters));
 				HttpResponse response = client.execute(post);
 
@@ -146,7 +159,7 @@ public class LabbusActivity extends Activity implements OnClickListener {
 			String city;
 			String zip;
 			String text;
-			
+
 			for (int i = 0; i < result.size(); i++) {
 				HashMap<String, String> parsermap = result.get(i);
 				id = parsermap.get("id");
@@ -154,25 +167,27 @@ public class LabbusActivity extends Activity implements OnClickListener {
 				city = parsermap.get("city");
 				zip = parsermap.get("zip");
 				text = parsermap.get("text");
-				
+
 				String[] tempDate = dateString[0].split("-");
-				String date = tempDate[2] + "." + tempDate[1] + "." + tempDate[0];
-				mLabbusList.add(new Labbus(Integer.parseInt(id), date, city, Integer.parseInt(zip), text));
+				String date = tempDate[2] + "." + tempDate[1] + "."
+						+ tempDate[0];
+				mLabbusList.add(new Labbus(Integer.parseInt(id), date, city,
+						Integer.parseInt(zip), text));
 			}
 			displayLabbusData();
-			
+
 			ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBarLabbus);
 			progressBar.setVisibility(View.GONE);
 		}
 	}
-	
+
 	private void displayLabbusData() {
-		LabbusArrayAdapter adapter = new LabbusArrayAdapter(this, R.layout.list_labbus, mLabbusList);
+		LabbusArrayAdapter adapter = new LabbusArrayAdapter(this,
+				R.layout.list_labbus, mLabbusList);
 		ListView v = (ListView) findViewById(R.id.lv_labbus);
 		v.setAdapter(adapter);
 	}
 
-	
 	@Override
 	public void onClick(View _button) {
 		Intent i = new Intent();
@@ -203,6 +218,12 @@ public class LabbusActivity extends Activity implements OnClickListener {
 		// End Actionbar
 		case R.id.b_back:
 			onBackPressed();
+			break;
+		case R.id.b_labbus_moreinformation:
+			Intent a = new Intent(Intent.ACTION_VIEW,
+					Uri.parse("http://docs.google.com/gview?embedded=true&url="
+							+ PDFURLLABORBUS));
+			startActivity(a);
 			break;
 		}
 		if (i != null && i.getComponent() != null) {
