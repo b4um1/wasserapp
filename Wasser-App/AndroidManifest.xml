@@ -111,8 +111,12 @@
             android:label="@string/title_activity_all_measuringpoints" >
         </activity>
         <activity
-            android:name="at.fhhgb.mc.wasserapp.labbus.LabbusActivity"
+            android:name=".labbus.LabbusActivity"
             android:label="@string/title_activity_labbus" >
+        </activity>
+        <activity
+            android:name="at.fhhgb.mc.wasserapp.katastrophenschutz.EmergencyMangement"
+            android:label="@string/title_activity_emergency_mangement" >
         </activity>
     </application>
 

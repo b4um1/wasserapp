@@ -60,6 +60,9 @@
         <include
             android:id="@+id/labbus"
             layout="@layout/activity_labbus" />
+        <include
+            android:id="@+id/emergency_management"
+            layout="@layout/activity_emergency_management" />
     </ViewFlipper>
 
     <LinearLayout
