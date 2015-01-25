@@ -56,15 +56,18 @@
             android:exported="false" />
 
         <activity
-            android:name=".HomeActivity"
-            android:screenOrientation="nosensor"
-            android:theme="@android:style/Theme.Holo" >
+            android:name=".Splash"
+            android:screenOrientation="nosensor" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".HomeActivity"
+            android:theme="@android:style/Theme.Holo"
+            android:screenOrientation="nosensor" />
         <activity
             android:name=".ChooseMarkerActivity"
             android:screenOrientation="nosensor" />
@@ -115,9 +118,13 @@
             android:label="@string/title_activity_labbus" >
         </activity>
         <activity
-            android:name="at.fhhgb.mc.wasserapp.katastrophenschutz.EmergencyMangement"
+            android:name=".katastrophenschutz.EmergencyMangement"
             android:label="@string/title_activity_emergency_mangement" >
         </activity>
+        <!-- <activity
+            android:name=".Splash"
+            android:label="@string/title_activity_splash" >
+        </activity>  -->
     </application>
 
 </manifest>

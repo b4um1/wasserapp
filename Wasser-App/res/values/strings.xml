@@ -89,5 +89,6 @@
     <string name="title_activity_labbus">LabbusActivity</string>
     <string name="title_activity_emergency_mangement">Katastrophenschutz</string>
     <string name="emergency_title">Neuesten Meldungen</string>
+    <string name="title_activity_splash">Splash</string>
 
 </resources>
