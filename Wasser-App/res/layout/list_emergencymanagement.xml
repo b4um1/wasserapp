@@ -4,58 +4,69 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="@layout/button_home"
-        android:orientation="vertical"
+        android:background="@color/whitetransparent"
+        android:paddingBottom="3dp"
         android:paddingLeft="3dp"
         android:paddingRight="3dp"
-        android:paddingTop="3dp" >
-
-        <TextView
-            android:id="@+id/tf_emergencylist_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Large Text"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
-
-        <TextView
-            android:id="@+id/tf_emergencylist_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="21.02.2015 21:45"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
-
-        <TextView
-            android:id="@+id/tf_emergencylist_description"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:text="Description of emergency case baldskfjladskfjadslkfjadslkfja"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:paddingTop="5dp" >
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@layout/button_home"
+            android:orientation="vertical"
+            android:paddingBottom="3dp"
+            android:paddingLeft="3dp"
+            android:paddingRight="3dp"
+            android:paddingTop="3dp" >
+
+            <TextView
+                android:id="@+id/tf_emergencylist_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Large Text"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            <TextView
+                android:id="@+id/tf_emergencylist_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="21.02.2015 21:45"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            <TextView
+                android:id="@+id/tf_emergencylist_description"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:text="Description of emergency case baldskfjladskfjadslkfjadslkfja"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:visibility="gone" />
 
             <Button
                 android:id="@+id/btn_emergencylist_more"
-                style="?android:attr/buttonStyleSmall"
-                android:layout_width="fill_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center|left"
-                android:layout_weight="1"
-                android:text="More" />
+                android:background="@layout/custom_marker_dialog_button"
+                android:onClick="removeAtomPayOnClickHandler"
+                android:paddingBottom="2dp"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:paddingTop="2dp"
+                android:text="Mehr"
+                android:textColor="@color/blue" />
 
-            <Button
-                android:id="@+id/btn_emergencylist_less"
-                style="?android:attr/buttonStyleSmall"
-                android:layout_width="fill_parent"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center|right"
-                android:layout_weight="1"
-                android:text="Less" />
+                android:layout_gravity="center" >
+
+            </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
+
+    </FrameLayout>
 
 </LinearLayout>

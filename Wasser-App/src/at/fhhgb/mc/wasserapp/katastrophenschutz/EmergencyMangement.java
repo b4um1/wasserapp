@@ -10,9 +10,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ViewFlipper;
 import at.fhhgb.mc.wasserapp.ChooseMarkerActivity;
 import at.fhhgb.mc.wasserapp.HomeActivity;
@@ -25,8 +31,11 @@ import at.fhhgb.mc.wasserapp.rssfeed.WebViewActivity;
 
 public class EmergencyMangement extends Activity implements OnClickListener{
 	
-	TextView tf_test;
+	
 	ArrayList<EmergencyManagementModel> mList;
+	Animation mFadein;
+	Animation mFadeout;
+	TextView mDescriptionview;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +50,25 @@ public class EmergencyMangement extends Activity implements OnClickListener{
 				(ViewGroup) findViewById(R.id.rootActionbar), this);
 		HomeActivity.setPositionToMark(this);
 		
-		//generateEmergencies();
+		mFadein = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fadein);
+		mFadeout = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fadeout);
+		
+		mFadeout.setAnimationListener(new AnimationListener() {
+			@Override
+			public void onAnimationStart(Animation animation) {
+			}
+			
+			@Override
+			public void onAnimationRepeat(Animation animation) {
+			}
+			
+			@Override
+			public void onAnimationEnd(Animation animation) {
+				mDescriptionview.setVisibility(View.GONE);
+			}
+		});
+		
+		generateEmergencies();
 		
 	}
 
@@ -67,9 +94,11 @@ public class EmergencyMangement extends Activity implements OnClickListener{
 	private void generateEmergencies(){
 		mList = new ArrayList<EmergencyManagementModel>();
 		
-		EmergencyManagementModel m = new EmergencyManagementModel("hallo test1","test 1", "21.02.0123");
+		EmergencyManagementModel m = new EmergencyManagementModel("hallo test1, dass ist eine testnachricht, für spätere Testzwecke. Viel text ist gut","test 1", "21.02.0123");
 		mList.add(m);
+		m = new EmergencyManagementModel("hallo test1","test 2", "21.02.0123");
 		mList.add(m);
+		m = new EmergencyManagementModel("hallo test1","test 3", "21.02.0123");
 		mList.add(m);
 		displayEmergencies();
 	}
@@ -79,8 +108,33 @@ public class EmergencyMangement extends Activity implements OnClickListener{
 				R.layout.list_labbus, mList);
 		ListView v = (ListView) findViewById(R.id.lv_emergencymanagement);
 		v.setAdapter(adapter);
+		
+		v.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				Toast.makeText(getBaseContext(), "TEST", Toast.LENGTH_SHORT).show();
+			}
+		});
+		
 	}
-
+	public void removeAtomPayOnClickHandler(View v) {
+		EmergencyHolder holder = (EmergencyHolder)v.getTag();
+		mDescriptionview = holder.tv_description;
+		
+		if (holder.b_more){
+			mDescriptionview.setVisibility(View.VISIBLE);
+			mDescriptionview.startAnimation(mFadein);
+			holder.b_more = false;
+			holder.btn_more.setText("Weniger");
+		}else{
+			mDescriptionview.startAnimation(mFadeout);
+			holder.b_more = true;
+			holder.btn_more.setText("Mehr");
+		}
+		v.setTag(holder);
+	}
+	
 	@Override
 	public void onClick(View _v) {
 		Intent i = new Intent();
@@ -112,11 +166,11 @@ public class EmergencyMangement extends Activity implements OnClickListener{
 			onBackPressed();
 			break;
 		}
+		
 		if (i != null && i.getComponent() != null) {
 			i.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 			finish();
 			startActivity(i);
 		}
-		
 	}
 }
