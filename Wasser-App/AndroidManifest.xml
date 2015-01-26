@@ -7,7 +7,7 @@
     <!-- Specify the correct minSDK and targetSDK versions. -->
     <uses-sdk
         android:minSdkVersion="16"
-        android:targetSdkVersion="19" />
+        android:targetSdkVersion="21" />
 
     <!-- Google Maps related permissions -->
     <permission

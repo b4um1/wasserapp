@@ -33,13 +33,10 @@
 
     </FrameLayout>
 
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center|center_vertical"
-        android:text="No implementaion yet"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="@color/blue" />
+    <ListView
+        android:id="@+id/lv_emergencymanagement"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+    </ListView>
 
 </LinearLayout>

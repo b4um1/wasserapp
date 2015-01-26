@@ -1,5 +1,7 @@
 package at.fhhgb.mc.wasserapp.katastrophenschutz;
 
+import java.util.ArrayList;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,16 +10,23 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
+import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.ViewFlipper;
 import at.fhhgb.mc.wasserapp.ChooseMarkerActivity;
 import at.fhhgb.mc.wasserapp.HomeActivity;
 import at.fhhgb.mc.wasserapp.R;
+import at.fhhgb.mc.wasserapp.labbus.LabbusArrayAdapter;
 import at.fhhgb.mc.wasserapp.mapactivity.MapActivity;
 import at.fhhgb.mc.wasserapp.more.LoginActivity;
 import at.fhhgb.mc.wasserapp.more.MoreActivity;
 import at.fhhgb.mc.wasserapp.rssfeed.WebViewActivity;
 
 public class EmergencyMangement extends Activity implements OnClickListener{
+	
+	TextView tf_test;
+	ArrayList<EmergencyManagementModel> mList;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +40,8 @@ public class EmergencyMangement extends Activity implements OnClickListener{
 		HomeActivity.setAllButtonListener(
 				(ViewGroup) findViewById(R.id.rootActionbar), this);
 		HomeActivity.setPositionToMark(this);
+		
+		//generateEmergencies();
 		
 	}
 
@@ -51,6 +62,23 @@ public class EmergencyMangement extends Activity implements OnClickListener{
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+	
+	private void generateEmergencies(){
+		mList = new ArrayList<EmergencyManagementModel>();
+		
+		EmergencyManagementModel m = new EmergencyManagementModel("hallo test1","test 1", "21.02.0123");
+		mList.add(m);
+		mList.add(m);
+		mList.add(m);
+		displayEmergencies();
+	}
+	
+	private void displayEmergencies() {
+		EmergencyArrayAdapter adapter = new EmergencyArrayAdapter(this,
+				R.layout.list_labbus, mList);
+		ListView v = (ListView) findViewById(R.id.lv_emergencymanagement);
+		v.setAdapter(adapter);
 	}
 
 	@Override
