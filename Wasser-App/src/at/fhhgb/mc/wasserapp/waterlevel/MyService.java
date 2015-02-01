@@ -71,21 +71,24 @@ public class MyService extends Service implements Serializable {
 
 	/** The log tag. */
 	private final String LOG_TAG = "Service";
-	
+
 	private final String GETLATESTMEASUREMENT = "getLatestMeasurmentById";
 	private final String FTPURLOFPHPFUNCTIONS = "http://wasserapp.reecon.eu/rivers.php";
 
 	private final String USER_AGENT = "Mozilla/5.0";
-	
+
 	private int mId;
-	
+	private int mCounter;
+
 	/** The m_notification_list. */
 	private ArrayList<NotificationModel> m_notification_list;
-	
+
 	/** The m list favs. */
 	private ArrayList<MeasuringPoint> mListFavs;
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see android.app.Service#onBind(android.content.Intent)
 	 */
 	@Override
@@ -93,7 +96,9 @@ public class MyService extends Service implements Serializable {
 		return null;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see android.app.Service#onCreate()
 	 */
 	public void onCreate() {
@@ -101,7 +106,9 @@ public class MyService extends Service implements Serializable {
 		Log.i(LOG_TAG, "onCreate ... ");
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see android.app.Service#onDestroy()
 	 */
 	public void onDestroy() {
@@ -109,79 +116,110 @@ public class MyService extends Service implements Serializable {
 		Log.i(LOG_TAG, "onDestroy ... ");
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see android.app.Service#onStartCommand(android.content.Intent, int, int)
 	 */
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		if (haveNetworkConnection()) {
-			m_notification_list = FavsRepository.loadNotificationList(getApplicationContext());
+			m_notification_list = FavsRepository
+					.loadNotificationList(getApplicationContext());
 			if (m_notification_list != null && m_notification_list.size() != 0) {
 				refreshFavs();
-				
-				
-				Log.i(LOG_TAG,
-						"onStartCommand ... "
-								+ m_notification_list.get(0)
-										.getmNotificationValue());
+
+				Log.i(LOG_TAG, "onStartCommand ... ");
 
 				ArrayList<Integer> remind = new ArrayList<Integer>();
 				for (int i = 0; i < m_notification_list.size(); i++) {
 					for (int j = 0; j < mListFavs.size(); j++) {
-						if ((m_notification_list.get(i).getmMp().getmMeasuringPointId() == mListFavs.get(j).getmMeasuringPointId())) {
+						if ((m_notification_list.get(i).getmMp()
+								.getmMeasuringPointId() == mListFavs.get(j)
+								.getmMeasuringPointId())) {
 							boolean setNotification = false;
 							if (m_notification_list.get(i).ismIsSmaller()) {
-								if (m_notification_list.get(i).getmNotificationValue() >= Integer.parseInt(mListFavs.get(j).getmWaterlevel())) {
+								if (m_notification_list.get(i)
+										.getmNotificationValue() >= Integer
+										.parseInt(mListFavs.get(j)
+												.getmWaterlevel())) {
 									setNotification = true;
 								}
 							} else {
-								if (m_notification_list.get(i).getmNotificationValue() <= Integer.parseInt(mListFavs.get(j).getmWaterlevel())) {
+								if (m_notification_list.get(i)
+										.getmNotificationValue() <= Integer
+										.parseInt(mListFavs.get(j)
+												.getmWaterlevel())) {
 									setNotification = true;
 								}
 							}
 							if (setNotification) {
 								remind.add(i);
 
-								String rivername = m_notification_list.get(i).getmMp().getmRiverName();
-								String measuringpointname = m_notification_list.get(i).getmMp().getmMeasuringPointName();
-								float waterlevel = m_notification_list.get(i).getmNotificationValue();
+								String rivername = m_notification_list.get(i)
+										.getmMp().getmRiverName();
+								String measuringpointname = m_notification_list
+										.get(i).getmMp()
+										.getmMeasuringPointName();
+								int waterlevel = m_notification_list.get(i)
+										.getmNotificationValue();
 
-								String msgText = getString(R.string.notification_msg_1) + rivername
-										+ getString(R.string.notification_msg_2) + measuringpointname
+								String msgText = getString(R.string.notification_msg_1)
+										+ " "
+										+ rivername
+										+ " "
+										+ getString(R.string.notification_msg_2)
+										+ " "
+										+ measuringpointname
+										+ " "
 										+ getString(R.string.notification_msg_3)
-										+ waterlevel + getString(R.string.notification_msg_4);
-								
-								Intent showIntent = new Intent(this, ShowMeasuringPointActivity.class);
-								MeasuringPoint mp = m_notification_list.get(i).getmMp();
+										+ " "
+										+ waterlevel
+										+ " "
+										+ getString(R.string.notification_msg_4);
+
+								Intent showIntent = new Intent(this,
+										ShowMeasuringPointActivity.class);
+								MeasuringPoint mp = m_notification_list.get(i)
+										.getmMp();
 								showIntent.putExtra("measuringpoint", mp);
 
 								NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 								PendingIntent pi = PendingIntent.getActivity(
-										this, 0, new Intent(this, WaterLevelsActivity.class), 0);
+										this, 0, new Intent(this,
+												WaterLevelsActivity.class), 0);
 								android.app.Notification.Builder builder = new Notification.Builder(
 										this);
 								builder.setContentTitle(
 										"Wasser App Benachrichtigung")
-										.setContentText("Big text Notification")
+										.setContentText(msgText)
 										.setDefaults(Notification.DEFAULT_ALL)
 										.setSmallIcon(R.drawable.app_icon)
 										.setAutoCancel(true)
 										.setPriority(Notification.PRIORITY_HIGH)
 										.addAction(R.drawable.app_icon,
 												"Pegelstaende anzeigen ...", pi);
-									
+
 								Notification notification = new Notification.BigTextStyle(
 										builder).bigText(msgText).build();
 
 								notificationManager.notify(0, notification);
 
+								m_notification_list.remove(i);
 							}
 						}
 					}
 				}
-				for (int i = 0; i < remind.size(); i++) {
-					m_notification_list.remove(remind.get(i));
-				}
-				FavsRepository.storeNotificationList(getApplicationContext(), m_notification_list);
+
+				// Log.i("remind size" , remind.size() + "");
+				// for (int i = 0; i < remind.size(); i++) {
+				// Log.i("REMOVE NOTIFICATION", remind.get(i) + "");
+				// boolean successfulRemove =
+				// m_notification_list.remove(remind.get(i));
+				// Log.i("successful Remove", "" + successfulRemove);
+				// }
+
+				FavsRepository.storeNotificationList(getApplicationContext(),
+						m_notification_list);
 			} else {
 				stopSelf();
 			}
@@ -223,8 +261,10 @@ public class MyService extends Service implements Serializable {
 				List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
 				urlParameters.add(new BasicNameValuePair("function",
 						GETLATESTMEASUREMENT));
+				// urlParameters.add(new BasicNameValuePair("measuringpoint_id",
+				// "" + mListFavs.get(mId).getmMeasuringPointId()));
 				urlParameters.add(new BasicNameValuePair("measuringpoint_id",
-						"" + mListFavs.get(mId).getmMeasuringPointId()));
+						"" + mId));
 				post.setEntity(new UrlEncodedFormEntity(urlParameters));
 				HttpResponse response = client.execute(post);
 
@@ -251,6 +291,7 @@ public class MyService extends Service implements Serializable {
 			new ParserTask().execute(_result);
 		}
 	}
+
 	/**
 	 * Background Parser-Task
 	 */
@@ -274,14 +315,15 @@ public class MyService extends Service implements Serializable {
 		@Override
 		protected void onPostExecute(List<HashMap<String, String>> result) {
 			if ((result != null) && (result.size() != 0)) {
-				
+
 				HashMap<String, String> parsermap = result.get(0);
 				String measuringpointId = parsermap.get("measuringpointId");
 				String timestamp = parsermap.get("timestamp");
 				String waterlevel = parsermap.get("waterlevel");
-	
+
 				for (int i = 0; i < mListFavs.size(); i++) {
-					if (mListFavs.get(i).getmMeasuringPointId() == Integer.parseInt(measuringpointId)) {
+					if (mListFavs.get(i).getmMeasuringPointId() == Integer
+							.parseInt(measuringpointId)) {
 						mListFavs.get(i).setmWaterlevel(waterlevel);
 						mListFavs.get(i).setmTimestamp(timestamp);
 					}

@@ -59,7 +59,7 @@ public class FragmentOneDay extends Fragment {
 	private final String FTPURLOFPHPFUNCTIONS = "http://wasserapp.reecon.eu/rivers.php";
 
 	private final String USER_AGENT = "Mozilla/5.0";
-	
+
 	ArrayList<TimeWaterlevel> eachHour;
 
 	private int mMeasuringpointId;
@@ -79,13 +79,11 @@ public class FragmentOneDay extends Fragment {
 			mMeasuringpointId = bundle.getInt("measuringpointId", -1);
 		}
 
-		Log.i("ID", "" + mMeasuringpointId);
-
 		if (mMeasuringpointId != -1) {
 			new RetrieveDayMeasurements().execute();
 		}
 
-		//openChart();
+		// openChart();
 
 		return mRootView;
 	}
@@ -93,12 +91,12 @@ public class FragmentOneDay extends Fragment {
 	private void openChart() {
 		// Define the number of elements you want in the chart.
 //		int z[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16,
-//				17, 18, 19, 20, 21, 22, 23, 24 };
+//				17, 18, 19, 20, 21, 22, 23 };
 
 		// TODO: FILL THE ARRAY WITH VALUES FROM THE DB !!!!
-		
-		//int x[] = { 171, 172, 171, 170, 171, 172, 173, 173 };
-		
+
+		// int x[] = { 171, 172, 171, 170, 171, 172, 173, 200};
+
 		int z[] = new int[eachHour.size()];
 		int x[] = new int[eachHour.size()];
 		for (int i = 0; i < eachHour.size(); i++) {
@@ -110,9 +108,14 @@ public class FragmentOneDay extends Fragment {
 		XYSeries xSeries = new XYSeries("X Series");
 
 		// Adding data to the X Series.
-		for (int i = 0; i < z.length; i++) {
-			xSeries.add(z[i], x[i]);
+//		for (int i = 0; i < z.length; i++) {
+//			xSeries.add(z[i], x[i]);
+//		}
+		
+		for (int i = 0; i < x.length; i++) {
+			xSeries.add(i, x[i]);
 		}
+
 
 		// Create a Dataset to hold the XSeries.
 
@@ -165,7 +168,7 @@ public class FragmentOneDay extends Fragment {
 
 		mRenderer.setMargins(new int[] { 15, 50, 10, 10 });
 
-		for (int i = 0; i < z.length; i+=2) {
+		for (int i = 0; i < z.length; i += 2) {
 			if (z[i] < 10) {
 				mRenderer.addXTextLabel(i, "0" + z[i]);
 			} else {
@@ -231,7 +234,6 @@ public class FragmentOneDay extends Fragment {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			Log.i("RESULT", result.toString());
 			return result.toString();
 		}
 
@@ -266,14 +268,14 @@ public class FragmentOneDay extends Fragment {
 		protected void onPostExecute(List<HashMap<String, String>> result) {
 			String timestamp;
 			String waterlevel;
-			
+
 			eachHour = new ArrayList<TimeWaterlevel>();
-			
+
 			for (int i = 0; i < result.size(); i++) {
 				HashMap<String, String> parsermap = result.get(i);
 				timestamp = parsermap.get("timestamp");
 				waterlevel = parsermap.get("waterlevel");
-				
+
 				String[] dateTime = timestamp.split(" ");
 				String[] time = dateTime[1].split(":");
 				String hour = time[0];
@@ -290,11 +292,11 @@ public class FragmentOneDay extends Fragment {
 			openChart();
 		}
 	}
-	
+
 	class TimeWaterlevel {
 		String timestamp;
 		String waterlevel;
-		
+
 		public TimeWaterlevel(String timestamp, String waterlevel) {
 			super();
 			this.timestamp = timestamp;
@@ -316,6 +318,6 @@ public class FragmentOneDay extends Fragment {
 		public void setWaterlevel(String waterlevel) {
 			this.waterlevel = waterlevel;
 		}
-		
+
 	}
 }

@@ -306,11 +306,11 @@ public class ShowMeasuringPointActivity extends FragmentActivity implements Acti
 					Intent intent = new Intent(this, MyService.class);
 					PendingIntent pintent = PendingIntent.getService(this, 0,
 							intent, 0);
-//
-//					AlarmManager alarm = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-//					// Start service every hour 3600*1000
-//					alarm.setRepeating(AlarmManager.RTC_WAKEUP,
-//							cal.getTimeInMillis(), 3600*1000, pintent);
+
+					AlarmManager alarm = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+					// Start service every hour 3600*1000
+					alarm.setRepeating(AlarmManager.RTC_WAKEUP,
+							cal.getTimeInMillis(), 3600*1000, pintent);
 					
 				} else {
 					cb.setChecked(false);
@@ -320,11 +320,19 @@ public class ShowMeasuringPointActivity extends FragmentActivity implements Acti
 							m_notification_list.remove(j);
 						}
 					}
-//					stopService(new Intent(this, MyService.class));
+					stopService(new Intent(this, MyService.class));
 				}
 				FavsRepository.storeNotificationList(getApplicationContext(), m_notification_list);
             } else {
             	et_notification.setText("");
+            	for (int j = 0; j < m_notification_list.size(); j++) {
+					if (mMp.getmMeasuringPointId() == m_notification_list
+							.get(j).getmMp().getmMeasuringPointId()) {
+						m_notification_list.remove(j);
+					}
+				}
+				stopService(new Intent(this, MyService.class));
+				FavsRepository.storeNotificationList(getApplicationContext(), m_notification_list);
             }
 			break;
 		}
