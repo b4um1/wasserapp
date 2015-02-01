@@ -18,7 +18,7 @@ public class EmergencyJSONParser {
 	private final String TEL = "tel";
 	private final String CONTACT_PERSON = "contact_person";
 	private final String URL = "url";
-
+	private final String CREATION_TIME = "creation_time";
 	private final String LOGTAG = "EmergencyJSONParserClass";
 
 	/**
@@ -67,11 +67,15 @@ public class EmergencyJSONParser {
 	private HashMap<String, String> getEmergency(JSONObject _jEmergency) {
 
 		HashMap<String, String> marker = new HashMap<String, String>();
-		String id = "-NA-", comment = "-NA-", title = "", contact_person = "", url= "", tel = "";
+		String id = "-NA-", comment = "-NA-", title = "", contact_person = "", url = "", tel = "", creationtime = "";
 
 		// Extracting creator_id if available
 		if (_jEmergency.containsKey(ID)) {
 			id = "" + _jEmergency.get(ID);
+		}
+		// Extracting creation time if available
+		if (_jEmergency.containsKey(CREATION_TIME)) {
+			creationtime = "" + _jEmergency.get(CREATION_TIME);
 		}
 
 		// Extracting comment --> description of emergency
@@ -92,15 +96,15 @@ public class EmergencyJSONParser {
 		if (_jEmergency.containsKey(TEL)) {
 			tel = "" + _jEmergency.get(TEL);
 		}
-		
 
 		marker.put("id", id);
+		marker.put("creationtime", creationtime);
 		marker.put("comment", comment);
 		marker.put("title", title);
 		marker.put("tel", tel);
 		marker.put("url", url);
-		//missing in php file
-		//marker.put(CREATION_TIME, creation_time);
+		// missing in php file
+		// marker.put(CREATION_TIME, creation_time);
 
 		return marker;
 	}

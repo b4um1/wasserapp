@@ -255,8 +255,9 @@ public class EmergencyMangement extends Activity implements OnClickListener{
 				String comment = parsermap.get("comment");
 				String tel = parsermap.get("tel");
 				String url = parsermap.get("url");
+				String creationtime = parsermap.get("creationtime");
 
-				EmergencyManagementModel emergency = new EmergencyManagementModel(comment, title, "01.01.2015", tel, url, id);
+				EmergencyManagementModel emergency = new EmergencyManagementModel(comment, title, creationtime, tel, url, id);
 				mList.add(emergency);
 			}
 			displayEmergencies();

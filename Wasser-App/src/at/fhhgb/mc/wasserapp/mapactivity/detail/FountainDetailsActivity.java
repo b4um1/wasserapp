@@ -152,13 +152,11 @@ public class FountainDetailsActivity extends Activity implements
 		Log.i("FountainDetails", m_type);
 
 		TextView tv_title = (TextView) findViewById(R.id.tv_details_title);
-		ImageView img_view = (ImageView) findViewById(R.id.img_detailsview);
 		TextView tv_drinkable_accessible = null;
 
 		if (m_type.equals("fountain")) {
 			tv_drinkable_accessible = (TextView) findViewById(R.id.tv_drinkable);
 			tv_title.setText("Brunnendetails");
-			img_view.setImageResource(R.drawable.pic_fountain);
 
 		} else {
 			if (m_type.equals("toilet")) {
@@ -167,7 +165,6 @@ public class FountainDetailsActivity extends Activity implements
 				tv_drinkable_accessible = (TextView) findViewById(R.id.tv_details_accessible_image);
 				tv_drinkable_accessible.setVisibility(View.VISIBLE);
 				tv_title.setText("Toilettendetails");
-				img_view.setImageResource(R.drawable.pic_wc);
 			} else {
 				tv_title.setText("Heilquellendetails");
 			}
@@ -342,7 +339,7 @@ public class FountainDetailsActivity extends Activity implements
 				String grade = parsermap.get("grade");
 				String comment = parsermap.get("comment");
 				int int_grade = 0;
-				if (grade.length() > 0) {
+				if (grade!=null) {
 					int_grade = Integer.parseInt(grade);
 				}
 				Comment c = new Comment(comment, int_grade);
