@@ -22,27 +22,13 @@
                 android:layout_weight="1" >
 
                 <Button
-                    android:id="@+id/b_waterlevel"
-                    style="@style/light"
-                    android:layout_width="130dip"
-                    android:layout_height="120dip"
-                    android:layout_gravity="right"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginTop="10dp"
-                    android:alpha="0.8"
-                    android:background="@android:color/transparent"
-                    android:paddingTop="20dp"
-                    android:textAllCaps="true"
-                    android:textColor="@color/whitegray" />
-
-                <Button
                     android:id="@+id/b_labbus"
                     style="@style/light"
                     android:layout_width="130dip"
                     android:layout_height="120dip"
                     android:layout_gravity="right"
+                    android:layout_marginBottom="10dp"
                     android:layout_marginRight="10dp"
-                    android:layout_marginTop="10dp"
                     android:alpha="0.8"
                     android:background="@layout/button_home"
                     android:drawableTop="@drawable/ic_laborbus"
@@ -58,25 +44,12 @@
                 android:layout_weight="1" >
 
                 <Button
-                    android:id="@+id/b_precipitation"
-                    style="@style/light"
-                    android:layout_width="130dip"
-                    android:layout_height="120dip"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="10dp"
-                    android:alpha="0.8"
-                    android:background="@android:color/transparent"
-                    android:paddingTop="20dp"
-                    android:textAllCaps="true"
-                    android:textColor="@color/whitegray" />
-
-                <Button
                     android:id="@+id/b_emergencymanagement"
                     style="@style/light"
                     android:layout_width="130dip"
                     android:layout_height="120dip"
+                    android:layout_marginBottom="10dp"
                     android:layout_marginLeft="10dp"
-                    android:layout_marginTop="10dp"
                     android:alpha="0.8"
                     android:background="@layout/button_home"
                     android:drawableTop="@drawable/ic_emergency"
@@ -84,6 +57,7 @@
                     android:text="@string/emergencyManagement_emergencyManagement"
                     android:textAllCaps="true"
                     android:textColor="@color/whitegray" />
+
             </FrameLayout>
         </LinearLayout>
 
