@@ -115,11 +115,13 @@
         </activity>
         <activity
             android:name=".labbus.LabbusActivity"
-            android:label="@string/title_activity_labbus" >
+            android:label="@string/title_activity_labbus"
+            android:screenOrientation="nosensor" >
         </activity>
         <activity
             android:name=".katastrophenschutz.EmergencyMangement"
-            android:label="@string/title_activity_emergency_mangement" >
+            android:label="@string/title_activity_emergency_mangement" 
+            android:screenOrientation="nosensor" >
         </activity>
         <!-- <activity
             android:name=".Splash"

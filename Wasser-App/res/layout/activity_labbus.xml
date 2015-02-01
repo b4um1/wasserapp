@@ -37,29 +37,32 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingBottom="10dp" >
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp" >
 
         <TextView
             android:id="@+id/tv_labbus_info"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:alpha="0.8"
+            android:background="@color/blue"
             android:padding="10dp"
             android:text="Der Laborbus bietet interessierten Hausbrunnenbesitzern die Möglichkeit, ihr Trinkwasser mit modernsten Messgeräten auf die wichtigsten Inhaltsstoffe untersuchen und eine bautechnische Begutachtung durchführen zu lassen. Dieses Fahrzeug ist mit einem Chemiker und einem Wassermeister in Oberösterreich unterwegs."
-            android:textColor="@color/blue"
-            android:textSize="18sp" />
+            android:textColor="@color/whitegray"
+            android:textSize="16sp" />
 
         <Button
             android:id="@+id/b_labbus_moreinformation"
             style="@style/light"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="10dp"
             android:alpha="0.8"
             android:background="@layout/button_home"
             android:drawablePadding="10dp"
             android:drawableRight="@android:drawable/ic_dialog_info"
-            android:padding="10dp"
+            android:padding="5dp"
             android:text="@string/labbus_moreInfos"
             android:textAllCaps="true"
             android:textColor="@color/whitegray" />
