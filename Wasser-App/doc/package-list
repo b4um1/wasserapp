@@ -1,7 +1,12 @@
 at.fhhgb.mc.wasserapp
+at.fhhgb.mc.wasserapp.katastrophenschutz
+at.fhhgb.mc.wasserapp.labbus
 at.fhhgb.mc.wasserapp.mapactivity
 at.fhhgb.mc.wasserapp.mapactivity.detail
 at.fhhgb.mc.wasserapp.more
+at.fhhgb.mc.wasserapp.parser
 at.fhhgb.mc.wasserapp.rssfeed
 at.fhhgb.mc.wasserapp.waterlevel
+at.fhhgb.mc.wasserapp.waterlevel.adapter
+at.fhhgb.mc.wasserapp.waterlevel.model
 com.google.android.gms
