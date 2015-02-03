@@ -26,7 +26,6 @@
     <string name="waterlevel_location_river">Ort, Fluss</string>
     <string name="waterlevel_waterlevel_diagram">Pegelstand - Diagramm</string>
     <string name="waterlevel_meter">Meter</string>
-    <string name="waterlevel_daysago">vor x Tagen</string>
     <string name="waterlevel_actual_waterlevel">Pegelstand aktuell</string>
     <string name="waterlevel_notification">Benachrichtigung bei einem Pegelstand von</string>
     <string name="waterlevel_turn_on_internet">Bitte stellen Sie eine Internetverbindung her!</string>
@@ -34,6 +33,8 @@
     <string name="waterlevel_noDataFound">Zu dieser Messstelle sind keine Daten vorhanden!</string>
     <string name="waterlevel_daySight">Tagesansicht</string>
     <string name="waterlevel_weekSight">Wochenansicht</string>
+    <string name="waterlevel_datetime">Uhrzeit</string>
+    <string name="waterlevel_date">Datum</string>
 
     <!-- precipitation -->
     <string name="precipitation_precipitation">Niederschlag</string>

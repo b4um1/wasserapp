@@ -33,7 +33,6 @@
     <string name="waterlevel_measuringpoint">Measuring point</string>
     <string name="waterlevel_waterlevel_diagram">Water Level - Chart</string>
     <string name="waterlevel_meter">meter</string>
-    <string name="waterlevel_daysago">days ago</string>
     <string name="waterlevel_actual_waterlevel">Actual Water Level</string>
     <string name="waterlevel_notification">Remind me at a water level of</string>
     <string name="waterlevel_turn_on_internet">Please turn on your internet connection!</string>
@@ -41,6 +40,8 @@
     <string name="waterlevel_noDataFound">no Data found!</string>
     <string name="waterlevel_daySight">day sight</string>
     <string name="waterlevel_weekSight">week sight</string>
+    <string name="waterlevel_datetime">Time Of Day</string>
+    <string name="waterlevel_date">Date</string>
 
     <!-- precipitation -->
     <string name="precipitation_precipitation">Precipitation</string>

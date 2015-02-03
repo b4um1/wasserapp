@@ -226,6 +226,9 @@ public class ShowMeasuringPointActivity extends FragmentActivity implements Acti
 	/* (non-Javadoc)
 	 * @see android.view.View.OnClickListener#onClick(android.view.View)
 	 */
+	/* (non-Javadoc)
+	 * @see android.view.View.OnClickListener#onClick(android.view.View)
+	 */
 	@Override
 	public void onClick(View _button) {
 		Intent i = new Intent();
@@ -310,7 +313,7 @@ public class ShowMeasuringPointActivity extends FragmentActivity implements Acti
 					AlarmManager alarm = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 					// Start service every hour 3600*1000
 					alarm.setRepeating(AlarmManager.RTC_WAKEUP,
-							cal.getTimeInMillis(), 3600*1000 / 2, pintent);
+							cal.getTimeInMillis(), 3600*1000 / 2, pintent);		// every half an hour
 					
 				} else {
 					cb.setChecked(false);

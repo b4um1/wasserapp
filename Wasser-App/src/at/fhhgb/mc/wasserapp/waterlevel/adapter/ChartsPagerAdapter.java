@@ -20,15 +20,20 @@ public class ChartsPagerAdapter extends FragmentPagerAdapter{
 
 	@Override
 	public Fragment getItem(int index) {
+		Bundle bundle;
 		 switch (index) {
 	        case 0:
-	        	Bundle bundle = new Bundle();
+	        	bundle = new Bundle();
 	        	bundle.putInt("measuringpointId", mMpId);
-	        	FragmentOneDay fragment = new FragmentOneDay();
-	        	fragment.setArguments(bundle);
-	            return fragment;
+	        	FragmentOneDay fragmentOneDay = new FragmentOneDay();
+	        	fragmentOneDay.setArguments(bundle);
+	            return fragmentOneDay;
 	        case 1:
-	            return new FragmentSevenDays();
+	        	bundle = new Bundle();
+	        	bundle.putInt("measuringpointId", mMpId);
+	        	FragmentSevenDays fragmentSevenDays = new FragmentSevenDays();
+	        	fragmentSevenDays.setArguments(bundle);
+	            return fragmentSevenDays;
 	        }
 	        return null;
 	}

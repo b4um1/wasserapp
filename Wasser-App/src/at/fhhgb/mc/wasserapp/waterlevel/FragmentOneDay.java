@@ -51,10 +51,6 @@ public class FragmentOneDay extends Fragment {
 	/** The m chart. */
 	private GraphicalView mChart;
 
-	/** The m day. */
-	private String[] mDay = new String[] { "7", "6", "5", "4", "3", "2", "1",
-			"0" };
-
 	private final String GETDAYMEASUREMENT = "get24HourDataForMeasuringpoint";
 	private final String FTPURLOFPHPFUNCTIONS = "http://wasserapp.reecon.eu/rivers.php";
 
@@ -137,7 +133,7 @@ public class FragmentOneDay extends Fragment {
 
 		XYMultipleSeriesRenderer mRenderer = new XYMultipleSeriesRenderer();
 
-		mRenderer.setXTitle("Uhrzeit");
+		mRenderer.setXTitle(getString(R.string.waterlevel_datetime));
 		// mRenderer.setYTitle(getString(R.string.waterlevel_meter));
 		mRenderer.setZoomButtonsVisible(false);
 		mRenderer.setZoomEnabled(false, false);
@@ -166,9 +162,9 @@ public class FragmentOneDay extends Fragment {
 		mRenderer.setClickEnabled(false);
 		mRenderer.setShowLegend(false);
 
-		mRenderer.setMargins(new int[] { 15, 50, 10, 10 });
+		mRenderer.setMargins(new int[] { 15, 55, 10, 20 });
 
-		for (int i = 0; i < z.length; i += 2) {
+		for (int i = 1; i < z.length; i += 2) {
 			if (z[i] < 10) {
 				mRenderer.addXTextLabel(i, "0" + z[i]);
 			} else {
