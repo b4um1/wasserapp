@@ -310,7 +310,7 @@ public class ShowMeasuringPointActivity extends FragmentActivity implements Acti
 					AlarmManager alarm = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 					// Start service every hour 3600*1000
 					alarm.setRepeating(AlarmManager.RTC_WAKEUP,
-							cal.getTimeInMillis(), 3600*1000, pintent);
+							cal.getTimeInMillis(), 3600*1000 / 2, pintent);
 					
 				} else {
 					cb.setChecked(false);

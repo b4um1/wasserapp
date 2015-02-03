@@ -13,7 +13,7 @@ import android.util.Log;
 
 public class LabbusJSONParser {
 	private final String LABBUS_ID = "id";
-	private final String LABBUS_DATE = "date";
+	private final String LABBUS_DATE = "arrive_date";
 	private final String LABBUS_CITY = "city";
 	private final String LABBUS_ZIP = "zip";
 	private final String LABBUS_TEXT = "zusatzinfo";

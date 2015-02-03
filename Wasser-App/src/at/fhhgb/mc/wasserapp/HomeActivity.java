@@ -1,6 +1,10 @@
 package at.fhhgb.mc.wasserapp;
 
+import java.util.Calendar;
+
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.text.Layout;
@@ -18,6 +22,7 @@ import at.fhhgb.mc.wasserapp.more.LoginActivity;
 import at.fhhgb.mc.wasserapp.more.MoreActivity;
 import at.fhhgb.mc.wasserapp.rssfeed.RssActivity;
 import at.fhhgb.mc.wasserapp.rssfeed.WebViewActivity;
+import at.fhhgb.mc.wasserapp.waterlevel.MyService;
 import at.fhhgb.mc.wasserapp.waterlevel.WaterLevelsActivity;
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
@@ -102,7 +107,6 @@ public class HomeActivity extends FragmentActivity implements OnClickListener, A
             public void onPageScrollStateChanged(int arg0) {
             }
         });
-
 	}
 
 	/**
